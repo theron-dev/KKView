@@ -47,6 +47,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element);
 @property(nonatomic,assign,readonly) struct KKPixel top;
 @property(nonatomic,assign,readonly) struct KKPixel right;
 @property(nonatomic,assign,readonly) struct KKPixel bottom;
+@property(nonatomic,assign,readonly) enum KKVerticalAlign verticalAlign;
 @property(nonatomic,assign) KKViewElementLayout layout;
 @property(nonatomic,strong) UIView * view;
 @property(nonatomic,strong,readonly) NSString * reuse;
@@ -58,6 +59,8 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element);
 
 -(void) obtainChildrenView;
 
+-(void) addSubview:(UIView *) view toView:(UIView *) toView;
+
 -(BOOL) isChildrenVisible:(KKViewElement *) element;
 
 -(BOOL) isHidden;
@@ -67,6 +70,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element);
 -(void) didLayouted;
 
 -(void) layout:(CGSize) size;
+
 
 @end
 

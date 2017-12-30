@@ -8,6 +8,9 @@
 
 #import <KKView/KKViewElement.h>
 
-@interface KKScrollViewElement : KKViewElement
+@interface KKScrollViewElement : KKViewElement<UIScrollViewDelegate>
+
+@property(nonatomic,assign,readonly) struct KKPixel taptop;
+@property(nonatomic,assign,readonly) struct KKPixel tapbottom;
 
 @end

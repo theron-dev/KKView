@@ -45,6 +45,16 @@
 		1ACF73871FF10B8B003FB42A /* KKViewCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF73851FF10B8B003FB42A /* KKViewCreator.m */; };
 		1ACF74101FF33569003FB42A /* KKPagerViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF740E1FF33568003FB42A /* KKPagerViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF74111FF33569003FB42A /* KKPagerViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF740F1FF33568003FB42A /* KKPagerViewElement.m */; };
+		1ACF74171FF340FC003FB42A /* JSContext+KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF74151FF340FC003FB42A /* JSContext+KKView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ACF74181FF340FC003FB42A /* JSContext+KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF74161FF340FC003FB42A /* JSContext+KKView.m */; };
+		1ACF741B1FF36A6E003FB42A /* KKLoadingViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF74191FF36A6E003FB42A /* KKLoadingViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF741A1FF36A6E003FB42A /* KKLoadingViewElement.m */; };
+		1ACF741F1FF376C6003FB42A /* KKEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF741D1FF376C6003FB42A /* KKEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ACF74201FF376C6003FB42A /* KKEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF741E1FF376C6003FB42A /* KKEvent.m */; };
+		1AE1434D1FF498D600D2DEAD /* KKViewContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE1434B1FF498D600D2DEAD /* KKViewContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1434C1FF498D600D2DEAD /* KKViewContext.m */; };
+		1AE143791FF5DBF100D2DEAD /* KKSwitchViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +130,16 @@
 		1ACF73A41FF1EBB0003FB42A /* KKHttp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KKHttp.xcodeproj; path = ../../KKHttp/KKHttp/KKHttp.xcodeproj; sourceTree = "<group>"; };
 		1ACF740E1FF33568003FB42A /* KKPagerViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKPagerViewElement.h; sourceTree = "<group>"; };
 		1ACF740F1FF33568003FB42A /* KKPagerViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKPagerViewElement.m; sourceTree = "<group>"; };
+		1ACF74151FF340FC003FB42A /* JSContext+KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JSContext+KKView.h"; sourceTree = "<group>"; };
+		1ACF74161FF340FC003FB42A /* JSContext+KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JSContext+KKView.m"; sourceTree = "<group>"; };
+		1ACF74191FF36A6E003FB42A /* KKLoadingViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKLoadingViewElement.h; sourceTree = "<group>"; };
+		1ACF741A1FF36A6E003FB42A /* KKLoadingViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKLoadingViewElement.m; sourceTree = "<group>"; };
+		1ACF741D1FF376C6003FB42A /* KKEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKEvent.h; sourceTree = "<group>"; };
+		1ACF741E1FF376C6003FB42A /* KKEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKEvent.m; sourceTree = "<group>"; };
+		1AE1434B1FF498D600D2DEAD /* KKViewContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKViewContext.h; sourceTree = "<group>"; };
+		1AE1434C1FF498D600D2DEAD /* KKViewContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKViewContext.m; sourceTree = "<group>"; };
+		1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSwitchViewElement.h; sourceTree = "<group>"; };
+		1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSwitchViewElement.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +176,8 @@
 			children = (
 				1ACF730F1FF0DC3B003FB42A /* KKView.h */,
 				1ACF73101FF0DC3B003FB42A /* Info.plist */,
+				1ACF741D1FF376C6003FB42A /* KKEvent.h */,
+				1ACF741E1FF376C6003FB42A /* KKEvent.m */,
 				1ACF73171FF0DC7A003FB42A /* KKElement.h */,
 				1ACF73181FF0DC7A003FB42A /* KKElement.m */,
 				1ACF73211FF0E285003FB42A /* KKViewElement.h */,
@@ -176,8 +198,16 @@
 				1ACF73681FF108D6003FB42A /* KKControlViewElement.m */,
 				1ACF740E1FF33568003FB42A /* KKPagerViewElement.h */,
 				1ACF740F1FF33568003FB42A /* KKPagerViewElement.m */,
+				1ACF74191FF36A6E003FB42A /* KKLoadingViewElement.h */,
+				1ACF741A1FF36A6E003FB42A /* KKLoadingViewElement.m */,
+				1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */,
+				1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */,
 				1ACF73841FF10B8B003FB42A /* KKViewCreator.h */,
 				1ACF73851FF10B8B003FB42A /* KKViewCreator.m */,
+				1ACF74151FF340FC003FB42A /* JSContext+KKView.h */,
+				1ACF74161FF340FC003FB42A /* JSContext+KKView.m */,
+				1AE1434B1FF498D600D2DEAD /* KKViewContext.h */,
+				1AE1434C1FF498D600D2DEAD /* KKViewContext.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -208,12 +238,17 @@
 			files = (
 				1ACF73331FF0F77E003FB42A /* UIColor+KKElement.h in Headers */,
 				1ACF735D1FF101C4003FB42A /* KKImageElement.h in Headers */,
+				1AE143791FF5DBF100D2DEAD /* KKSwitchViewElement.h in Headers */,
 				1ACF732F1FF0F739003FB42A /* UIFont+KKElement.h in Headers */,
 				1ACF73111FF0DC3B003FB42A /* KKView.h in Headers */,
 				1ACF74101FF33569003FB42A /* KKPagerViewElement.h in Headers */,
 				1ACF73611FF106EF003FB42A /* KKScrollViewElement.h in Headers */,
 				1ACF73191FF0DC7A003FB42A /* KKElement.h in Headers */,
+				1ACF741B1FF36A6E003FB42A /* KKLoadingViewElement.h in Headers */,
 				1ACF73231FF0E285003FB42A /* KKViewElement.h in Headers */,
+				1ACF741F1FF376C6003FB42A /* KKEvent.h in Headers */,
+				1ACF74171FF340FC003FB42A /* JSContext+KKView.h in Headers */,
+				1AE1434D1FF498D600D2DEAD /* KKViewContext.h in Headers */,
 				1ACF732B1FF0EFE8003FB42A /* KKTextElement.h in Headers */,
 				1ACF73271FF0E328003FB42A /* KKPixel.h in Headers */,
 				1ACF73861FF10B8B003FB42A /* KKViewCreator.h in Headers */,
@@ -251,7 +286,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
-				ORGANIZATIONNAME = mofang.cn;
+				ORGANIZATIONNAME = kkmofang.cn;
 				TargetAttributes = {
 					1ACF730B1FF0DC3B003FB42A = {
 						CreatedOnToolsVersion = 9.2;
@@ -351,12 +386,17 @@
 				1ACF73621FF106EF003FB42A /* KKScrollViewElement.m in Sources */,
 				1ACF74111FF33569003FB42A /* KKPagerViewElement.m in Sources */,
 				1ACF73871FF10B8B003FB42A /* KKViewCreator.m in Sources */,
+				1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */,
 				1ACF73341FF0F77E003FB42A /* UIColor+KKElement.m in Sources */,
 				1ACF736A1FF108D6003FB42A /* KKControlViewElement.m in Sources */,
 				1ACF73241FF0E285003FB42A /* KKViewElement.m in Sources */,
 				1ACF73301FF0F739003FB42A /* UIFont+KKElement.m in Sources */,
+				1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */,
 				1ACF732C1FF0EFE8003FB42A /* KKTextElement.m in Sources */,
 				1ACF735E1FF101C4003FB42A /* KKImageElement.m in Sources */,
+				1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */,
+				1ACF74201FF376C6003FB42A /* KKEvent.m in Sources */,
+				1ACF74181FF340FC003FB42A /* JSContext+KKView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,11 +538,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = ../libs;
 				INFOPLIST_FILE = KKView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.mofang.KKView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -517,11 +560,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = ../libs;
 				INFOPLIST_FILE = KKView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.mofang.KKView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

@@ -8,9 +8,21 @@
 
 #import "KKElement.h"
 
+@implementation KKElementEvent
+
+-(instancetype) initWithElement:(KKElement *) element {
+    if((self = [super init])) {
+        _element = element;
+    }
+    return self;
+}
+
+@end
+
 @interface KKElement() {
     NSMutableDictionary * _attributes;
     NSMutableDictionary * _styles;
+    NSUInteger _levelChildId;
 }
 @end
 
@@ -131,11 +143,13 @@
 
 
 -(void) willRemoveChildren:(KKElement *) element {
-    
+    element->_levelId = 0;
+    element->_depth = 0;
 }
 
 -(void) didAddChildren:(KKElement *) element {
-    
+    element->_levelId = ++ _levelChildId;
+    element->_depth = _depth + 1;
 }
 
 -(NSString *) get:(NSString *) key {
@@ -147,6 +161,10 @@
         }
         NSMutableDictionary * attrs = [_styles valueForKey:status];
         v = [attrs valueForKey:key];
+        if(v == nil && ![@"" isEqualToString:status]) {
+            attrs = [_styles valueForKey:@""];
+            v = [attrs valueForKey:key];
+        }
     }
     return v;
 }
@@ -276,6 +294,114 @@
 
 -(void) changedKey:(NSString *) key {
     
+}
+
+-(void) emit:(NSString *)name event:(KKEvent *)event {
+    [super emit:name event:event];
+    if([event isKindOfClass:[KKElementEvent class]]) {
+        KKElementEvent * e = (KKElementEvent *) event;
+        if(! [e isCancelBubble]) {
+            [self.parent emit:name event:event];
+        }
+    }
+}
+
+-(NSMutableDictionary *) data {
+    NSMutableDictionary * data = [NSMutableDictionary dictionaryWithCapacity:4];
+    for(NSString * key in [self keys]) {
+        if([key hasPrefix:@"data-"]) {
+            NSString * v = [self get:key];
+            if(v) {
+                [data setValue:v forKey:[key substringFromIndex:5]];
+            }
+        }
+    }
+    return data;
+}
+
+-(NSString *) description {
+    
+    NSMutableString * v = [NSMutableString stringWithCapacity:128];
+    
+    for(int i=0;i<_depth;i++) {
+        [v appendString:@"\t"];
+    }
+    
+    NSString * name = [self get:@"#name"];
+    
+    if(name == nil) {
+        name = @"element";
+    }
+    
+    [v appendFormat:@"<%@",name];
+    
+    {
+        
+        NSEnumerator * keyEnum = [_attributes keyEnumerator];
+        NSString * key;
+        
+        while((key = [keyEnum nextObject])) {
+            
+            if(![key hasPrefix:@"#"]) {
+                
+                NSString * vv = [_attributes valueForKey:key];
+                vv = [vv stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
+                vv = [vv stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+                [v appendFormat:@" %@=\"%@\"",key,vv ];
+            }
+        }
+    
+    }
+    
+    {
+        NSEnumerator * keyEnum = [_styles keyEnumerator];
+        NSString * key;
+        
+        while((key = [keyEnum nextObject])) {
+            
+            NSDictionary * attrs = [_styles valueForKey:key];
+            
+            if([key isEqualToString:@""]) {
+                [v appendString:@" style=\""];
+            } else {
+                [v appendFormat:@" style:%@=\"",key];
+            }
+            
+            for(NSString * k in [attrs allKeys]) {
+                [v appendFormat:@"%@: %@;",k,[attrs valueForKey:k]];
+            }
+            
+            [v appendString:@"\""];
+        }
+    }
+    
+    [v appendString:@">"];
+    
+    KKElement * p = self.firstChild;
+    
+    if(p) {
+        [v appendString:@"\r\n"];
+        while(p){
+            [v appendString:[p description]];
+            p = p.nextSibling;
+        }
+        for(int i=0;i<_depth;i++) {
+            [v appendString:@"\t"];
+        }
+        [v appendFormat:@"</%@>\r\n",name];
+    } else {
+        NSString * vv = [self get:@"#text"];
+        if(vv) {
+            vv = [vv stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
+            vv = [vv stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
+            vv = [vv stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
+            [v appendString:vv];
+        }
+        [v appendFormat:@"</%@>\r\n",name];
+    }
+    
+    
+    return v;
 }
 
 @end

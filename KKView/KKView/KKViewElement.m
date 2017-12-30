@@ -14,6 +14,12 @@
 
 #include <objc/runtime.h>
 
+@interface KKViewElement() {
+
+}
+
+@end
+
 @implementation KKViewElement
 
 
@@ -56,6 +62,8 @@
         } else {
             [self setLayout: NULL];
         }
+    } else if([key isEqualToString:@"vertical-align"]) {
+        _verticalAlign = KKVerticalAlignFromString(value);
     }
     [_view KKViewElement:self setProperty:key value:value];
 }
@@ -63,7 +71,11 @@
 #define KKViewDequeueViewsKey  "KKViewDequeueViewsKey"
 
 -(NSString *) reuse {
-    return [self get:@"reuse"];
+    NSString * v = [self get:@"reuse"];
+    if(v == nil) {
+        v = [NSString stringWithFormat:@"#%d",(int) self.levelId];
+    }
+    return v;
 }
 
 -(Class) viewClass {
@@ -99,8 +111,6 @@
                 
                 [views removeLastObject];
                 
-                [v addSubview:vv];
-                
             }
             
         }
@@ -114,16 +124,20 @@
         vv = [[UIView alloc] initWithFrame:CGRectZero];
     }
     
-    [v addSubview:vv];
+    if([self.parent isKindOfClass:[KKViewElement class]]) {
+        [(KKViewElement *) self.parent addSubview:vv toView:v];
+    } else {
+        [self addSubview:vv toView:v];
+    }
     
     [vv KKElementObtainView:self];
-
-    [self setView:vv];
-    
-    [self changedKeys:[self keys]];
     
     [vv KKViewElementDidLayouted:self];
     
+    [self setView:vv];
+    
+    [self changedKeys:[self keys]];
+
     [self obtainChildrenView];
 }
 
@@ -163,6 +177,14 @@
         [vv KKElementRecycleView:self];
         
         [self setView:nil];
+        
+        KKElement * p = self.firstChild;
+        while(p) {
+            if([p isKindOfClass:[KKViewElement class]]) {
+                [(KKViewElement *) p recycleView];
+            }
+            p = p.nextSibling;
+        }
     }
 }
 
@@ -189,8 +211,21 @@
 
 }
 
+-(void) addSubview:(UIView *) view toView:(UIView *) toView {
+    [toView addSubview:view];
+}
+
 -(void) didAddChildren:(KKElement *)element {
     [super didAddChildren:element];
+}
+
+-(void) willRemoveChildren:(KKElement *)element {
+    [super willRemoveChildren:element];
+    
+    if([element isKindOfClass:[KKViewElement class]]) {
+        [(KKViewElement *) element recycleView];
+    }
+    
 }
 
 -(void) remove {
@@ -327,7 +362,7 @@ CGSize KKViewElementLayoutRelative(KKViewElement * element) {
                 }
                 
             } else {
-                left = paddingLeft + left;
+                left = paddingLeft + left + mleft;
             }
             
             if(top == MAXFLOAT) {
@@ -337,7 +372,7 @@ CGSize KKViewElementLayoutRelative(KKViewElement * element) {
                 } else if(bottom == MAXFLOAT) {
                     top = paddingTop + mtop + (inSize.height - height - mtop - mbottom) * 0.5f;
                 } else {
-                    top = paddingTop + (inSize.height - height - mbottom );
+                    top = paddingTop + (inSize.height - height - mbottom - bottom);
                 }
                 
             } else {
@@ -367,6 +402,31 @@ CGSize KKViewElementLayoutRelative(KKViewElement * element) {
     return contentSize;
 }
 
+static void KKViewElementLayoutLine(NSArray * elements,CGSize inSize,CGFloat lineHeight) {
+    
+    for(KKViewElement * element in elements) {
+        
+        enum KKVerticalAlign v = element.verticalAlign;
+        
+        if(v == KKVerticalAlignBottom) {
+            CGRect r = element.frame;
+            CGFloat mbottom = KKPixelValue(element.margin.bottom, inSize.height, 0);
+            CGFloat mtop = KKPixelValue(element.margin.top, inSize.height, 0);
+            r.origin.y = r.origin.y + (lineHeight - mtop - mbottom - r.size.height);
+            element.frame =r;
+        } else if(v == KKVerticalAlignMiddle) {
+            CGRect r = element.frame;
+            CGFloat mbottom = KKPixelValue(element.margin.bottom, inSize.height, 0);
+            CGFloat mtop = KKPixelValue(element.margin.top, inSize.height, 0);
+            r.origin.y = r.origin.y + (lineHeight - mtop - mbottom - r.size.height) * 0.5;
+            element.frame =r;
+        }
+        
+        [element didLayouted];
+    }
+    
+}
+
 /**
  * 流式布局 "flex" 左到右 上到下
  */
@@ -385,6 +445,7 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
     CGFloat maxWidth = paddingLeft + paddingRight;
     CGFloat lineHeight = 0;
     
+    NSMutableArray * lineElements = [NSMutableArray arrayWithCapacity:4];
     KKElement * p = element.firstChild;
     
     while(p) {
@@ -441,6 +502,10 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
             CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
             
             if(x + mleft + mright + paddingRight >= size.width) {
+                if([lineElements count] > 0) {
+                    KKViewElementLayoutLine(lineElements,inSize,lineHeight);
+                    [lineElements removeAllObjects];
+                }
                 y += lineHeight;
                 lineHeight = 0;
                 x = paddingLeft;
@@ -465,10 +530,15 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
             }
             
             e.frame = v;
-            [e didLayouted];
+            
+            [lineElements addObject:e];
         }
         
         p = p.nextSibling;
+    }
+    
+    if([lineElements count] > 0) {
+        KKViewElementLayoutLine(lineElements,inSize,lineHeight);
     }
     
     return CGSizeMake(maxWidth,y + lineHeight + paddingBottom);
@@ -490,6 +560,8 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
     CGFloat x = paddingLeft;
     CGFloat maxWidth = paddingLeft + paddingRight;
     CGFloat lineHeight = 0;
+    
+    NSMutableArray * lineElements = [NSMutableArray arrayWithCapacity:4];
     
     KKElement * p = element.firstChild;
     
@@ -557,15 +629,20 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             v.origin.y = top ;
             
            
-            if(left + paddingRight + mright > maxWidth) {
-                maxWidth = left + paddingRight + mright;
+            if(left + paddingRight + mright + v.size.width > maxWidth) {
+                maxWidth = left + paddingRight + mright + v.size.width;
             }
             
             e.frame = v;
-            [e didLayouted];
+            
+            [lineElements addObject:e];
         }
         
         p = p.nextSibling;
+    }
+    
+    if([lineElements count]) {
+        KKViewElementLayoutLine(lineElements, inSize, lineHeight);
     }
     
     return CGSizeMake(maxWidth,y + lineHeight + paddingBottom);
@@ -592,6 +669,10 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
         } else {
             self.layer.masksToBounds = NO;
         }
+    } else if([key isEqualToString:@"tint-color"]) {
+        self.tintColor = [UIColor KKElementStringValue:value];
+    } else if([key isEqualToString:@"enabled"]) {
+        self.userInteractionEnabled = KKBooleanValue(value);
     }
 }
 

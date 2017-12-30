@@ -21,6 +21,10 @@ struct KKEdge {
     struct KKPixel top,right,bottom,left;
 };
 
+enum KKVerticalAlign {
+    KKVerticalAlignTop,KKVerticalAlignMiddle,KKVerticalAlignBottom
+};
+
 extern struct KKPixel KKPixelFromString(NSString * value);
 
 extern struct KKEdge KKEdgeFromString(NSString * value);
@@ -33,3 +37,6 @@ extern CGFloat KKPixelValue(struct KKPixel v ,CGFloat baseOf,CGFloat defaultValu
 extern NSString * KKStringValue(id value);
 
 extern BOOL KKBooleanValue(id value);
+
+extern enum KKVerticalAlign KKVerticalAlignFromString(NSString * value);
+

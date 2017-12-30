@@ -8,15 +8,17 @@
 
 #import "KKImageElement.h"
 #import <KKHttp/KKHttp.h>
+#import "KKViewContext.h"
 
 static CGSize KKImageElementLayout(KKViewElement * element);
 
 
 @interface KKImageElement() {
     BOOL _displaying;
-    KKHttpTask * _imageTask;
-    KKHttpTask * _defaultTask;
-    KKHttpTask * _failTask;
+    id<KKHttpTask> _imageTask;
+    id<KKHttpTask> _defaultTask;
+    id<KKHttpTask> _failTask;
+    KKViewContext * _context;
 }
 
 -(void) setNeedsDisplay;
@@ -33,9 +35,11 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     if((self = [super init])) {
         [super setLayout:KKImageElementLayout];
         [self set:@"view" value:@"UIImageView"];
+        _context = [KKViewContext currentContext];
     }
     return self;
 }
+
 -(void) dealloc {
     
     [_imageTask cancel];
@@ -55,13 +59,14 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     return [self get:@"fail-src"];
 }
 
+-(void) setView:(UIView *)view{
+    [super setView:view];
+    [view setUserInteractionEnabled:NO];
+}
+
 -(void) changedKey:(NSString *)key {
     [super changedKey:key];
     if([@"src" isEqualToString:key]) {
-        NSString * v = [self get:key];
-        if([v hasPrefix:@"http://"]){
-            NSLog(@"%@",v);
-        }
         self.image = nil;
         [self setNeedsDisplay];
     } else if([@"default-src" isEqualToString:key]) {
@@ -79,33 +84,50 @@ static CGSize KKImageElementLayout(KKViewElement * element);
         NSString * v = [self src];
         if([v length]) {
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
-
-                KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
-                options.type = KKHttpOptionsTypeImage;
-                options.method = KKHttpOptionsGET;
-                options.onfail = ^(NSError *error, id weakObject) {
-                    if(weakObject) {
-                        KKImageElement * e = (KKImageElement *) weakObject;
-                        [e setError:error];
-                    }
-                };
-                options.onload = ^(id data, NSError *error, id weakObject) {
-                    if(weakObject) {
-                        KKImageElement * e = (KKImageElement *) weakObject;
-                        if(error) {
-                            [e setError:error];
-                        } else if(data){
-                            [e setImage:(UIImage *) data];
-                        } else {
-                            [e setError:[NSError errorWithDomain:@"KKImageElement" code:0 userInfo:@{NSLocalizedDescriptionKey:@"图片格式错误"}]];
-                        }
-                    }
-                };
                 
-                _imageTask = [[KKHttp main] send:options weakObject:self];
+                if(_context == nil) {
+                    _image = [KKHttp imageWithURL:v];
+                } else {
+                    _image = [_context imageWithURI:v];
+                }
+                
+                if(_image == nil) {
+                    
+                    KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
+                    options.type = KKHttpOptionsTypeImage;
+                    options.method = KKHttpOptionsGET;
+                    options.onfail = ^(NSError *error, id weakObject) {
+                        if(weakObject) {
+                            KKImageElement * e = (KKImageElement *) weakObject;
+                            [e setError:error];
+                        }
+                    };
+                    options.onload = ^(id data, NSError *error, id weakObject) {
+                        if(weakObject) {
+                            KKImageElement * e = (KKImageElement *) weakObject;
+                            if(error) {
+                                [e setError:error];
+                            } else if(data){
+                                [e setImage:(UIImage *) data];
+                            } else {
+                                [e setError:[NSError errorWithDomain:@"KKImageElement" code:0 userInfo:@{NSLocalizedDescriptionKey:@"图片格式错误"}]];
+                            }
+                        }
+                    };
+                    
+                    if(_context == nil) {
+                        _imageTask = [[KKHttp main] send:options weakObject:self];
+                    } else {
+                        _imageTask = [_context send:options weakObject:self];
+                    }
+                }
                 
             } else {
-                _image = [UIImage imageNamed:v];
+                if(_context == nil) {
+                    _image = [UIImage imageNamed:v];
+                } else {
+                    _image = [_context imageWithURI:v];
+                }
             }
         }
     }
@@ -144,22 +166,39 @@ static CGSize KKImageElementLayout(KKViewElement * element);
         NSString * v = [self defaultSrc];
         if([v length]) {
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
-                KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
-                options.type = KKHttpOptionsTypeImage;
-                options.method = KKHttpOptionsGET;
-                options.onload = ^(id data, NSError *error, id weakObject) {
-                    if(weakObject) {
-                        KKImageElement * e = (KKImageElement *) weakObject;
-                        if(error == nil) {
-                            [e setDefaultImage:(UIImage *) data];
-                        }
-                    }
-                };
                 
-                _defaultTask = [[KKHttp main] send:options weakObject:self];
+                if(_context == nil) {
+                    _defaultImage = [KKHttp imageWithURL:v];
+                } else {
+                    _defaultImage = [_context imageWithURI:v];
+                }
+                
+                if(_defaultImage == nil) {
+                    KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
+                    options.type = KKHttpOptionsTypeImage;
+                    options.method = KKHttpOptionsGET;
+                    options.onload = ^(id data, NSError *error, id weakObject) {
+                        if(weakObject) {
+                            KKImageElement * e = (KKImageElement *) weakObject;
+                            if(error == nil) {
+                                [e setDefaultImage:(UIImage *) data];
+                            }
+                        }
+                    };
+                    
+                    if(_context == nil) {
+                        _defaultTask = [[KKHttp main] send:options weakObject:self];
+                    } else {
+                        _defaultTask = [_context send:options weakObject:self];
+                    }
+                }
                 
             } else {
-                _defaultImage = [UIImage imageNamed:v];
+                if(_context == nil) {
+                    _defaultImage = [UIImage imageNamed:v];
+                } else {
+                    _defaultImage = [_context imageWithURI:v];
+                }
             }
         }
     }
@@ -180,22 +219,41 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     if(_failImage == nil && _failTask == nil) {
         NSString * v = [self failSrc];
         if([v length]) {
+            
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
-                KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
-                options.type = KKHttpOptionsTypeImage;
-                options.method = KKHttpOptionsGET;
-                options.onload = ^(id data, NSError *error, id weakObject) {
-                    if(weakObject) {
-                        KKImageElement * e = (KKImageElement *) weakObject;
-                        if(error == nil) {
-                            [e setFailImage:(UIImage *) data];
-                        }
-                    }
-                };
                 
-                _defaultTask = [[KKHttp main] send:options weakObject:self];
+                if(_context == nil) {
+                    _failImage = [KKHttp imageWithURL:v];
+                } else {
+                    _failImage = [_context imageWithURI:v];
+                }
+                
+                if(_failImage == nil) {
+                    
+                    KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
+                    options.type = KKHttpOptionsTypeImage;
+                    options.method = KKHttpOptionsGET;
+                    options.onload = ^(id data, NSError *error, id weakObject) {
+                        if(weakObject) {
+                            KKImageElement * e = (KKImageElement *) weakObject;
+                            if(error == nil) {
+                                [e setFailImage:(UIImage *) data];
+                            }
+                        }
+                    };
+                    
+                    if(_context == nil) {
+                        _failTask = [[KKHttp main] send:options weakObject:self];
+                    } else {
+                        _failTask = [_context send:options weakObject:self];
+                    }
+                }
             } else {
-                _failImage = [UIImage imageNamed:v];
+                if(_context == nil) {
+                    _failImage = [UIImage imageNamed:v];
+                } else {
+                    _failImage = [_context imageWithURI:v];
+                }
             }
         }
     }

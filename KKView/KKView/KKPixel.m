@@ -99,8 +99,18 @@ extern BOOL KKBooleanValue(id value) {
     }
    
     if([value isKindOfClass:[NSString class]]) {
-        return [value isEqualToString:@"true"] || [value isEqualToString:@"yes"];
+        return [value isEqualToString:@"true"] || [value isEqualToString:@"yes"] || [value isEqualToString:@"1"];
     }
     
     return value ? true: false;
+}
+
+extern enum KKVerticalAlign KKVerticalAlignFromString(NSString * value) {
+    if([value isEqualToString:@"middle"]) {
+        return KKVerticalAlignMiddle;
+    }
+    if([value isEqualToString:@"bottom"]) {
+        return KKVerticalAlignBottom;
+    }
+    return KKVerticalAlignTop;
 }

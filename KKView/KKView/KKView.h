@@ -16,4 +16,8 @@
 #import <KKView/KKScrollViewElement.h>
 #import <KKView/KKPagerViewElement.h>
 #import <KKView/KKControlViewElement.h>
+#import <KKView/KKLoadingViewElement.h>
+#import <KKView/KKSwitchViewElement.h>
 #import <KKView/KKViewCreator.h>
+#import <KKView/JSContext+KKView.h>
+#import <KKView/KKViewContext.h>

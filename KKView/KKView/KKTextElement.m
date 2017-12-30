@@ -10,6 +10,7 @@
 
 #import "UIFont+KKElement.h"
 #import "UIColor+KKElement.h"
+#import "KKViewContext.h"
 
 @interface KKTextElement() {
     BOOL _displaying;
@@ -21,8 +22,20 @@
 
 @end
 
+@interface KKImgElement() {
+    KKViewContext * _context;
+}
+
+@end
 
 @implementation KKImgElement
+
+-(instancetype) init {
+    if((self = [super init])) {
+        _context = [KKViewContext currentContext];
+    }
+    return self;
+}
 
 -(NSString *) text {
     return [self get:@"#text"];
@@ -33,10 +46,19 @@
     NSString * value = [self get:key];
     if([@"width" isEqualToString:key]) {
         self.width = KKPixelFromString(value);
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"height" isEqualToString:key]) {
         self.height = KKPixelFromString(value);
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"margin" isEqualToString:key]) {
         self.margin = KKEdgeFromString(value);
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"src" isEqualToString:key]) {
         self.image = nil;
         if([self.parent isKindOfClass:[KKTextElement class]]) {
@@ -73,7 +95,7 @@
     CGFloat mtop = KKPixelValue(self.margin.top, 0, 0);
     CGFloat mright = KKPixelValue(self.margin.right, 0, 0);
     CGFloat mbottom = KKPixelValue(self.margin.bottom, 0, 0);
-    return CGRectMake(mleft - mright, mtop - mbottom, width + mleft + mright, height + mtop + mbottom);
+    return CGRectMake(- mleft + mright, - mtop + mbottom, width , height);
 }
 
 -(NSString *) src {
@@ -83,10 +105,14 @@
 -(UIImage *) image {
     if(_image == nil) {
         NSString * v = self.src;
-        if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
-            
+        if(_context == nil) {
+            if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
+                _image = [KKHttp imageWithURL:v];
+            } else {
+                _image = [UIImage imageNamed:v];
+            }
         } else {
-            _image = [UIImage imageNamed:v];
+            _image = [_context imageWithURI:v];
         }
     }
     return _image;
@@ -106,10 +132,19 @@
     NSString * value = [self get:key];
     if([@"font" isEqualToString:key]) {
         self.font = [UIFont KKElementStringValue:value];
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"color" isEqualToString:key]) {
         self.color = [UIColor KKElementStringValue:value];
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"letter-spacing" isEqualToString:key]) {
         self.letterSpacing = KKPixelFromString(value);
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
+        }
     } else if([@"#text" isEqualToString:key]) {
         if([self.parent isKindOfClass:[KKTextElement class]]) {
             [(KKTextElement *) self.parent setNeedsDisplay];
@@ -121,7 +156,6 @@
 
 static CGSize KKTextElementLayout(KKViewElement * element);
 static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * element);
-
 
 @implementation KKTextElement
 
@@ -201,7 +235,8 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 
 -(void) setView:(UIView *)view {
     [super setView:view];
-    [self setNeedsDisplay];
+    [view setUserInteractionEnabled:NO];
+    [(UILabel *)view setNumberOfLines:0];
 }
 
 -(void) setNeedsDisplay {
@@ -233,24 +268,33 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     NSString * value = [self get:key];
     if([@"font" isEqualToString:key]) {
         self.font = [UIFont KKElementStringValue:value];
+        [self setNeedsDisplay];
     } else if([@"color" isEqualToString:key]) {
         self.color = [UIColor KKElementStringValue:value];
+        [self setNeedsDisplay];
     } else if([@"line-spacing" isEqualToString:key]) {
         self.lineSpacing = KKPixelFromString(value);
+        [self setNeedsDisplay];
     } else if([@"paragraph-spacing" isEqualToString:key]) {
         self.paragraphSpacing = KKPixelFromString(value);
+        [self setNeedsDisplay];
     } else if([@"letter-spacing" isEqualToString:key]) {
         self.letterSpacing = KKPixelFromString(value);
+        [self setNeedsDisplay];
+    } else if([@"baseline" isEqualToString:key]) {
+        self.baseline = KKPixelFromString(value);
+        [self setNeedsDisplay];
     } else if([@"text-align" isEqualToString:key]) {
         if([value isEqualToString:@"right"]) {
             self.textAlign = NSTextAlignmentRight;
         } else if([value isEqualToString:@"center"]) {
             self.textAlign = NSTextAlignmentCenter;
-        } if([value isEqualToString:@"justify"]) {
+        } else if([value isEqualToString:@"justify"]) {
             self.textAlign = NSTextAlignmentJustified;
         } else {
             self.textAlign = NSTextAlignmentLeft;
         }
+        [self setNeedsDisplay];
     } else if([@"#text" isEqualToString:key]) {
         [self setNeedsDisplay];
     }
@@ -287,7 +331,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     attrs[NSForegroundColorAttributeName] = e.color;
     attrs[NSFontAttributeName] = e.font;
     attrs[NSKernAttributeName] = @(KKPixelValue(e.letterSpacing, 0, 0));
-    
+    attrs[NSBaselineOffsetAttributeName] = @(KKPixelValue(e.baseline, 0, 0));
     NSMutableParagraphStyle * style = [[NSMutableParagraphStyle alloc] init];
     
     {
@@ -330,3 +374,28 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     return attrs;
     
 }
+
+
+@implementation UILabel (KKElement)
+
+-(void) KKViewElement:(KKViewElement *) element setProperty:(NSString *) key value:(NSString *) value {
+    [super KKViewElement:element setProperty:key value:value];
+    
+    if([key isEqualToString:@"color"]) {
+        self.textColor = [UIColor KKElementStringValue:value];
+    } else if([key isEqualToString:@"font"]) {
+        self.font = [UIFont KKElementStringValue:value];
+    } else if([key isEqualToString:@"text-align"]) {
+        if([value isEqualToString:@"right"]) {
+            self.textAlignment = NSTextAlignmentRight;
+        } else if([value isEqualToString:@"center"]) {
+            self.textAlignment = NSTextAlignmentCenter;
+        } else if([value isEqualToString:@"justify"]) {
+            self.textAlignment = NSTextAlignmentJustified;
+        } else {
+            self.textAlignment = NSTextAlignmentLeft;
+        }
+    }
+}
+
+@end

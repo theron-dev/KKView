@@ -26,15 +26,15 @@ JSExportAs(set,
 );
 
 JSExportAs(on,
--(void) onJSFunction:(JSValue *) func keys:(NSArray *) keys context:(JSValue *) context
+-(void) onJSFunctionKeys:(NSArray *) keys fn:(JSValue *) func context:(JSValue *) context
 );
 
 JSExportAs(evaluate,
--(void) onJSFunction:(JSValue *) func evaluateScript:(NSString *) evaluateScript context:(JSValue *) context
+-(void) onJSFunctionEvaluateScript:(NSString *) evaluateScript fn:(JSValue *) func context:(JSValue *) context
 );
 
 JSExportAs(off,
--(void) offJSFunction:(JSValue *) func keys:(NSArray *) keys context:(JSValue *) context
+-(void) offJSFunctionKeys:(NSArray *) keys fn:(JSValue *) func context:(JSValue *) context
 );
 
 @end
@@ -45,7 +45,7 @@ JSExportAs(off,
 
 @property(nonatomic,strong) id object;
 @property(nonatomic,weak) KKObserver * parent;
-@property(nonatomic,weak,readonly) JSContext *jsContext;
+@property(nonatomic,strong,readonly) JSContext *jsContext;
 
 -(instancetype) initWithJSContext:(JSContext *) jsContext;
 -(instancetype) initWithJSContext:(JSContext *) jsContext object:(id) object;
@@ -56,11 +56,15 @@ JSExportAs(off,
 
 -(void) on:(KKObserverFunction) func keys:(NSArray *) keys children:(BOOL) children context:(void *) context;
 
+-(void) on:(KKObserverFunction) func keys:(NSArray *) keys children:(BOOL) children identity:(NSUInteger) identity context:(void *) context;
+
 -(void) on:(KKObserverFunction) func keys:(NSArray *) keys context:(void *) context;
 
 -(void) off:(KKObserverFunction) func keys:(NSArray *) keys context:(void *) context;
 
 -(id) evaluateScript:(NSString*) evaluateScript;
+
+-(instancetype) newObserver;
 
 +(JSContext *) mainJSContext;
 
@@ -69,8 +73,6 @@ JSExportAs(off,
 @end
 
 @interface NSObject(KKObserver)
-
-@property(nonatomic,strong,readonly) KKObserver * kk_Observer;
 
 -(id) kk_getValue:(NSString *) key;
 
@@ -81,6 +83,10 @@ JSExportAs(off,
 -(void) kk_set:(NSArray *) keys value:(id) value;
 
 -(NSSet *) kk_keySet;
+
+-(NSString *) kk_stringValue;
+
+-(NSString *) kk_getString:(NSString *) key;
 
 @end
 

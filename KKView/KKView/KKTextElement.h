@@ -33,6 +33,7 @@
 @property(nonatomic,assign) struct KKPixel lineSpacing;
 @property(nonatomic,assign) struct KKPixel paragraphSpacing;
 @property(nonatomic,assign) struct KKPixel letterSpacing;
+@property(nonatomic,assign) struct KKPixel baseline;
 @property(nonatomic,assign) NSTextAlignment textAlign;
 @property(nonatomic,strong) UIColor * color;
 @property(nonatomic,strong) UIFont * font;

@@ -12,6 +12,4 @@ typedef void (^KKControlViewElementAction)(void);
 
 @interface KKControlViewElement : KKViewElement
 
-@property(nonatomic,strong) KKControlViewElementAction onAction;
-
 @end

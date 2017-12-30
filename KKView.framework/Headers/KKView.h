@@ -14,6 +14,10 @@
 #import <KKView/UIFont+KKElement.h>
 #import <KKView/UIColor+KKElement.h>
 #import <KKView/KKScrollViewElement.h>
+#import <KKView/KKPagerViewElement.h>
 #import <KKView/KKControlViewElement.h>
+#import <KKView/KKLoadingViewElement.h>
+#import <KKView/KKSwitchViewElement.h>
 #import <KKView/KKViewCreator.h>
-#import <KKView/KKViewImageLoad.h>
+#import <KKView/JSContext+KKView.h>
+#import <KKView/KKViewContext.h>
