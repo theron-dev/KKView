@@ -16,6 +16,16 @@
 
 @implementation JSContext (KKView)
 
++(void) initialize {
+    [super initialize];
+    [KKPagerViewElement class];
+    [KKTextElement class];
+    [KKImageElement class];
+    [KKControlViewElement class];
+    [KKLoadingViewElement class];
+    [KKSwitchViewElement class];
+}
+
 +(void) setDefaultElementClass:(Class) elementClass name:(NSString *) name {
     [[self defaultElementClass] setObject:NSStringFromClass(elementClass) forKey:name];
 }
