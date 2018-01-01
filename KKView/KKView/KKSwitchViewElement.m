@@ -7,8 +7,14 @@
 //
 
 #import "KKSwitchViewElement.h"
+#import "JSContext+KKView.h"
 
 @implementation KKSwitchViewElement
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"switch"];
+}
 
 -(instancetype) init {
     if((self = [super init])) {

@@ -7,12 +7,18 @@
 //
 
 #import "KKPagerViewElement.h"
+#import "JSContext+KKView.h"
 
 @interface KKPagerViewElement() <UIScrollViewDelegate>
 
 @end
 
 @implementation KKPagerViewElement
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"pager"];
+}
 
 -(void) setView:(UIView *)view{
     [super setView:view];

@@ -11,6 +11,7 @@
 #import "UIColor+KKElement.h"
 #import "UIFont+KKElement.h"
 #import "KKPixel.h"
+#import "JSContext+KKView.h"
 
 #include <objc/runtime.h>
 
@@ -22,6 +23,10 @@
 
 @implementation KKViewElement
 
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"view"];
+}
 
 -(void) changedKey:(NSString *) key {
     [super changedKey:key];

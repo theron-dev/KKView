@@ -16,22 +16,15 @@
 
 @implementation JSContext (KKView)
 
-+(NSDictionary *) defaultElementClass {
-    static NSDictionary * v = nil;
++(void) setDefaultElementClass:(Class) elementClass name:(NSString *) name {
+    [[self defaultElementClass] setObject:NSStringFromClass(elementClass) forKey:name];
+}
+
++(NSMutableDictionary *) defaultElementClass {
+    static NSMutableDictionary * v = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        v = @{
-              @"view":NSStringFromClass([KKViewElement class]),
-              @"text":NSStringFromClass([KKTextElement class]),
-              @"span":NSStringFromClass([KKSpanElement class]),
-              @"img":NSStringFromClass([KKImgElement class]),
-              @"image":NSStringFromClass([KKImageElement class]),
-              @"scroll":NSStringFromClass([KKScrollViewElement class]),
-              @"pager":NSStringFromClass([KKPagerViewElement class]),
-              @"button":NSStringFromClass([KKControlViewElement class]),
-              @"loading":NSStringFromClass([KKLoadingViewElement class]),
-              @"switch":NSStringFromClass([KKSwitchViewElement class]),
-              };
+        v = [[NSMutableDictionary alloc] init];
     });
     return v;
 }

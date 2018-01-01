@@ -7,6 +7,7 @@
 //
 
 #import "KKScrollViewElement.h"
+#import "JSContext+KKView.h"
 
 enum KKScrollViewElementScrollType {
     KKScrollViewElementScrollTypeNone,KKScrollViewElementScrollTypeTop,KKScrollViewElementScrollTypeBottom
@@ -19,6 +20,11 @@ enum KKScrollViewElementScrollType {
 @end
 
 @implementation KKScrollViewElement
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"scroll"];
+}
 
 -(instancetype) init {
     if((self = [super init])) {

@@ -7,7 +7,7 @@
 //
 
 #import "KKTextElement.h"
-
+#import "JSContext+KKView.h"
 #import "UIFont+KKElement.h"
 #import "UIColor+KKElement.h"
 #import "KKViewContext.h"
@@ -29,6 +29,11 @@
 @end
 
 @implementation KKImgElement
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"img"];
+}
 
 -(instancetype) init {
     if((self = [super init])) {
@@ -123,6 +128,11 @@
 
 @implementation KKSpanElement
 
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"span"];
+}
+
 -(NSString *) text {
     return [self get:@"#text"];
 }
@@ -160,6 +170,11 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 @implementation KKTextElement
 
 @synthesize attributedString = _attributedString;
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"text"];
+}
 
 -(instancetype) init{
     if((self = [super init])) {

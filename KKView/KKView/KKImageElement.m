@@ -9,6 +9,7 @@
 #import "KKImageElement.h"
 #import <KKHttp/KKHttp.h>
 #import "KKViewContext.h"
+#import "JSContext+KKView.h"
 
 static CGSize KKImageElementLayout(KKViewElement * element);
 
@@ -30,6 +31,11 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 @synthesize image = _image;
 @synthesize defaultImage = _defaultImage;
 @synthesize failImage = _failImage;
+
++(void) initialize{
+    [super initialize];
+    [JSContext setDefaultElementClass:self name:@"image"];
+}
 
 -(instancetype) init{
     if((self = [super init])) {
