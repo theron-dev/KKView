@@ -17,7 +17,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"pager"];
+    [JSContext setDefaultElementClass:[KKPagerViewElement class] name:@"pager"];
 }
 
 -(void) setView:(UIView *)view{

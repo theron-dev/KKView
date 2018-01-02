@@ -25,7 +25,14 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"view"];
+    [JSContext setDefaultElementClass:[KKViewElement class] name:@"view"];
+}
+
+-(instancetype) init{
+    if((self = [super init])) {
+        _layout = KKViewElementLayoutRelative;
+    }
+    return self;
 }
 
 -(void) changedKey:(NSString *) key {

@@ -23,7 +23,7 @@ enum KKScrollViewElementScrollType {
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"scroll"];
+    [JSContext setDefaultElementClass:[KKScrollViewElement class] name:@"scroll"];
 }
 
 -(instancetype) init {

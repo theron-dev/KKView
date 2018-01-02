@@ -21,7 +21,7 @@
 
 +(void) initialize {
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"qr"];
+    [JSContext setDefaultElementClass:[KKQRElement class] name:@"qr"];
 }
 
 -(instancetype) init {

@@ -7,24 +7,9 @@
 //
 
 #import "JSContext+KKView.h"
-#import "KKPagerViewElement.h"
-#import "KKTextElement.h"
-#import "KKImageElement.h"
-#import "KKControlViewElement.h"
-#import "KKLoadingViewElement.h"
-#import "KKSwitchViewElement.h"
+
 
 @implementation JSContext (KKView)
-
-+(void) initialize {
-    [super initialize];
-    [KKPagerViewElement class];
-    [KKTextElement class];
-    [KKImageElement class];
-    [KKControlViewElement class];
-    [KKLoadingViewElement class];
-    [KKSwitchViewElement class];
-}
 
 +(void) setDefaultElementClass:(Class) elementClass name:(NSString *) name {
     [[self defaultElementClass] setObject:NSStringFromClass(elementClass) forKey:name];

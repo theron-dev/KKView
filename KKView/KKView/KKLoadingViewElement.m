@@ -13,7 +13,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"loading"];
+    [JSContext setDefaultElementClass:[KKLoadingViewElement class] name:@"loading"];
 }
 
 -(instancetype) init {

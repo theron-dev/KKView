@@ -13,7 +13,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"switch"];
+    [JSContext setDefaultElementClass:[KKSwitchViewElement class] name:@"switch"];
 }
 
 -(instancetype) init {

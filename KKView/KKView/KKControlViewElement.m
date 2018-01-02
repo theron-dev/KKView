@@ -13,7 +13,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"button"];
+    [JSContext setDefaultElementClass:[KKControlViewElement class] name:@"button"];
 }
 
 -(instancetype) init {

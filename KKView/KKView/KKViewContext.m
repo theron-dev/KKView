@@ -7,6 +7,15 @@
 //
 
 #import "KKViewContext.h"
+#import "KKPagerViewElement.h"
+#import "KKTextElement.h"
+#import "KKImageElement.h"
+#import "KKControlViewElement.h"
+#import "KKLoadingViewElement.h"
+#import "KKSwitchViewElement.h"
+#import "KKQRElement.h"
+#import "KKQRCaptureElement.h"
+#import "KKBodyElement.h"
 
 #include <pthread.h>
 
@@ -36,6 +45,19 @@ static NSMutableArray * KKViewContextQueue() {
 }
 
 @implementation KKViewContext
+
++(void) initialize {
+    [super initialize];
+    [KKPagerViewElement class];
+    [KKTextElement class];
+    [KKImageElement class];
+    [KKControlViewElement class];
+    [KKLoadingViewElement class];
+    [KKSwitchViewElement class];
+    [KKQRElement class];
+    [KKQRCaptureElement class];
+    [KKBodyElement class];
+}
 
 -(UIImage *) imageWithURI:(NSString * ) uri {
     

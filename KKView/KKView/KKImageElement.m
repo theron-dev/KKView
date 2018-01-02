@@ -34,7 +34,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:self name:@"image"];
+    [JSContext setDefaultElementClass:[KKImageElement class] name:@"image"];
 }
 
 -(instancetype) init{
