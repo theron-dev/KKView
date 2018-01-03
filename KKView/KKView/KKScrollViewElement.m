@@ -114,6 +114,15 @@ enum KKScrollViewElementScrollType {
     }
 }
 
+-(void) addSubview:(UIView *) view element:(KKViewElement *) element toView:(UIView *) toView {
+    NSString * v = [element get:@"floor"];
+    if([v isEqualToString:@"front"]) {
+        [toView addSubview:view];
+    } else {
+        [toView insertSubview:view atIndex:0];
+    }
+}
+
 -(void) addSubview:(UIView *) view toView:(UIView *) toView {
     [toView insertSubview:view atIndex:0];
 }

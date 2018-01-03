@@ -137,9 +137,9 @@
     }
     
     if([self.parent isKindOfClass:[KKViewElement class]]) {
-        [(KKViewElement *) self.parent addSubview:vv toView:v];
+        [(KKViewElement *) self.parent addSubview:vv element:self toView:v];
     } else {
-        [self addSubview:vv toView:v];
+        [v addSubview:vv];
     }
     
     [vv KKElementObtainView:self];
@@ -223,8 +223,13 @@
 
 }
 
--(void) addSubview:(UIView *) view toView:(UIView *) toView {
-    [toView addSubview:view];
+-(void) addSubview:(UIView *) view element:(KKViewElement *) element toView:(UIView *) toView {
+    NSString * v = [element get:@"floor"];
+    if([v isEqualToString:@"back"]) {
+        [toView insertSubview:view atIndex:0];
+    } else {
+        [toView addSubview:view];
+    }
 }
 
 -(void) didAddChildren:(KKElement *)element {

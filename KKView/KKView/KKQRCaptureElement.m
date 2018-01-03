@@ -54,7 +54,7 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 
 +(void) initialize {
     [super initialize];
-    [JSContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr"];
+    [JSContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
 }
 
 -(instancetype) init {
