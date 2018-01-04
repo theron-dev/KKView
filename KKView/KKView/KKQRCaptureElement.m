@@ -7,7 +7,7 @@
 //
 
 #import "KKQRCaptureElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -54,7 +54,7 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 
 +(void) initialize {
     [super initialize];
-    [JSContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
+    [KKViewContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
 }
 
 -(instancetype) init {

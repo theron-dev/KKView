@@ -7,7 +7,7 @@
 //
 
 #import "KKQRElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 @interface KKQRElement() {
     BOOL _displaying;
@@ -21,7 +21,7 @@
 
 +(void) initialize {
     [super initialize];
-    [JSContext setDefaultElementClass:[KKQRElement class] name:@"qr"];
+    [KKViewContext setDefaultElementClass:[KKQRElement class] name:@"qr"];
 }
 
 -(instancetype) init {

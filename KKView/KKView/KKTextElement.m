@@ -32,7 +32,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKImgElement class] name:@"img"];
+    [KKViewContext setDefaultElementClass:[KKImgElement class] name:@"img"];
 }
 
 -(instancetype) init {
@@ -130,7 +130,7 @@
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKSpanElement class] name:@"span"];
+    [KKViewContext setDefaultElementClass:[KKSpanElement class] name:@"span"];
 }
 
 -(NSString *) text {
@@ -173,7 +173,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKTextElement class] name:@"text"];
+    [KKViewContext setDefaultElementClass:[KKTextElement class] name:@"text"];
 }
 
 -(instancetype) init{

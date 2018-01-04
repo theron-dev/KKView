@@ -7,13 +7,13 @@
 //
 
 #import "KKControlViewElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 @implementation KKControlViewElement
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKControlViewElement class] name:@"button"];
+    [KKViewContext setDefaultElementClass:[KKControlViewElement class] name:@"button"];
 }
 
 -(instancetype) init {

@@ -7,13 +7,13 @@
 //
 
 #import "KKSwitchViewElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 @implementation KKSwitchViewElement
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKSwitchViewElement class] name:@"switch"];
+    [KKViewContext setDefaultElementClass:[KKSwitchViewElement class] name:@"switch"];
 }
 
 -(instancetype) init {

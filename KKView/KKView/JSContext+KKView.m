@@ -7,25 +7,13 @@
 //
 
 #import "JSContext+KKView.h"
-
+#include "KKViewContext.h"
 
 @implementation JSContext (KKView)
 
-+(void) setDefaultElementClass:(Class) elementClass name:(NSString *) name {
-    [[self defaultElementClass] setObject:NSStringFromClass(elementClass) forKey:name];
-}
-
-+(NSMutableDictionary *) defaultElementClass {
-    static NSMutableDictionary * v = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        v = [[NSMutableDictionary alloc] init];
-    });
-    return v;
-}
 
 -(void) KKViewOpenlib {
-    [self KKViewOpenlib:[[self class] defaultElementClass]];
+    [self KKViewOpenlib:[KKViewContext defaultElementClass]];
 }
 
 -(void) KKViewOpenlib:(NSDictionary *) elementClass {

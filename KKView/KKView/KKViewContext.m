@@ -122,4 +122,18 @@ static NSMutableArray * KKViewContextQueue() {
     [KKViewContextQueue() removeLastObject];
 }
 
++(void) setDefaultElementClass:(Class) elementClass name:(NSString *) name {
+    [[self defaultElementClass] setObject:NSStringFromClass(elementClass) forKey:name];
+}
+
++(NSMutableDictionary *) defaultElementClass {
+    static NSMutableDictionary * v = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        v = [[NSMutableDictionary alloc] init];
+    });
+    return v;
+}
+
+
 @end

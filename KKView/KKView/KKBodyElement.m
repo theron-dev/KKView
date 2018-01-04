@@ -7,13 +7,13 @@
 //
 
 #import "KKBodyElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 @implementation KKBodyElement
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKBodyElement class] name:@"body"];
+    [KKViewContext setDefaultElementClass:[KKBodyElement class] name:@"body"];
 }
 
 -(void) dealloc {

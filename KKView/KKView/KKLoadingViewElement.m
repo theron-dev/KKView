@@ -7,13 +7,13 @@
 //
 
 #import "KKLoadingViewElement.h"
-#import "JSContext+KKView.h"
+#import "KKViewContext.h"
 
 @implementation KKLoadingViewElement
 
 +(void) initialize{
     [super initialize];
-    [JSContext setDefaultElementClass:[KKLoadingViewElement class] name:@"loading"];
+    [KKViewContext setDefaultElementClass:[KKLoadingViewElement class] name:@"loading"];
 }
 
 -(instancetype) init {
