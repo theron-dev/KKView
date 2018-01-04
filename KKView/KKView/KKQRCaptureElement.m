@@ -13,31 +13,12 @@
 
 typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 
-@interface KKQRCaptureView: UIView {
+@interface KKQRCaptureView: UIView <AVCaptureMetadataOutputObjectsDelegate> {
     
 }
 
-@property(nonatomic,strong) KKQRCaptureViewOnVisible onVisible;
-
-@end
-
-@implementation KKQRCaptureView
-
-@synthesize onVisible = _onVisible;
-
--(void) didMoveToWindow {
-    [super didMoveToWindow];
-    if(_onVisible) {
-        _onVisible(self.window != nil);
-    }
-}
-
-@end
-
-@interface KKQRCaptureElement () <AVCaptureMetadataOutputObjectsDelegate>  {
-    
-}
-
+@property(nonatomic,weak) id<AVCaptureMetadataOutputObjectsDelegate> delegate;
+@property(nonatomic,assign,getter=isCapture) BOOL capture;
 @property(nonatomic,strong) AVCaptureVideoPreviewLayer * previewLayer;
 @property(nonatomic,strong) AVCaptureSession * session;
 
@@ -47,26 +28,61 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 
 @end
 
-@implementation KKQRCaptureElement
+@implementation KKQRCaptureView
 
+@synthesize delegate = _delegate;
+@synthesize capture = _capture;
 @synthesize previewLayer = _previewLayer;
 @synthesize session = _session;
 
-+(void) initialize {
-    [super initialize];
-    [KKViewContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
+-(void) didMoveToWindow {
+    [super didMoveToWindow];
+    if(self.window) {
+        if(_capture) {
+            [self startCapture];
+        }
+    } else {
+        [self stopCapture];
+    }
 }
 
--(instancetype) init {
-    if((self = [super init])) {
-        [self set:@"view" value:NSStringFromClass([KKQRCaptureView class])];
-    }
-    return self;
-}
 
 -(void) dealloc {
     [_session stopRunning];
     [_previewLayer removeFromSuperlayer];
+}
+
+-(void) KKViewElement:(KKViewElement *)element setProperty:(NSString *)key value:(NSString *)value{
+    [super KKViewElement:element setProperty:key value:value];
+    
+    if([key isEqualToString:@"capture"]) {
+        self.capture = KKBooleanValue(value);
+    }
+}
+
+-(void) setCapture:(BOOL)capture {
+    _capture = capture;
+    if(_capture && self.window) {
+        [self startCapture];
+    } else {
+        [self stopCapture];
+    }
+}
+
+-(void) startCapture {
+    
+    AVCaptureVideoPreviewLayer * layer = [self previewLayer];
+    
+    if(layer) {
+        layer.frame = self.bounds;
+        [self.layer insertSublayer:layer atIndex:0];
+    }
+    
+    [self.session startRunning];
+}
+
+-(void) stopCapture {
+    [_session stopRunning];
 }
 
 -(AVCaptureSession *) session {
@@ -99,7 +115,6 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
         [_session addOutput:output];
         [_session setSessionPreset:AVCaptureSessionPresetHigh];
         output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode , AVMetadataObjectTypeEAN8Code ,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeCode128Code];
-        
     }
     
     return _session;
@@ -113,46 +128,55 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
     return _previewLayer;
 }
 
--(void) setView:(UIView *)view {
-    [_previewLayer removeFromSuperlayer];
-    [(KKQRCaptureView *) self.view setOnVisible:nil];
-    [super setView:view];
-    __weak KKQRCaptureElement * v = self;
-    [(KKQRCaptureView *) self.view setOnVisible:^(BOOL visible) {
-        if(visible && KKBooleanValue([v get:@"capture"])) {
-            [v startCapture];
-        } else {
-            [v stopCapture];
-        }
-    }];
+
+- (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
+    
+    [_delegate captureOutput:output didOutputMetadataObjects:metadataObjects fromConnection:connection];
+    
 }
 
--(void) startCapture {
-    
-    AVCaptureVideoPreviewLayer * layer = [self previewLayer];
-    
-    if(layer) {
-        layer.frame = self.view.bounds;
-        [self.view.layer addSublayer:layer];
-    }
-    
-    [self.session startRunning];
-}
 
--(void) stopCapture {
+-(void) recycle {
     [_session stopRunning];
+    [_previewLayer removeFromSuperlayer];
+    _session = nil;
+    _previewLayer = nil;
 }
 
--(void) changedKey:(NSString *)key {
-    [super changedKey:key];
-    if([key isEqualToString:@"capture"]) {
-        if(self.view.window != nil && KKBooleanValue([self get:@"capture"])) {
-            [self startCapture];
-        } else {
-            [self stopCapture];
-        }
-    }
+@end
+
+@interface KKQRCaptureElement () <AVCaptureMetadataOutputObjectsDelegate> {
+    
 }
+
+@end
+
+@implementation KKQRCaptureElement
+
++(void) initialize {
+    [super initialize];
+    [KKViewContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
+}
+
+-(void) dealloc {
+    NSLog(@"KKQRCaptureElement dealloc");
+}
+
+-(instancetype) init {
+    if((self = [super init])) {
+        [self set:@"view" value:NSStringFromClass([KKQRCaptureView class])];
+    }
+    return self;
+}
+
+-(void) setView:(UIView *)view {
+    [(KKQRCaptureView *) self.view setDelegate:nil];
+    [(KKQRCaptureView *) self.view recycle];
+    [super setView:view];
+    [(KKQRCaptureView *) self.view setDelegate:self];
+}
+
+
 - (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
     
     if (metadataObjects.count > 0) {

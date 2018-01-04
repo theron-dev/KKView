@@ -18,39 +18,36 @@
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self setAttrs:@{@"view":NSStringFromClass([UIActivityIndicatorView class])}];
+        [self setAttrs:@{@"view":NSStringFromClass([UIActivityIndicatorView class]),@"hidden":@"false"}];
     }
     return self;
 }
 
--(void) changedKey:(NSString *)key{
-    [super changedKey:key];
+@end
+
+@implementation UIActivityIndicatorView(KKElement)
+
+-(void) KKViewElement:(KKViewElement *)element setProperty:(NSString *)key value:(NSString *)v {
+    [super KKViewElement:element setProperty:key value:v];
     
     if([key isEqualToString:@"type"]) {
         
-        NSString * v = [self get:key];
-        
-        UIActivityIndicatorView * loadingView = (UIActivityIndicatorView *) self.view;
-        
         if([v isEqualToString:@"large"]) {
-            loadingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+            self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
         } else if([v isEqualToString:@"gray"]) {
-            loadingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+            self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         } else {
-            loadingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+            self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
         }
     } else if([key isEqualToString:@"hidden"]) {
-        NSString * v = [self get:key];
-        UIActivityIndicatorView * loadingView = (UIActivityIndicatorView *) self.view;
         if(KKBooleanValue(v)) {
-            [loadingView stopAnimating];
-            [loadingView setHidden:YES];
+            [self stopAnimating];
+            [self setHidden:YES];
         } else {
-            [loadingView setHidden:NO];
-            [loadingView startAnimating];
+            [self setHidden:NO];
+            [self startAnimating];
         }
     }
     
 }
-
 @end
