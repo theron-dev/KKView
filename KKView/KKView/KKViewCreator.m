@@ -53,7 +53,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                         [element set:@"#text" value:KKStringValue(value)];
                     }
                     
-                } evaluateScript:v context:nil];
+                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
                 
             } else if([key isEqualToString:@"kk:show"]) {
                 
@@ -73,7 +73,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                         [element set:@"hidden" value:KKBooleanValue(value)?@"true":@"false"];
                     }
                     
-                } evaluateScript:v context:nil];
+                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
             } else if([key hasPrefix:@"kk:on"]) {
                 
                 KKViewOnEvent(data,e,[key substringFromIndex:5],[v componentsSeparatedByString:@"."]);
@@ -85,7 +85,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                         [element set:[key substringFromIndex:3] value:KKStringValue(value)];
                     }
                     
-                } evaluateScript:v context:nil];
+                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
             }
         } else if([key hasPrefix:@"style:"]) {
             [element setCSSStyle:v forStatus:[key substringFromIndex:6]];
@@ -189,7 +189,7 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
         }
     };
     
-    [data on:reloadData evaluateScript:evaluateScript context:nil];
+    [data on:reloadData evaluateScript:evaluateScript priority:KKOBSERVER_PRIORITY_DESC context:nil];
     
 }
 

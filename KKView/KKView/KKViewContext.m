@@ -50,6 +50,8 @@ static NSMutableArray * KKViewContextQueue() {
     [super initialize];
     [KKPagerViewElement class];
     [KKTextElement class];
+    [KKSpanElement class];
+    [KKImgElement class];
     [KKImageElement class];
     [KKControlViewElement class];
     [KKLoadingViewElement class];

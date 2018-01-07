@@ -410,6 +410,8 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         } else {
             self.textAlignment = NSTextAlignmentLeft;
         }
+    } else if([key isEqualToString:@"#text"]) {
+        [(KKTextElement *) element setNeedsDisplay];
     }
 }
 
