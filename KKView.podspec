@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "KKView"
-  s.version      = "1.0.5"
+  s.version      = "1.0.6"
   s.summary      = "XML/JS 原生渲染"
   s.description  = "XML/JS 原生渲染, 支持双向数据绑定"
 
