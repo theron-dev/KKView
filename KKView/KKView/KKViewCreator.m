@@ -63,7 +63,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                         [element set:@"hidden" value:KKBooleanValue(value)?@"false":@"true"];
                     }
                     
-                } evaluateScript:v context:nil];
+                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
                 
             } else if([key isEqualToString:@"kk:hide"]) {
                 
