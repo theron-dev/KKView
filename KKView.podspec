@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "KKView"
-  s.version      = "1.0.6"
+  s.version      = "1.0.7"
   s.summary      = "XML/JS 原生渲染"
   s.description  = "XML/JS 原生渲染, 支持双向数据绑定"
 
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   s.vendored_frameworks = 'KKView.framework'
   s.requires_arc = true
-  s.dependency 'KKObserver', '~> 1.0.5' 
+  s.dependency 'KKObserver', '~> 1.0.6' 
   s.dependency 'KKHttp', '~> 1.0.2' 
 
 end
