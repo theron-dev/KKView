@@ -20,6 +20,9 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     id<KKHttpTask> _defaultTask;
     id<KKHttpTask> _failTask;
     KKViewContext * _context;
+    BOOL _hasLocalImage;
+    BOOL _hasLocalDefaultImage;
+    BOOL _hasLocalFailImage;
 }
 
 -(void) setNeedsDisplay;
@@ -86,18 +89,26 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(UIImage *) image {
     
-    if(_image == nil && _imageTask == nil && _error == nil) {
+    if(_image == nil && _imageTask == nil && _error == nil && !_hasLocalImage) {
         NSString * v = [self src];
         if([v length]) {
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
                 
+                __weak KKImageElement * e = self;
+                
+                KKHttpImageCallback cb = ^(UIImage * image) {
+                    if([[e src] isEqualToString:v]) {
+                        e.image = image;
+                    }
+                };
+                
                 if(_context == nil) {
-                    _image = [KKHttp imageWithURL:v];
+                    _hasLocalImage = [KKHttp imageWithURL:v callback:cb];
                 } else {
-                    _image = [_context imageWithURI:v];
+                    _hasLocalImage = [_context imageWithURI:v callback:cb];
                 }
                 
-                if(_image == nil) {
+                if(!_hasLocalImage) {
                     
                     KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
                     options.type = KKHttpOptionsTypeImage;
@@ -158,6 +169,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(void) setImage:(UIImage *)image {
     _image = image;
+    _hasLocalImage = NO;
     _error = nil;
     if(_imageTask) {
         [_imageTask cancel];
@@ -168,18 +180,26 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(UIImage *) defaultImage {
     
-    if(_defaultImage == nil && _defaultTask == nil) {
+    if(_defaultImage == nil && _defaultTask == nil && !_hasLocalDefaultImage) {
         NSString * v = [self defaultSrc];
         if([v length]) {
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
                 
+                __weak KKImageElement * e = self;
+                
+                KKHttpImageCallback cb = ^(UIImage * image) {
+                    if([[e defaultSrc] isEqualToString:v]) {
+                        e.defaultImage = image;
+                    }
+                };
+                
                 if(_context == nil) {
-                    _defaultImage = [KKHttp imageWithURL:v];
+                    _hasLocalDefaultImage = [KKHttp imageWithURL:v callback:cb];
                 } else {
-                    _defaultImage = [_context imageWithURI:v];
+                    _hasLocalDefaultImage = [_context imageWithURI:v callback:cb];
                 }
                 
-                if(_defaultImage == nil) {
+                if(!_hasLocalDefaultImage) {
                     KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
                     options.type = KKHttpOptionsTypeImage;
                     options.method = KKHttpOptionsGET;
@@ -213,6 +233,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(void) setDefaultImage:(UIImage *)defaultImage {
     _defaultImage = defaultImage;
+    _hasLocalDefaultImage = NO;
     if(_defaultTask) {
         [_defaultTask cancel];
         _defaultTask = nil;
@@ -222,19 +243,27 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(UIImage *) failImage {
     
-    if(_failImage == nil && _failTask == nil) {
+    if(_failImage == nil && _failTask == nil && !_hasLocalFailImage) {
         NSString * v = [self failSrc];
         if([v length]) {
             
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
                 
+                __weak KKImageElement * e = self;
+                
+                KKHttpImageCallback cb = ^(UIImage * image) {
+                    if([[e failSrc] isEqualToString:v]) {
+                        e.failImage = image;
+                    }
+                };
+                
                 if(_context == nil) {
-                    _failImage = [KKHttp imageWithURL:v];
+                    _hasLocalFailImage = [KKHttp imageWithURL:v callback:cb];
                 } else {
-                    _failImage = [_context imageWithURI:v];
+                    _hasLocalFailImage = [_context imageWithURI:v callback:cb];
                 }
                 
-                if(_failImage == nil) {
+                if(!_hasLocalFailImage) {
                     
                     KKHttpOptions * options = [[KKHttpOptions alloc] initWithURL:v];
                     options.type = KKHttpOptionsTypeImage;
@@ -268,6 +297,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 
 -(void) setFailImage:(UIImage *)failImage {
     _failImage = failImage;
+    _hasLocalFailImage = NO;
     if(_failTask) {
         [_failTask cancel];
         _failTask = nil;

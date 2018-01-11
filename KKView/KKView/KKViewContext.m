@@ -84,6 +84,53 @@ static NSMutableArray * KKViewContextQueue() {
         return [UIImage imageNamed:[_basePath stringByAppendingPathComponent:uri]];
     }
 }
+    
+-(BOOL) imageWithURI:(NSString * ) uri callback:(KKHttpImageCallback) callback {
+    
+    if([(id)_delegate respondsToSelector:@selector(KKViewContext:imageWithURI:callback:)]) {
+        if([_delegate KKViewContext:self imageWithURI:uri callback:callback]) {
+            return YES;
+        }
+    }
+    
+    if(uri == nil || [uri isEqualToString:@""]) {
+        return NO;
+    }
+    
+    NSString * path = nil;
+    
+    if([uri hasPrefix:@"http://"] || [uri hasPrefix:@"https://"]) {
+        return [KKHttp imageWithURL:uri callback:callback];
+    } else if([uri hasPrefix:@"/"]) {
+        path = uri;
+    } else if([uri hasPrefix:@"@"]) {
+        if(callback) {
+            dispatch_async(KKHttpIODispatchQueue(), ^{
+                UIImage * image = [UIImage imageNamed:[uri substringFromIndex:1]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(image);
+                });
+            });
+        }
+        return YES;
+    } else {
+        path = [_basePath stringByAppendingPathComponent:uri];
+    }
+    
+    if(path && [[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        if(callback) {
+            dispatch_async(KKHttpIODispatchQueue(), ^{
+                UIImage * image = [UIImage imageNamed:path];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(image);
+                });
+            });
+        }
+        return YES;
+    }
+    
+    return NO;
+}
 
 -(id<KKHttpTask>) send:(KKHttpOptions *) options weakObject:(id) weakObject  {
     
