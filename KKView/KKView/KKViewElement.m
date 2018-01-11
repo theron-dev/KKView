@@ -472,6 +472,7 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
             KKViewElement * e = (KKViewElement *) p;
             
             if([e isHidden]) {
+                p = p.nextSibling;
                 continue;
             }
             
