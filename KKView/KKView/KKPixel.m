@@ -56,6 +56,29 @@ struct KKEdge KKEdgeFromString(NSString * value) {
     return v;
 }
 
+NSString * NSStringFromKKPixel(struct KKPixel v) {
+    switch (v.type) {
+        case KKPixelTypeAuto:
+            return @"auto";
+            break;
+        case KKPixelTypePercent:
+            return [NSString stringWithFormat:@"%g%%",v.value];
+        case KKPixelTypeRPX:
+            return [NSString stringWithFormat:@"%grpx",v.value];
+        default:
+            break;
+    }
+    return [NSString stringWithFormat:@"%gpx",v.value];
+}
+
+NSString * NSStringFromKKEdge(struct KKEdge v) {
+    return [NSString stringWithFormat:@"%@ %@ %@ %@",
+            NSStringFromKKPixel(v.top),
+            NSStringFromKKPixel(v.right),
+            NSStringFromKKPixel(v.bottom),
+            NSStringFromKKPixel(v.left)];
+}
+
 CGFloat KKPixelUnitPX() {
     return 1;
 }

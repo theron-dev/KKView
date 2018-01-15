@@ -12,6 +12,7 @@
 #import "UIFont+KKElement.h"
 #import "KKPixel.h"
 #import "KKViewContext.h"
+#import "UIView+BackgroundImage.h"
 
 #include <objc/runtime.h>
 
@@ -23,6 +24,8 @@
 
 @implementation KKViewElement
 
+@synthesize viewContext = _viewContext;
+
 +(void) initialize{
     [super initialize];
     [KKViewContext setDefaultElementClass:[KKViewElement class] name:@"view"];
@@ -31,6 +34,7 @@
 -(instancetype) init{
     if((self = [super init])) {
         _layout = KKViewElementLayoutRelative;
+        _viewContext = [KKViewContext currentContext];
     }
     return self;
 }
@@ -691,6 +695,34 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
         self.tintColor = [UIColor KKElementStringValue:value];
     } else if([key isEqualToString:@"enabled"]) {
         self.userInteractionEnabled = KKBooleanValue(value);
+    } else if([key isEqualToString:@"background-image"]) {
+        if(value) {
+            
+            NSArray * vs = [value componentsSeparatedByString:@" "];
+            
+            UIImage * image = nil;
+            
+            if(element.viewContext == nil) {
+                image = [UIImage imageNamed:vs[0]];
+            } else {
+                image = [element.viewContext imageWithURI:vs[0]];
+            }
+            
+            if([vs count] == 3 && image) {
+                
+                CGSize size = image.size;
+                CGFloat left = [vs[1] doubleValue];
+                CGFloat top = [vs[2] doubleValue];
+         
+                image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, size.height - top -1, size.width - left - 1)];
+                
+            }
+            
+            self.kk_backgroundImage = image;
+            
+        } else {
+            self.layer.contents = nil;
+        }
     }
 }
 

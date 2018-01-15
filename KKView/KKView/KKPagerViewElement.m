@@ -8,8 +8,12 @@
 
 #import "KKPagerViewElement.h"
 #import "KKViewContext.h"
+#import "NSTimer+KKView.h"
 
-@interface KKPagerViewElement() <UIScrollViewDelegate>
+@interface KKPagerViewElement() <UIScrollViewDelegate> {
+    NSTimer * _timer;
+    BOOL _animating;
+}
 
 @end
 
@@ -20,13 +24,54 @@
     [KKViewContext setDefaultElementClass:[KKPagerViewElement class] name:@"pager"];
 }
 
+-(void) dealloc {
+    [_timer invalidate];
+}
+
 -(void) setView:(UIView *)view{
+    [_timer invalidate];
+    _timer = nil;
     [super setView:view];
-    UIScrollView * v = (UIScrollView *) view;
-    [v setPagingEnabled:YES];
-    [v setShowsVerticalScrollIndicator:NO];
-    [v setShowsHorizontalScrollIndicator:NO];
-    [self pageIndexChanged:YES];
+    
+    if(view) {
+        
+        UIScrollView * v = (UIScrollView *) view;
+        [v setPagingEnabled:YES];
+        [v setShowsVerticalScrollIndicator:NO];
+        [v setShowsHorizontalScrollIndicator:NO];
+        [self pageIndexChanged:YES];
+        
+        {
+            NSTimeInterval v = [[self get:@"interval"] doubleValue];
+            
+            if(v > 0) {
+                _timer = [NSTimer kk_timerWithTimeInterval: (v / 1000.0) func:^(id weakObject) {
+                    [weakObject doLoopAction];
+                } weakObject:self repeats:YES];
+            }
+            
+        }
+    }
+}
+
+-(void) doLoopAction {
+    
+    if(_animating) {
+        return;
+    }
+    
+    UIScrollView * v = (UIScrollView *) self.view;
+    CGSize size = self.frame.size;
+    
+    NSInteger pageIndex = v.contentOffset.x / size.width;
+    NSInteger pageCount = v.contentSize.width / size.width;
+    
+    if(pageCount > 2 && pageIndex > 0 && pageIndex < pageCount -1) {
+ 
+        pageIndex = (pageIndex) % (pageCount - 1) + 1;
+        
+        [v setContentOffset:CGPointMake(pageIndex * size.width, 0) animated:YES];
+    }
 }
 
 -(void) pageIndexChanged:(BOOL) inited {
@@ -59,6 +104,15 @@
     
     [self emit:@"pagechange" event:e];
     
+    _animating = NO;
+}
+
+-(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    _animating = YES;
+}
+
+-(void) scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    _animating = YES;
 }
 
 -(void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {

@@ -40,3 +40,6 @@ extern BOOL KKBooleanValue(id value);
 
 extern enum KKVerticalAlign KKVerticalAlignFromString(NSString * value);
 
+NSString * NSStringFromKKPixel(struct KKPixel v);
+
+NSString * NSStringFromKKEdge(struct KKEdge v);

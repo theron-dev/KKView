@@ -49,6 +49,9 @@ enum KKScrollViewElementScrollType {
     [super setView:view];
     [self.view addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
     [(UIScrollView *) self.view setDelegate:self];
+    if (@available(iOS 11.0, *)) {
+        ((UIScrollView *) self.view).contentInsetAdjustmentBehavior = UIApplicationBackgroundFetchIntervalNever;
+    }
 }
 
 -(void) dealloc {
