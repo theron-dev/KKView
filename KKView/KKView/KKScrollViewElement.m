@@ -8,9 +8,12 @@
 
 #import "KKScrollViewElement.h"
 #import "KKViewContext.h"
+#include <objc/runtime.h>
 
 enum KKScrollViewElementScrollType {
-    KKScrollViewElementScrollTypeNone,KKScrollViewElementScrollTypeTop,KKScrollViewElementScrollTypeBottom
+    KKScrollViewElementScrollTypeNone,
+    KKScrollViewElementScrollTypeTop,
+    KKScrollViewElementScrollTypeBottom
 } ;
 
 @interface KKScrollViewElement() <UIScrollViewDelegate> {
@@ -75,7 +78,7 @@ enum KKScrollViewElementScrollType {
                     
                     e.data = [self data];
                     
-                    [self emit:@"taptop" event:e];
+                    [self emit:@"taptoping" event:e];
                     
                     _scrollType = KKScrollViewElementScrollTypeTop;
                 }
@@ -92,7 +95,7 @@ enum KKScrollViewElementScrollType {
                     
                     e.data = [self data];
                     
-                    [self emit:@"tapbottom" event:e];
+                    [self emit:@"tapbottoming" event:e];
                     
                     _scrollType = KKScrollViewElementScrollTypeBottom;
                 }
@@ -103,18 +106,29 @@ enum KKScrollViewElementScrollType {
     }
 }
 
--(void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+-(void) scrollViewDidEndScrolling {
+    if(_scrollType == KKScrollViewElementScrollTypeTop) {
+        KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+        e.data = [self data];
+        [self emit:@"taptop" event:e];
+    } else if(_scrollType == KKScrollViewElementScrollTypeBottom) {
+        KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+        e.data = [self data];
+        [self emit:@"tapbottom" event:e];
+    }
     _scrollType = KKScrollViewElementScrollTypeNone;
+}
+
+-(void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [self scrollViewDidEndScrolling];
 }
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    _scrollType = KKScrollViewElementScrollTypeNone;
+    
 }
 
 -(void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if(!decelerate) {
-        _scrollType = KKScrollViewElementScrollTypeNone;
-    }
+    [self scrollViewDidEndScrolling];
 }
 
 -(void) addSubview:(UIView *) view element:(KKViewElement *) element toView:(UIView *) toView {
@@ -128,6 +142,47 @@ enum KKScrollViewElementScrollType {
 
 -(void) addSubview:(UIView *) view toView:(UIView *) toView {
     [toView insertSubview:view atIndex:0];
+}
+
+-(BOOL) isChildrenVisible:(KKViewElement *) element {
+    
+    switch (element.position) {
+        case KKPositionTop:
+        {
+            CGPoint p = self.contentOffset;
+            struct KKEdge margin = element.margin;
+            CGFloat mtop = KKPixelValue(margin.top, 0, 0);
+            CGRect frame = element.frame;
+            frame.origin.y = p.x + mtop;
+            element.frame = frame;
+        }
+            break;
+        case KKPositionBottom:
+        {
+            CGPoint p = self.contentOffset;
+            CGRect frame = element.frame;
+            struct KKEdge margin = element.margin;
+            
+            CGFloat mtop = KKPixelValue(margin.top, 0, 0);
+            CGFloat mbottom = KKPixelValue(margin.bottom, 0, 0);
+            
+            struct KKEdge padding = self.padding;
+            CGFloat pbottom = KKPixelValue(padding.bottom, 0, 0);
+            
+            if(frame.origin.y + frame.size.height + mtop + mbottom - p.y < self.frame.size.height - pbottom) {
+                CGFloat y = p.y + self.frame.size.height - pbottom - frame.size.height - mbottom;
+                element.translate = CGPointMake(0, y-frame.origin.y);
+            } else {
+                element.translate = CGPointZero;
+            }
+            
+        }
+            break;
+        default:
+            break;
+    }
+    
+    return [super isChildrenVisible:element];
 }
 
 @end

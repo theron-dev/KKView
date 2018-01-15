@@ -118,7 +118,11 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
         }
     }
     
-    __weak KKElement * parent = p;
+    KKElement * before = [[KKElement alloc] init];
+    
+    [p append:before];
+    
+    __weak KKElement * be = before;
     __block NSMutableArray * elements = [NSMutableArray arrayWithCapacity:4];
     __block NSMutableArray * observers = [NSMutableArray arrayWithCapacity:4];
     
@@ -144,7 +148,7 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
                 if(children){
                     children(e,obs);
                 }
-                [parent append:e];
+                [be before:e];
                 [elements addObject:e];
                 [observers addObject:obs];
                 [obs setParent:data];

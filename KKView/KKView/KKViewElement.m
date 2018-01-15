@@ -80,6 +80,8 @@
         }
     } else if([key isEqualToString:@"vertical-align"]) {
         _verticalAlign = KKVerticalAlignFromString(value);
+    } else if([key isEqualToString:@"position"]) {
+        _position = KKPositionFromString(value);
     }
     [_view KKViewElement:self setProperty:key value:value];
 }
@@ -727,7 +729,10 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
 }
 
 -(void) KKViewElementDidLayouted:(KKViewElement *) element {
-    self.frame = element.frame;
+    CGRect r = element.frame;
+    r.origin.x += element.translate.x;
+    r.origin.y += element.translate.y;
+    self.frame = r;
 }
 
 -(void) KKElementRecycleView:(KKViewElement *) element {

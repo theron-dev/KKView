@@ -8,6 +8,27 @@
 
 #import "KKPixel.h"
 
+enum KKPosition KKPositionFromString(NSString * value) {
+    
+    if([value isEqualToString:@"top"]) {
+        return KKPositionTop;
+    }
+    
+    if([value isEqualToString:@"bottom"]) {
+        return KKPositionBottom;
+    }
+    
+    if([value isEqualToString:@"left"]) {
+        return KKPositionTop;
+    }
+    
+    if([value isEqualToString:@"right"]) {
+        return KKPositionBottom;
+    }
+    
+    return KKPositionNone;
+}
+
 struct KKPixel KKPixelFromString(NSString * value) {
     struct KKPixel v = {0,KKPixelTypeAuto};
     if([value isEqualToString:@"auto"]) {

@@ -25,6 +25,12 @@ enum KKVerticalAlign {
     KKVerticalAlignTop,KKVerticalAlignMiddle,KKVerticalAlignBottom
 };
 
+enum KKPosition {
+    KKPositionNone,KKPositionTop,KKPositionBottom,KKPositionLeft,KKPositionRight
+};
+
+extern enum KKPosition KKPositionFromString(NSString * value);
+
 extern struct KKPixel KKPixelFromString(NSString * value);
 
 extern struct KKEdge KKEdgeFromString(NSString * value);
