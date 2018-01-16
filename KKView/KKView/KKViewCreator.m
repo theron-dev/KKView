@@ -78,6 +78,18 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
                 KKViewOnEvent(data,e,[key substringFromIndex:5],[v componentsSeparatedByString:@"."]);
                 
+            } else if([key hasPrefix:@"kk:emit_"]) {
+                
+                [data on:^(id value, NSArray *changedKeys, void *context) {
+                    
+                    if(value != nil && element) {
+                        KKElementEvent * ev = [[KKElementEvent alloc] initWithElement:element];
+                        ev.data = value;
+                        [element emit:[key substringFromIndex:8] event:ev];
+                    }
+                    
+                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
+                
             } else {
                 [data on:^(id value, NSArray *changedKeys, void *context) {
                     

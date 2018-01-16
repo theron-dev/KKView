@@ -44,7 +44,7 @@ enum KKScrollViewElementScrollType {
     } else if([@"tapbottom" isEqualToString:key]) {
         _tapbottom = KKPixelFromString([self get:key]);
     }
-    
+
 }
 -(void) setView:(UIView *)view {
     [self.view removeObserver:self forKeyPath:@"contentOffset"];
@@ -185,4 +185,19 @@ enum KKScrollViewElementScrollType {
     return [super isChildrenVisible:element];
 }
 
+-(void) emit:(NSString *)name event:(KKEvent *)event {
+    
+    if([event isKindOfClass:[KKElementEvent class]]) {
+        
+        if([name isEqualToString:@"scrolltop"]) {
+            
+            [(KKElementEvent *) event setCancelBubble:YES];
+            
+            [(UIScrollView *) self.view setContentOffset:CGPointZero animated:NO];
+        }
+        
+    }
+    
+    [super emit:name event:event];
+}
 @end
