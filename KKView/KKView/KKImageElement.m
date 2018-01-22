@@ -87,6 +87,11 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     }
 }
 
+-(void) obtainView:(UIView *)view{
+    [super obtainView:view];
+    [self setNeedsDisplay];
+}
+
 -(UIImage *) image {
     
     if(_image == nil && _imageTask == nil && _error == nil && !_hasLocalImage) {

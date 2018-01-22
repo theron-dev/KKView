@@ -315,6 +315,11 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     }
 }
 
+-(void) obtainView:(UIView *)view {
+    [super obtainView:view];
+    [self setNeedsDisplay];
+}
+
 @end
 
 CGSize KKTextElementLayout(KKViewElement * element) {

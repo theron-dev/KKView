@@ -154,7 +154,10 @@
     
     [self setView:vv];
     
-    [self changedKeys:[self keys]];
+    for(NSString * key in self.keys) {
+        NSString * v = [self get:key];
+        [vv KKViewElement:self setProperty:key value:v];
+    }
 
     [self obtainChildrenView];
 }
@@ -190,13 +193,10 @@
         
         [vv KKElementRecycleView:self];
         
-        [vv removeFromSuperview];
-        
-        [vv KKElementRecycleView:self];
-        
         [self setView:nil];
         
         KKElement * p = self.firstChild;
+        
         while(p) {
             if([p isKindOfClass:[KKViewElement class]]) {
                 [(KKViewElement *) p recycleView];
@@ -219,7 +219,9 @@
                 if([self isChildrenVisible:e]) {
                     [e obtainView:_view];
                 } else {
+                    UIView * v = [e view];
                     [e recycleView];
+                    [v removeFromSuperview];
                 }
             }
             p = p.nextSibling;
@@ -246,7 +248,9 @@
     [super willRemoveChildren:element];
     
     if([element isKindOfClass:[KKViewElement class]]) {
+        UIView * v = [(KKViewElement *) element view];
         [(KKViewElement *) element recycleView];
+        [v removeFromSuperview];
     }
     
 }
@@ -292,15 +296,6 @@
     [self obtainChildrenView];
 }
 
--(void) changedKeys:(NSSet *)keys {
-    [super changedKeys:keys];
-    if(_view) {
-        for(NSString * key in keys) {
-            [_view KKViewElement:self setProperty:key value:[self get:key]];
-        }
-    }
-}
-
 @end
 
 /**
@@ -326,10 +321,10 @@ CGSize KKViewElementLayoutRelative(KKViewElement * element) {
             
             KKViewElement * e = (KKViewElement *) p;
             
-            CGFloat mleft = KKPixelValue(e.margin.left, inSize.width, 0);
-            CGFloat mright = KKPixelValue(e.margin.right, inSize.width, 0);
-            CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
-            CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
+            CGFloat mleft = KKPixelValue(e.margin.left, size.width, 0);
+            CGFloat mright = KKPixelValue(e.margin.right, size.width, 0);
+            CGFloat mtop = KKPixelValue(e.margin.top, size.height, 0);
+            CGFloat mbottom = KKPixelValue(e.margin.bottom, size.height, 0);
             
             CGFloat width = KKPixelValue(e.width, inSize.width - mleft - mright, MAXFLOAT);
             CGFloat height = KKPixelValue(e.height, inSize.height - mtop - mbottom, MAXFLOAT);
@@ -723,7 +718,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             self.kk_backgroundImage = image;
             
         } else {
-            self.layer.contents = nil;
+            self.kk_backgroundImage = nil;
         }
     }
 }
