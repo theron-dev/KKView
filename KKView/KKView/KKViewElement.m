@@ -590,6 +590,11 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             
             KKViewElement * e = (KKViewElement *) p;
             
+            if([e isHidden]) {
+                p = p.nextSibling;
+                continue;
+            }
+            
             CGFloat width = KKPixelValue(e.width, inSize.width, MAXFLOAT);
             CGFloat height = KKPixelValue(e.height, inSize.height, MAXFLOAT);
             
