@@ -105,10 +105,15 @@ CGFloat KKPixelUnitPX() {
 }
 
 CGFloat KKPixelUnitRPX() {
-    static CGFloat v = 0;
-    if(v == 0) {
-        v = [UIScreen mainScreen].bounds.size.width / 750.0;
+
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    
+    if(size.width > size.height) {
+        return size.height / 750.0f;
+    } else {
+        return size.width / 750.0f;
     }
+    
     return v;
 }
 
