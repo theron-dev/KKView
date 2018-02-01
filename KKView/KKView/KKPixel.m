@@ -113,8 +113,6 @@ CGFloat KKPixelUnitRPX() {
     } else {
         return size.width / 750.0f;
     }
-    
-    return v;
 }
 
 CGFloat KKPixelValue(struct KKPixel  v ,CGFloat baseOf,CGFloat defaultValue) {
