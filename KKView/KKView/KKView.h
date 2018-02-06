@@ -25,3 +25,5 @@
 #import <KKView/KKQRCaptureElement.h>
 #import <KKView/KKBodyElement.h>
 #import <KKView/UIView+BackgroundImage.h>
+#import <KKView/KKPixel.h>
+
