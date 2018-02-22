@@ -725,6 +725,15 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
         } else {
             self.kk_backgroundImage = nil;
         }
+    } else if([key isEqualToString:@"shadow"]) {
+        NSArray * vs = [value componentsSeparatedByString:@" "];
+        if([vs count] == 4) {
+            self.layer.shadowOffset = CGSizeMake(KKPixelValue(KKPixelFromString(vs[0]),0,0), KKPixelValue(KKPixelFromString(vs[1]),0,0));
+            self.layer.shadowRadius = KKPixelValue(KKPixelFromString(vs[2]),0,0);
+            self.layer.shadowColor = [UIColor KKElementStringValue:vs[3]].CGColor;
+        } else{
+            self.layer.shadowColor = nil;
+        }
     }
 }
 

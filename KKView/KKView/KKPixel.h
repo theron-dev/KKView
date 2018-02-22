@@ -45,6 +45,8 @@ extern "C" {
     
     extern CGFloat KKPixelValue(struct KKPixel v ,CGFloat baseOf,CGFloat defaultValue);
     
+    extern BOOL KKPixelIsValue(NSString * value);
+    
     extern NSString * KKStringValue(id value);
     
     extern BOOL KKBooleanValue(id value);

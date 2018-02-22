@@ -129,6 +129,10 @@ CGFloat KKPixelValue(struct KKPixel  v ,CGFloat baseOf,CGFloat defaultValue) {
     return defaultValue;
 }
 
+BOOL KKPixelIsValue(NSString * value) {
+    return [value hasSuffix:@"%"] || [value hasSuffix:@"px"] || [value hasSuffix:@"rpx"] || [value isEqualToString:@"auto"];
+}
+
 extern NSString * KKStringValue(id value) {
     if([value isKindOfClass:[NSString class]]) {
         return value;

@@ -65,6 +65,8 @@
 		1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1434C1FF498D600D2DEAD /* KKViewContext.m */; };
 		1AE143791FF5DBF100D2DEAD /* KKSwitchViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */; };
+		AC30717D203CA0F600075F2D /* KKKeyboardElement.h in Headers */ = {isa = PBXBuildFile; fileRef = AC30717B203CA0F600075F2D /* KKKeyboardElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AC30717E203CA0F600075F2D /* KKKeyboardElement.m in Sources */ = {isa = PBXBuildFile; fileRef = AC30717C203CA0F600075F2D /* KKKeyboardElement.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +162,8 @@
 		1AE1434C1FF498D600D2DEAD /* KKViewContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKViewContext.m; sourceTree = "<group>"; };
 		1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSwitchViewElement.h; sourceTree = "<group>"; };
 		1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSwitchViewElement.m; sourceTree = "<group>"; };
+		AC30717B203CA0F600075F2D /* KKKeyboardElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKKeyboardElement.h; sourceTree = "<group>"; };
+		AC30717C203CA0F600075F2D /* KKKeyboardElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKKeyboardElement.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +242,8 @@
 				1A8E75F6200984130051826B /* NSTimer+KKView.m */,
 				1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */,
 				1A8E7604200C82EB0051826B /* UIView+BackgroundImage.m */,
+				AC30717B203CA0F600075F2D /* KKKeyboardElement.h */,
+				AC30717C203CA0F600075F2D /* KKKeyboardElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -287,6 +293,7 @@
 				1A03665B1FF9C85700CD6C27 /* KKQRCaptureElement.h in Headers */,
 				1ACF73861FF10B8B003FB42A /* KKViewCreator.h in Headers */,
 				1A8E75F7200984130051826B /* NSTimer+KKView.h in Headers */,
+				AC30717D203CA0F600075F2D /* KKKeyboardElement.h in Headers */,
 				1ACF73691FF108D6003FB42A /* KKControlViewElement.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +440,7 @@
 				1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */,
 				1ACF732C1FF0EFE8003FB42A /* KKTextElement.m in Sources */,
 				1ACF735E1FF101C4003FB42A /* KKImageElement.m in Sources */,
+				AC30717E203CA0F600075F2D /* KKKeyboardElement.m in Sources */,
 				1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */,
 				1A8E7606200C82EB0051826B /* UIView+BackgroundImage.m in Sources */,
 				1ACF74201FF376C6003FB42A /* KKEvent.m in Sources */,

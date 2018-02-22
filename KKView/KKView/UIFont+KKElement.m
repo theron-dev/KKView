@@ -19,19 +19,35 @@
     
     NSArray * vs = [value componentsSeparatedByString:@" "];
     CGFloat fontSize =0 ;
+    BOOL bold = NO;
+    BOOL italic = NO;
+    NSString * name = nil;
+    
     for(NSString * v in vs) {
-        if([v hasSuffix:@"px"]) {
+        
+        if(KKPixelIsValue(v)) {
             fontSize = KKPixelValue(KKPixelFromString(v),0,0);
         } else if([v isEqualToString:@"bold"]) {
-            return [UIFont boldSystemFontOfSize:fontSize];
+            bold = YES;
         } else if([v isEqualToString:@"italic"]) {
-            return [UIFont italicSystemFontOfSize:fontSize];
-        } else {
-            UIFont * vv = [UIFont fontWithName:v size:fontSize];
-            if(vv) {
-                return vv;
-            }
+            italic = YES;
+        } else if([v length]){
+            name = v;
         }
+    }
+    
+    if(name) {
+        UIFont * v = [UIFont fontWithName:name size:fontSize];
+        if(v) {
+            return v;
+        }
+    }
+    
+    if(bold) {
+        return [UIFont boldSystemFontOfSize:fontSize];
+    }
+    if(italic) {
+        return [UIFont italicSystemFontOfSize:fontSize];
     }
     return [UIFont systemFontOfSize:fontSize];
     
