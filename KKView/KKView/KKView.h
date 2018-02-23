@@ -26,4 +26,7 @@
 #import <KKView/KKBodyElement.h>
 #import <KKView/UIView+BackgroundImage.h>
 #import <KKView/KKPixel.h>
+#import <KKView/KKKeyboardElement.h>
+#import <KKView/KKTopbarElement.h>
+#import <KKView/KKElementView.h>
 
