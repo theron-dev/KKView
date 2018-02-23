@@ -148,11 +148,11 @@
         [v addSubview:vv];
     }
     
+    [self setView:vv];
+    
     [vv KKElementObtainView:self];
     
     [vv KKViewElementDidLayouted:self];
-    
-    [self setView:vv];
     
     for(NSString * key in self.keys) {
         NSString * v = [self get:key];

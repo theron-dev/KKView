@@ -26,6 +26,7 @@
 		1A0366551FF9C80100CD6C27 /* KKQRElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0366531FF9C80100CD6C27 /* KKQRElement.m */; };
 		1A03665B1FF9C85700CD6C27 /* KKQRCaptureElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A0366591FF9C85700CD6C27 /* KKQRCaptureElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A03665C1FF9C85700CD6C27 /* KKQRCaptureElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A03665A1FF9C85700CD6C27 /* KKQRCaptureElement.m */; };
+		1A104728203FB1D800FBA6E3 /* KKKeyboardElement.m in Sources */ = {isa = PBXBuildFile; fileRef = AC30717C203CA0F600075F2D /* KKKeyboardElement.m */; };
 		1A8E75F7200984130051826B /* NSTimer+KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8E75F5200984130051826B /* NSTimer+KKView.h */; };
 		1A8E75F8200984130051826B /* NSTimer+KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E75F6200984130051826B /* NSTimer+KKView.m */; };
 		1A8E7605200C82EB0051826B /* UIView+BackgroundImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -66,7 +67,6 @@
 		1AE143791FF5DBF100D2DEAD /* KKSwitchViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */; };
 		AC30717D203CA0F600075F2D /* KKKeyboardElement.h in Headers */ = {isa = PBXBuildFile; fileRef = AC30717B203CA0F600075F2D /* KKKeyboardElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AC30717E203CA0F600075F2D /* KKKeyboardElement.m in Sources */ = {isa = PBXBuildFile; fileRef = AC30717C203CA0F600075F2D /* KKKeyboardElement.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -440,7 +440,7 @@
 				1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */,
 				1ACF732C1FF0EFE8003FB42A /* KKTextElement.m in Sources */,
 				1ACF735E1FF101C4003FB42A /* KKImageElement.m in Sources */,
-				AC30717E203CA0F600075F2D /* KKKeyboardElement.m in Sources */,
+				1A104728203FB1D800FBA6E3 /* KKKeyboardElement.m in Sources */,
 				1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */,
 				1A8E7606200C82EB0051826B /* UIView+BackgroundImage.m in Sources */,
 				1ACF74201FF376C6003FB42A /* KKEvent.m in Sources */,

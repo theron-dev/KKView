@@ -27,11 +27,11 @@
 }
 
 -(void) keyboardVisible:(NSNotification *) notification {
-    CGRect bounds
+    //CGRect bounds = [[[notification userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 }
 
 -(void) keyboardHidden:(NSNotification *) notification {
-    
+    //CGRect bounds = [[[notification userInfo] valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 }
 
 @end
