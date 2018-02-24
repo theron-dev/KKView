@@ -256,7 +256,9 @@
 }
 
 -(void) remove {
+    UIView * v = self.view;
     [self recycleView];
+    [v removeFromSuperview];
     [super remove];
 }
 

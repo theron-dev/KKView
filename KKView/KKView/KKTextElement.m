@@ -256,14 +256,15 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 
 -(void) setNeedsDisplay {
     
+    _attributedString = nil;
+    _bounds= CGRectZero;
+    _size = CGSizeZero;
+    
     if(_displaying) {
         return;
     }
     
-    _attributedString = nil;
     _displaying = true;
-    _bounds= CGRectZero;
-    _size = CGSizeZero;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
