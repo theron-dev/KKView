@@ -80,24 +80,30 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
             } else if([key hasPrefix:@"kk:emit_"]) {
                 
-                [data on:^(id value, NSArray *changedKeys, void *context) {
-                    
-                    if(value != nil && element) {
-                        KKElementEvent * ev = [[KKElementEvent alloc] initWithElement:element];
-                        ev.data = value;
-                        [element emit:[key substringFromIndex:8] event:ev];
-                    }
-                    
-                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
-                
+                {
+                    NSString * name = [key substringFromIndex:8];
+                    [data on:^(id value, NSArray *changedKeys, void *context) {
+                        
+                        if(value != nil && element) {
+                            KKElementEvent * ev = [[KKElementEvent alloc] initWithElement:element];
+                            ev.data = value;
+                            [element emit:name event:ev];
+                        }
+                        
+                    } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
+                }
             } else {
-                [data on:^(id value, NSArray *changedKeys, void *context) {
-                    
-                    if(value != nil) {
-                        [element set:[key substringFromIndex:3] value:KKStringValue(value)];
-                    }
-                    
-                } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
+                
+                {
+                    NSString * name = [key substringFromIndex:3];
+                    [data on:^(id value, NSArray *changedKeys, void *context) {
+                        
+                        if(value != nil) {
+                            [element set:name value:KKStringValue(value)];
+                        }
+                        
+                    } evaluateScript:v priority:KKOBSERVER_PRIORITY_DESC context:nil];
+                }
             }
         } else if([key hasPrefix:@"style:"]) {
             [element setCSSStyle:v forStatus:[key substringFromIndex:6]];
