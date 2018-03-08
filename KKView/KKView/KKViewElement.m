@@ -522,7 +522,7 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
             CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
             CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
             
-            if(x + mleft + mright + paddingRight >= size.width) {
+            if(x + mleft + mright + paddingRight + v.size.width > size.width) {
                 if([lineElements count] > 0) {
                     KKViewElementLayoutLine(lineElements,inSize,lineHeight);
                     [lineElements removeAllObjects];
