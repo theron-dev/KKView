@@ -188,6 +188,13 @@
             }
         }
         [self changedKeys:keys];
+        if([@"status" isEqualToString:key]) {
+            KKElement * e = self.firstChild;
+            while(e) {
+                [e set:@"in-status" value:status];
+                e = e.nextSibling;
+            }
+        }
     } else {
         [self changedKeys:[NSSet setWithObject:key]];
     }
@@ -247,11 +254,6 @@
 
 -(void) setStatus:(NSString *) status {
     [self set:@"status" value:status];
-    KKElement * e = self.firstChild;
-    while(e) {
-        [e set:@"in-status" value:status];
-        e = e.nextSibling;
-    }
 }
 
 -(NSSet *) keys {

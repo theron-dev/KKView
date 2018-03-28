@@ -12,9 +12,9 @@
 
 typedef void (^KKViewItemLoad) (id idx,id item);
 
-static void KKViewOnEvent(KKObserver * data, KKElement * e, NSString * name, NSArray * keys) {
+static void KKViewOnEvent(KKJSObserver * data, KKElement * e, NSString * name, NSArray * keys) {
     
-    __weak KKObserver * v = data;
+    __weak KKObserver * v = data.observer;
     
     [e on:name fn:^(KKEvent *event, void *context) {
         
@@ -31,7 +31,7 @@ static void KKViewOnEvent(KKObserver * data, KKElement * e, NSString * name, NSA
     
 }
 
-static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * attrs) {
+static void KKViewOnAttribute(KKJSObserver * data, KKElement * e, NSDictionary * attrs) {
     
     NSEnumerator * keyEnum = [attrs keyEnumerator];
     
@@ -47,7 +47,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
             
             if([key isEqualToString:@"kk:text"]) {
                 
-                [data on:^(id value, NSArray *changedKeys, void *context) {
+                [data.observer on:^(id value, NSArray *changedKeys, void *context) {
                     
                     if(value != nil) {
                         [element set:@"#text" value:KKStringValue(value)];
@@ -57,7 +57,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
             } else if([key isEqualToString:@"kk:show"]) {
                 
-                [data on:^(id value, NSArray *changedKeys, void *context) {
+                [data.observer on:^(id value, NSArray *changedKeys, void *context) {
                     
                     if(value != nil) {
                         [element set:@"hidden" value:KKBooleanValue(value)?@"false":@"true"];
@@ -67,7 +67,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
             } else if([key isEqualToString:@"kk:hide"]) {
                 
-                [data on:^(id value, NSArray *changedKeys, void *context) {
+                [data.observer on:^(id value, NSArray *changedKeys, void *context) {
                     
                     if(value != nil) {
                         [element set:@"hidden" value:KKBooleanValue(value)?@"true":@"false"];
@@ -82,7 +82,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
                 {
                     NSString * name = [key substringFromIndex:8];
-                    [data on:^(id value, NSArray *changedKeys, void *context) {
+                    [data.observer on:^(id value, NSArray *changedKeys, void *context) {
                         
                         if(value != nil && element) {
                             KKElementEvent * ev = [[KKElementEvent alloc] initWithElement:element];
@@ -96,7 +96,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
                 
                 {
                     NSString * name = [key substringFromIndex:3];
-                    [data on:^(id value, NSArray *changedKeys, void *context) {
+                    [data.observer on:^(id value, NSArray *changedKeys, void *context) {
                         
                         if(value != nil) {
                             [element set:name value:KKStringValue(value)];
@@ -116,7 +116,7 @@ static void KKViewOnAttribute(KKObserver * data, KKElement * e, NSDictionary * a
     }
 }
 
-void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, KKElement * p, KKObserver * data,KKViewChildren children) {
+void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserver * data,KKViewChildren children) {
     
     KKViewContext * viewContext = [KKViewContext currentContext];
     
@@ -155,7 +155,7 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
         KKViewItemLoad itemLoad = ^(id idx, id item){
             
             KKElement * e;
-            KKObserver * obs;
+            KKJSObserver * obs;
             if(i < [elements count]) {
                 e = [elements objectAtIndex:i];
                 obs = [observers objectAtIndex:i];
@@ -169,11 +169,11 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
                 [be before:e];
                 [elements addObject:e];
                 [observers addObject:obs];
-                [obs setParent:data];
+                [obs.observer setParent:data.observer];
             }
             
-            [obs set:@[index] value:idx];
-            [obs set:@[key] value:item];
+            [obs.observer set:@[index] value:idx];
+            [obs.observer set:@[key] value:item];
             
             i ++;
             
@@ -199,8 +199,8 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
         
         while(i < [elements count]) {
             KKElement * e = [elements lastObject];
-            KKObserver * obs = [observers lastObject];
-            [obs off:nil keys:@[] context:nil];
+            KKJSObserver * obs = [observers lastObject];
+            [obs recycle];
             [e remove];
             [elements removeLastObject];
             [observers removeLastObject];
@@ -211,11 +211,11 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
         }
     };
     
-    [data on:reloadData evaluateScript:evaluateScript priority:KKOBSERVER_PRIORITY_DESC context:nil];
+    [data.observer on:reloadData evaluateScript:evaluateScript priority:KKOBSERVER_PRIORITY_DESC context:nil];
     
 }
 
-void KKView(Class elementClass, NSDictionary * attrs, KKElement * p, KKObserver * data,KKViewChildren children) {
+void KKView(Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserver * data,KKViewChildren children) {
     
     NSString * v = [attrs valueForKey:@"kk:for"];
     

@@ -18,7 +18,7 @@
 
 -(void) KKViewOpenlib:(NSDictionary *) elementClass {
     
-    self[@"View"] = ^(NSString * name,NSDictionary * attrs,KKElement * parent,KKObserver * data,JSValue * fn) {
+    self[@"View"] = ^(NSString * name,NSDictionary * attrs,KKElement * parent,KKJSObserver * data,JSValue * fn) {
         
         Class isa = NSClassFromString([elementClass valueForKey:name]);
         
@@ -26,7 +26,7 @@
             isa = [KKElement class];
         }
         
-        KKView(isa, attrs, parent, data, ^(KKElement *p, KKObserver *data) {
+        KKView(isa, attrs, parent, data, ^(KKElement *p, KKJSObserver *data) {
             if(fn) {
                 [fn callWithArguments:@[p,data]];
             }
