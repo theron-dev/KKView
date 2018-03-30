@@ -159,19 +159,18 @@ enum KKScrollViewElementScrollType {
             break;
         case KKPositionBottom:
         {
-            CGPoint p = self.contentOffset;
             CGRect frame = element.frame;
             struct KKEdge margin = element.margin;
             
-            CGFloat mtop = KKPixelValue(margin.top, 0, 0);
             CGFloat mbottom = KKPixelValue(margin.bottom, 0, 0);
             
             struct KKEdge padding = self.padding;
             CGFloat pbottom = KKPixelValue(padding.bottom, 0, 0);
             
-            if(frame.origin.y + frame.size.height + mtop + mbottom - p.y < self.frame.size.height - pbottom) {
-                CGFloat y = p.y + self.frame.size.height - pbottom - frame.size.height - mbottom;
-                element.translate = CGPointMake(0, y-frame.origin.y);
+            CGFloat dy = frame.origin.y + frame.size.height + mbottom;
+            CGFloat maxY = self.frame.size.height - pbottom;
+            if( dy < maxY) {
+                element.translate = CGPointMake(0, maxY - dy );
             } else {
                 element.translate = CGPointZero;
             }
