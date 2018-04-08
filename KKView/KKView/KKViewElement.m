@@ -479,8 +479,13 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
                 continue;
             }
             
-            CGFloat width = KKPixelValue(e.width, inSize.width, MAXFLOAT);
-            CGFloat height = KKPixelValue(e.height, inSize.height, MAXFLOAT);
+            CGFloat mleft = KKPixelValue(e.margin.left, inSize.width, 0);
+            CGFloat mright = KKPixelValue(e.margin.right, inSize.width, 0);
+            CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
+            CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
+            
+            CGFloat width = KKPixelValue(e.width, inSize.width - mleft - mright, MAXFLOAT);
+            CGFloat height = KKPixelValue(e.height, inSize.height - mtop - mbottom, MAXFLOAT);
             
             CGRect v = e.frame;
             
@@ -516,11 +521,6 @@ CGSize KKViewElementLayoutFlex(KKViewElement * element) {
             }
             
             e.frame = v;
-            
-            CGFloat mleft = KKPixelValue(e.margin.left, inSize.width, 0);
-            CGFloat mright = KKPixelValue(e.margin.right, inSize.width, 0);
-            CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
-            CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
             
             if(x + mleft + mright + paddingRight + v.size.width > size.width) {
                 if([lineElements count] > 0) {
@@ -597,8 +597,13 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
                 continue;
             }
             
-            CGFloat width = KKPixelValue(e.width, inSize.width, MAXFLOAT);
-            CGFloat height = KKPixelValue(e.height, inSize.height, MAXFLOAT);
+            CGFloat mleft = KKPixelValue(e.margin.left, inSize.width, 0);
+            CGFloat mright = KKPixelValue(e.margin.right, inSize.width, 0);
+            CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
+            CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
+            
+            CGFloat width = KKPixelValue(e.width, inSize.width - mleft - mright, MAXFLOAT);
+            CGFloat height = KKPixelValue(e.height, inSize.height - mtop - mbottom, MAXFLOAT);
             
             CGRect v = e.frame;
             
@@ -635,11 +640,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             
             e.frame = v;
             
-            CGFloat mleft = KKPixelValue(e.margin.left, inSize.width, 0);
-            CGFloat mright = KKPixelValue(e.margin.right, inSize.width, 0);
-            CGFloat mtop = KKPixelValue(e.margin.top, inSize.height, 0);
-            CGFloat mbottom = KKPixelValue(e.margin.bottom, inSize.height, 0);
-            
+        
             CGFloat left = x + mleft;
             CGFloat top = y + mtop;
             
@@ -727,12 +728,13 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
         } else {
             self.kk_backgroundImage = nil;
         }
-    } else if([key isEqualToString:@"shadow"]) {
+    } else if([key isEqualToString:@"box-shadow"]) {
         NSArray * vs = [value componentsSeparatedByString:@" "];
         if([vs count] == 4) {
             self.layer.shadowOffset = CGSizeMake(KKPixelValue(KKPixelFromString(vs[0]),0,0), KKPixelValue(KKPixelFromString(vs[1]),0,0));
             self.layer.shadowRadius = KKPixelValue(KKPixelFromString(vs[2]),0,0);
             self.layer.shadowColor = [UIColor KKElementStringValue:vs[3]].CGColor;
+            self.layer.shadowOpacity = 1.0;
         } else{
             self.layer.shadowColor = nil;
         }
