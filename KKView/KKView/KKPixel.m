@@ -39,6 +39,12 @@ struct KKPixel KKPixelFromString(NSString * value) {
     } else if([value hasSuffix:@"rpx"]) {
         v.type = KKPixelTypeRPX;
         v.value = [value floatValue];
+    } else if([value hasSuffix:@"vw"]) {
+        v.type = KKPixelTypeVW;
+        v.value = [value floatValue];
+    } else if([value hasSuffix:@"vh"]) {
+        v.type = KKPixelTypeVH;
+        v.value = [value floatValue];
     } else  {
         v.type = KKPixelTypePX;
         v.value = [value floatValue];
@@ -86,6 +92,10 @@ NSString * NSStringFromKKPixel(struct KKPixel v) {
             return [NSString stringWithFormat:@"%g%%",v.value];
         case KKPixelTypeRPX:
             return [NSString stringWithFormat:@"%grpx",v.value];
+        case KKPixelTypeVW:
+            return [NSString stringWithFormat:@"%gvw",v.value];
+        case KKPixelTypeVH:
+            return [NSString stringWithFormat:@"%gvh",v.value];
         default:
             break;
     }
@@ -115,6 +125,16 @@ CGFloat KKPixelUnitRPX() {
     }
 }
 
+CGFloat KKPixelUnitVW() {
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    return size.width / 100.0f;
+}
+
+CGFloat KKPixelUnitVH() {
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    return size.height / 100.0f;
+}
+
 CGFloat KKPixelValue(struct KKPixel  v ,CGFloat baseOf,CGFloat defaultValue) {
     switch (v.type) {
         case KKPixelTypePercent:
@@ -123,6 +143,10 @@ CGFloat KKPixelValue(struct KKPixel  v ,CGFloat baseOf,CGFloat defaultValue) {
             return v.value * KKPixelUnitPX();
         case KKPixelTypeRPX:
             return v.value * KKPixelUnitRPX();
+        case KKPixelTypeVW:
+            return v.value * KKPixelUnitVW();
+        case KKPixelTypeVH:
+            return v.value * KKPixelUnitVH();
         default:
             break;
     }
@@ -130,10 +154,15 @@ CGFloat KKPixelValue(struct KKPixel  v ,CGFloat baseOf,CGFloat defaultValue) {
 }
 
 BOOL KKPixelIsValue(NSString * value) {
-    return [value hasSuffix:@"%"] || [value hasSuffix:@"px"] || [value hasSuffix:@"rpx"] || [value isEqualToString:@"auto"];
+    return [value hasSuffix:@"%"]
+        || [value hasSuffix:@"px"]
+        || [value hasSuffix:@"rpx"]
+        || [value hasSuffix:@"vw"]
+        || [value hasSuffix:@"vh"]
+        || [value isEqualToString:@"auto"];
 }
 
-extern NSString * KKStringValue(id value) {
+NSString * KKStringValue(id value) {
     if([value isKindOfClass:[NSString class]]) {
         return value;
     }
@@ -143,7 +172,7 @@ extern NSString * KKStringValue(id value) {
     return nil;
 }
 
-extern BOOL KKBooleanValue(id value) {
+BOOL KKBooleanValue(id value) {
     
     if([value isKindOfClass:[NSNumber class]]) {
         return [value boolValue];
@@ -156,7 +185,7 @@ extern BOOL KKBooleanValue(id value) {
     return value ? true: false;
 }
 
-extern enum KKVerticalAlign KKVerticalAlignFromString(NSString * value) {
+enum KKVerticalAlign KKVerticalAlignFromString(NSString * value) {
     if([value isEqualToString:@"middle"]) {
         return KKVerticalAlignMiddle;
     }
@@ -164,4 +193,51 @@ extern enum KKVerticalAlign KKVerticalAlignFromString(NSString * value) {
         return KKVerticalAlignBottom;
     }
     return KKVerticalAlignTop;
+}
+
+NSTextAlignment KKTextAlignmentFromString(NSString * value) {
+    if([value isEqualToString:@"right"]) {
+        return NSTextAlignmentRight;
+    } else if([value isEqualToString:@"center"]) {
+        return NSTextAlignmentCenter;
+    } else if([value isEqualToString:@"justify"]) {
+        return NSTextAlignmentJustified;
+    }
+    return NSTextAlignmentLeft;
+}
+
+CATransform3D KKTransformFromString(NSString * value) {
+    CATransform3D v = CATransform3DIdentity;
+
+    for(NSString * i in [value componentsSeparatedByString:@" "]) {
+        if([i hasPrefix:@"translate("]) {
+            char x[255] = "",y[255] = "",z[255] = "";
+            sscanf([i UTF8String], "translate(%[^, \\)],%[^, \\)],%[^, \\)])",x,y,z);
+            CGFloat tx = KKPixelValue(KKPixelFromString([NSString stringWithUTF8String:x]), 0, 0);
+            CGFloat ty = KKPixelValue(KKPixelFromString([NSString stringWithUTF8String:y]), 0, 0);
+            CGFloat tz = KKPixelValue(KKPixelFromString([NSString stringWithUTF8String:z]), 0, 0);
+            v = CATransform3DTranslate(v, tx, ty, tz);
+        } else if([i hasPrefix:@"scale("]) {
+            float x=0,y=0,z=0;
+            sscanf([i UTF8String], "scale(%f,%f,%f)",&x,&y,&z);
+            v = CATransform3DScale(v,x , y, z);
+        } else if([i hasPrefix:@"rotateX("]) {
+            float a=0;
+            sscanf([i UTF8String], "rotateX(%f)",&a);
+            v = CATransform3DRotate(v, a * M_PI / 180.0f, 1.0, 0, 0);
+        } else if([i hasPrefix:@"rotateY("]) {
+            float a=0;
+            sscanf([i UTF8String], "rotateY(%f)",&a);
+            v = CATransform3DRotate(v, a * M_PI / 180.0f, 0, 1, 0);
+        } else if([i hasPrefix:@"rotateZ("]) {
+            float a=0;
+            sscanf([i UTF8String], "rotateZ(%f)",&a);
+            v = CATransform3DRotate(v, a * M_PI / 180.0f, 0, 0, 1);
+        } else if([i hasPrefix:@"rotate("]) {
+            float a=0;
+            sscanf([i UTF8String], "rotate(%f)",&a);
+            v = CATransform3DRotate(v, a * M_PI / 180.0f, 0, 0, 1);
+        }
+    }
+    return v;
 }

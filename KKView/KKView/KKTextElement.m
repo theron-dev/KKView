@@ -301,15 +301,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         self.baseline = KKPixelFromString(value);
         [self setNeedsDisplay];
     } else if([@"text-align" isEqualToString:key]) {
-        if([value isEqualToString:@"right"]) {
-            self.textAlign = NSTextAlignmentRight;
-        } else if([value isEqualToString:@"center"]) {
-            self.textAlign = NSTextAlignmentCenter;
-        } else if([value isEqualToString:@"justify"]) {
-            self.textAlign = NSTextAlignmentJustified;
-        } else {
-            self.textAlign = NSTextAlignmentLeft;
-        }
+        self.textAlign = KKTextAlignmentFromString(value);
         [self setNeedsDisplay];
     } else if([@"#text" isEqualToString:key]) {
         [self setNeedsDisplay];
@@ -407,15 +399,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     } else if([key isEqualToString:@"font"]) {
         self.font = [UIFont KKElementStringValue:value];
     } else if([key isEqualToString:@"text-align"]) {
-        if([value isEqualToString:@"right"]) {
-            self.textAlignment = NSTextAlignmentRight;
-        } else if([value isEqualToString:@"center"]) {
-            self.textAlignment = NSTextAlignmentCenter;
-        } else if([value isEqualToString:@"justify"]) {
-            self.textAlignment = NSTextAlignmentJustified;
-        } else {
-            self.textAlignment = NSTextAlignmentLeft;
-        }
+        self.textAlignment = KKTextAlignmentFromString(value);
     } else if([key isEqualToString:@"#text"]) {
         [(KKTextElement *) element setNeedsDisplay];
     }

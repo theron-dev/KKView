@@ -7,7 +7,7 @@
 //
 
 #import "KKViewElement.h"
-
+#import "KKAnimationElement.h"
 #import "UIColor+KKElement.h"
 #import "UIFont+KKElement.h"
 #import "KKPixel.h"
@@ -735,6 +735,19 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             self.layer.shadowColor = [UIColor KKElementStringValue:vs[3]].CGColor;
         } else{
             self.layer.shadowColor = nil;
+        }
+    } else if([key isEqualToString:@"animation"]) {
+        [self.layer removeAllAnimations];
+        KKElement * e = element.firstChild;
+        while(e != nil) {
+            if([e isKindOfClass:[KKAnimationElement class]]) {
+                NSString * name = [e get:@"name"];
+                if([name isEqualToString:value]) {
+                    [self.layer addAnimation:[(KKAnimationElement *) e animation] forKey:name];
+                    break;
+                }
+            }
+            e = e.nextSibling;
         }
     }
 }

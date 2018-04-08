@@ -70,6 +70,10 @@
 		1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1434C1FF498D600D2DEAD /* KKViewContext.m */; };
 		1AE143791FF5DBF100D2DEAD /* KKSwitchViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */; };
+		AC1EF159207AB65C00FCC5B1 /* KKAnimationElement.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1EF157207AB65C00FCC5B1 /* KKAnimationElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AC1EF15A207AB65C00FCC5B1 /* KKAnimationElement.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1EF158207AB65C00FCC5B1 /* KKAnimationElement.m */; };
+		AC1EF160207AC36400FCC5B1 /* KKInputElement.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1EF15E207AC36400FCC5B1 /* KKInputElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AC1EF161207AC36400FCC5B1 /* KKInputElement.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1EF15F207AC36400FCC5B1 /* KKInputElement.m */; };
 		AC30717D203CA0F600075F2D /* KKKeyboardElement.h in Headers */ = {isa = PBXBuildFile; fileRef = AC30717B203CA0F600075F2D /* KKKeyboardElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -170,6 +174,10 @@
 		1AE1434C1FF498D600D2DEAD /* KKViewContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKViewContext.m; sourceTree = "<group>"; };
 		1AE143771FF5DBF100D2DEAD /* KKSwitchViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSwitchViewElement.h; sourceTree = "<group>"; };
 		1AE143781FF5DBF100D2DEAD /* KKSwitchViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSwitchViewElement.m; sourceTree = "<group>"; };
+		AC1EF157207AB65C00FCC5B1 /* KKAnimationElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKAnimationElement.h; sourceTree = "<group>"; };
+		AC1EF158207AB65C00FCC5B1 /* KKAnimationElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKAnimationElement.m; sourceTree = "<group>"; };
+		AC1EF15E207AC36400FCC5B1 /* KKInputElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKInputElement.h; sourceTree = "<group>"; };
+		AC1EF15F207AC36400FCC5B1 /* KKInputElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKInputElement.m; sourceTree = "<group>"; };
 		AC30717B203CA0F600075F2D /* KKKeyboardElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKKeyboardElement.h; sourceTree = "<group>"; };
 		AC30717C203CA0F600075F2D /* KKKeyboardElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKKeyboardElement.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -256,6 +264,10 @@
 				1A104733203FD20500FBA6E3 /* KKTopbarElement.m */,
 				1A104739203FD51900FBA6E3 /* KKElementView.h */,
 				1A10473A203FD51900FBA6E3 /* KKElementView.m */,
+				AC1EF157207AB65C00FCC5B1 /* KKAnimationElement.h */,
+				AC1EF158207AB65C00FCC5B1 /* KKAnimationElement.m */,
+				AC1EF15E207AC36400FCC5B1 /* KKInputElement.h */,
+				AC1EF15F207AC36400FCC5B1 /* KKInputElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -304,8 +316,10 @@
 				1AE1434D1FF498D600D2DEAD /* KKViewContext.h in Headers */,
 				1ACF732B1FF0EFE8003FB42A /* KKTextElement.h in Headers */,
 				1ACF73271FF0E328003FB42A /* KKPixel.h in Headers */,
+				AC1EF159207AB65C00FCC5B1 /* KKAnimationElement.h in Headers */,
 				1A03665B1FF9C85700CD6C27 /* KKQRCaptureElement.h in Headers */,
 				1ACF73861FF10B8B003FB42A /* KKViewCreator.h in Headers */,
+				AC1EF160207AC36400FCC5B1 /* KKInputElement.h in Headers */,
 				1A8E75F7200984130051826B /* NSTimer+KKView.h in Headers */,
 				AC30717D203CA0F600075F2D /* KKKeyboardElement.h in Headers */,
 				1ACF73691FF108D6003FB42A /* KKControlViewElement.h in Headers */,
@@ -437,6 +451,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC1EF15A207AB65C00FCC5B1 /* KKAnimationElement.m in Sources */,
 				1ACF73281FF0E328003FB42A /* KKPixel.m in Sources */,
 				1ACF731A1FF0DC7A003FB42A /* KKElement.m in Sources */,
 				1A104735203FD20500FBA6E3 /* KKTopbarElement.m in Sources */,
@@ -447,6 +462,7 @@
 				1A9CE2CE1FFB803A00F2E650 /* KKBodyElement.m in Sources */,
 				1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */,
 				1ACF73341FF0F77E003FB42A /* UIColor+KKElement.m in Sources */,
+				AC1EF161207AC36400FCC5B1 /* KKInputElement.m in Sources */,
 				1A0366551FF9C80100CD6C27 /* KKQRElement.m in Sources */,
 				1ACF736A1FF108D6003FB42A /* KKControlViewElement.m in Sources */,
 				1ACF73241FF0E285003FB42A /* KKViewElement.m in Sources */,

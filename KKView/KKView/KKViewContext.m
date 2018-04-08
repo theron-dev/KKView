@@ -18,6 +18,8 @@
 #import "KKBodyElement.h"
 #import "KKKeyboardElement.h"
 #import "KKTopbarElement.h"
+#import "KKAnimationElement.h"
+#import "KKInputElement.h"
 
 #include <pthread.h>
 
@@ -63,6 +65,8 @@ static NSMutableArray * KKViewContextQueue() {
     [KKBodyElement class];
     [KKKeyboardElement class];
     [KKTopbarElement class];
+    [KKAnimationElement class];
+    [KKInputElement class];
 }
 
 -(UIImage *) imageWithURI:(NSString * ) uri {
