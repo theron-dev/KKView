@@ -25,6 +25,7 @@
 @implementation KKViewElement
 
 @synthesize viewContext = _viewContext;
+@synthesize obtaining = _obtaining;
 
 +(void) initialize{
     [super initialize];
@@ -109,6 +110,8 @@
     
     [self recycleView];
     
+    _obtaining = YES;
+    
     __strong UIView * vv = nil;
     
     UIView * v = view;
@@ -160,6 +163,8 @@
     }
 
     [self obtainChildrenView];
+    
+    _obtaining = NO;
 }
 
 -(void) recycleView {

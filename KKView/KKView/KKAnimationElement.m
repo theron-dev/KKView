@@ -59,6 +59,22 @@
                     }
                 }
                 
+                {
+                    NSString * v = [e get:@"delay"];
+                    
+                    if(v != nil) {
+                        anim.timeOffset = [v floatValue] * 0.001f;
+                    }
+                }
+                
+                {
+                    NSString * v = [e get:@"duration"];
+                    
+                    if(v != nil) {
+                        anim.duration = [v floatValue] * 0.001f;
+                    }
+                }
+                
                 [animations addObject:anim];
                 
             } else if([name isEqualToString:@"anim:opacity"]) {
@@ -78,6 +94,22 @@
                     
                     if(v != nil) {
                         anim.toValue = @([v floatValue]);
+                    }
+                }
+                
+                {
+                    NSString * v = [e get:@"delay"];
+                    
+                    if(v != nil) {
+                        anim.timeOffset = [v floatValue] * 0.001f;
+                    }
+                }
+                
+                {
+                    NSString * v = [e get:@"duration"];
+                    
+                    if(v != nil) {
+                        anim.duration = [v floatValue] * 0.001f;
                     }
                 }
                 

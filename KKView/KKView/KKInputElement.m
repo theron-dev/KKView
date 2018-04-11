@@ -57,36 +57,26 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
-    __weak KKInputElement * element = self;
+    KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        if(element) {
-            
-            UITextField * textField = (UITextField *) element.view;
-            
-            if(textField) {
-                
-                KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
-                
-                NSMutableDictionary * data = element.data;
-                
-                data[@"value"] = textField.text;
-                
-                e.data = data;
-                
-                [self emit:@"change" event:e];
-                
-            }
-        }
-    });
+    NSMutableDictionary * data = self.data;
+    
+    data[@"value"] = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    e.data = data;
+    
+    [self emit:@"change" event:e];
     
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
-    [textField resignFirstResponder];
+    KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+    
+    e.data = self.data;
+    
+    [self emit:@"done" event:e];
     
     return YES;
 }
@@ -114,12 +104,37 @@
         self.textColor = [UIColor KKElementStringValue:value];
     } else if([key isEqualToString:@"autofocus"]) {
         if(KKBooleanValue(value)) {
-            [self becomeFirstResponder];
+            if([element isObtaining]) {
+                __weak UITextField * v = self;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [v becomeFirstResponder];
+                });
+            } else {
+                [self becomeFirstResponder];
+            }
         }
     } else if([key isEqualToString:@"text-align"]) {
         self.textAlignment = KKTextAlignmentFromString(value);
     } else if([key isEqualToString:@"font"]) {
         self.font = [UIFont KKElementStringValue:value];
+    } else if([key isEqualToString:@"type"]) {
+        
+        if([value isEqualToString:@"password"]) {
+            self.secureTextEntry = YES;
+            self.keyboardType = UIKeyboardTypeDefault;
+        } else if([value isEqualToString:@"email"]) {
+            self.keyboardType = UIKeyboardTypeEmailAddress;
+            self.secureTextEntry = NO;
+        } else if([value isEqualToString:@"phone"]) {
+            self.keyboardType = UIKeyboardTypePhonePad;
+            self.secureTextEntry = NO;
+        } else if([value isEqualToString:@"number"]) {
+            self.keyboardType = UIKeyboardTypeNumberPad;
+            self.secureTextEntry = NO;
+        } else {
+            self.keyboardType = UIKeyboardTypeDefault;
+            self.secureTextEntry = NO;
+        }
     }
 }
 
