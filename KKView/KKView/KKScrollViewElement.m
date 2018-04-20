@@ -127,6 +127,10 @@ enum KKScrollViewElementScrollType {
     
 }
 
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    _scrollType = KKScrollViewElementScrollTypeNone;
+}
+
 -(void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     [self scrollViewDidEndScrolling];
 }
