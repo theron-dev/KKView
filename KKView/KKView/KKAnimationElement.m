@@ -9,6 +9,11 @@
 #import "KKAnimationElement.h"
 #import "KKPixel.h"
 #import "KKViewContext.h"
+#import "KKViewElement.h"
+
+@interface KKAnimationElement()<CAAnimationDelegate>
+
+@end
 
 @implementation KKAnimationElement
 
@@ -30,6 +35,7 @@
         group.repeatCount = [[self get:@"repeat-count"] intValue];
         group.autoreverses = KKBooleanValue( [self get:@"autoreverses"] );
         group.timeOffset = [[self get:@"delay"] floatValue] * 0.001;
+        group.delegate = self;
         
         NSMutableArray* animations = [NSMutableArray arrayWithCapacity:4];
         
@@ -124,6 +130,25 @@
         _animation = group;
     }
     return _animation;
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    
+    if([anim isKindOfClass:[CAAnimationGroup class]]) {
+        
+        KKViewElement * p = (KKViewElement *) self.parent;
+        
+        if([p isKindOfClass:[KKViewElement class]] &&  KKBooleanValue([self get:@"toValue"])) {
+            
+            for(CAAnimation * i in [(CAAnimationGroup *) anim animations]) {
+                if([i isKindOfClass:[CABasicAnimation class]]) {
+                    CABasicAnimation * a = (CABasicAnimation *) i;
+                    [p.view.layer setValue:a.toValue forKeyPath:a.keyPath];
+                }
+            }
+            
+        }
+    }
 }
 
 @end

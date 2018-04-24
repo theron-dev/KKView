@@ -182,14 +182,17 @@ static CGSize KKImageElementLayout(KKViewElement * element);
         }
     }
     
-    _image = image;
     _hasLocalImage = NO;
     _error = nil;
     if(_imageTask) {
         [_imageTask cancel];
         _imageTask = nil;
     }
-    [self setNeedsDisplay];
+    
+    if(_image != image) {
+        _image = image;
+        [self setNeedsDisplay];
+    }
 }
 
 -(UIImage *) defaultImage {
