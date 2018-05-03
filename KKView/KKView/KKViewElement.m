@@ -22,6 +22,23 @@
 
 @end
 
+@interface KKView : UIView {
+    
+}
+
+@end
+
+@implementation KKView
+
+
+- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event {
+    UIView * v = [super hitTest:point withEvent:event];
+    
+    return v;
+}
+
+@end
+
 @implementation KKViewElement
 
 @synthesize viewContext = _viewContext;
@@ -142,7 +159,7 @@
     }
     
     if(vv == nil) {
-        vv = [[UIView alloc] initWithFrame:CGRectZero];
+        vv = [[KKView alloc] initWithFrame:CGRectZero];
     }
     
     if([self.parent isKindOfClass:[KKViewElement class]]) {
