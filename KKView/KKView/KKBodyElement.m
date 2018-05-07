@@ -62,6 +62,10 @@
     
 }
 
+-(void) didLayouted {
+    [self obtainChildrenView];
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if(object == self.view) {
         self.contentSize = [(UIScrollView *) self.view contentSize];
