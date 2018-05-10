@@ -190,8 +190,20 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     }
     
     if(_image != image) {
+        
         _image = image;
+        
         [self setNeedsDisplay];
+        
+        if(self.width.type == KKPixelTypeAuto
+           || self.height.type == KKPixelTypeAuto) {
+            
+            KKElementEvent * event = [[KKElementEvent alloc] initWithElement:self];
+            
+            [self emit:@"layout" event:event];
+            
+        }
+        
     }
 }
 
@@ -356,7 +368,7 @@ static CGSize KKImageElementLayout(KKViewElement * element) {
     if(size.width == MAXFLOAT || size.height == MAXFLOAT) {
         KKImageElement * e = (KKImageElement *) element;
         CGSize s = e.image.size;
-        if(size.width == MAXFLOAT && size.height) {
+        if(size.width == MAXFLOAT && size.height == MAXFLOAT) {
             size.width = s.width;
             size.height = s.height;
         } else if(size.width == MAXFLOAT) {
@@ -372,7 +384,6 @@ static CGSize KKImageElementLayout(KKViewElement * element) {
                 size.height = size.width * s.height / s.width;
             }
         }
-
     }
     
     return size;

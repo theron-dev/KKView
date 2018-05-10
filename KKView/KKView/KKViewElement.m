@@ -285,6 +285,9 @@
 }
 
 -(BOOL) isChildrenVisible:(KKViewElement *) element {
+    if(KKBooleanValue([element get:@"keepalive"])) {
+        return YES;
+    }
     CGRect r = _frame;
     r.origin = _contentOffset;
     return CGRectIntersectsRect(r, element.frame);
@@ -714,9 +717,9 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
         self.hidden = value == nil ? false: KKBooleanValue(value);
     } else if([key isEqualToString:@"overflow"]) {
         if([@"hidden" isEqualToString:value]) {
-            self.layer.masksToBounds = YES;
+            self.clipsToBounds = YES;
         } else {
-            self.layer.masksToBounds = NO;
+            self.clipsToBounds = NO;
         }
     } else if([key isEqualToString:@"tint-color"]) {
         self.tintColor = [UIColor KKElementStringValue:value];
