@@ -733,7 +733,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             UIImage * image = nil;
             
             if(element.viewContext == nil) {
-                image = [UIImage imageNamed:vs[0]];
+                image = [UIImage kk_imageWithPath:vs[0]];
             } else {
                 image = [element.viewContext imageWithURI:vs[0]];
             }

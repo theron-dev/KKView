@@ -114,7 +114,7 @@
             if([v hasPrefix:@"http://"] || [v hasPrefix:@"https://"]) {
                 _image = [KKHttp imageWithURL:v];
             } else {
-                _image = [UIImage imageNamed:v];
+                _image = [UIImage kk_imageWithPath:v];
             }
         } else {
             _image = [_context imageWithURI:v];

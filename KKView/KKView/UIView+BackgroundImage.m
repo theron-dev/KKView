@@ -12,21 +12,29 @@
 @implementation UIView (BackgroundImage)
 
 -(UIImage *) kk_backgroundImage {
-    UIImageView * imageView = objc_getAssociatedObject(self, "_kk_backgroundImageView");
-    return [imageView image];
+    CGImageRef v = (__bridge CGImageRef) self.layer.contents;
+    if(v != nil) {
+        return [UIImage imageWithCGImage:v];
+    }
+    return nil;
 }
 
 -(void) setKk_backgroundImage:(UIImage *)kk_backgroundImage {
-    UIImageView * imageView = objc_getAssociatedObject(self, "_kk_backgroundImageView");
-    if(imageView == nil) {
-        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [imageView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        [imageView setUserInteractionEnabled:NO];
-        [self insertSubview:imageView atIndex:0];
-        objc_setAssociatedObject(self, "_kk_backgroundImageView", imageView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.layer.contents = (id) [kk_backgroundImage CGImage];
+    
+    if(kk_backgroundImage) {
+        CGSize size = kk_backgroundImage.size;
+        UIEdgeInsets cap = kk_backgroundImage.capInsets;
+        CGFloat l = cap.left / size.width;
+        CGFloat t = cap.top / size.height;
+        CGFloat r = cap.right / size.width;
+        CGFloat b = cap.bottom / size.height;
+        self.layer.contentsCenter = CGRectMake(l,t,r - l, b - t);
+    } else {
+        self.layer.contentsCenter = CGRectMake(0, 0, 1, 1);
     }
-    imageView.image = kk_backgroundImage;
-    imageView.hidden = kk_backgroundImage == nil;
+    
 }
 
 @end

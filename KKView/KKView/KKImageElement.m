@@ -146,7 +146,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
                 
             } else {
                 if(_context == nil) {
-                    _image = [UIImage imageNamed:v];
+                    _image = [UIImage kk_imageWithPath:v];
                 } else {
                     _image = [_context imageWithURI:v];
                 }
@@ -250,7 +250,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
                 
             } else {
                 if(_context == nil) {
-                    _defaultImage = [UIImage imageNamed:v];
+                    _defaultImage = [UIImage kk_imageWithPath:v];
                 } else {
                     _defaultImage = [_context imageWithURI:v];
                 }
@@ -314,7 +314,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
                 }
             } else {
                 if(_context == nil) {
-                    _failImage = [UIImage imageNamed:v];
+                    _failImage = [UIImage kk_imageWithPath:v];
                 } else {
                     _failImage = [_context imageWithURI:v];
                 }

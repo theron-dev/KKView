@@ -85,11 +85,11 @@ static NSMutableArray * KKViewContextQueue() {
     if([uri hasPrefix:@"http://"] || [uri hasPrefix:@"https://"]) {
         return [KKHttp imageWithURL:uri];
     } else if([uri hasPrefix:@"/"]) {
-        return [UIImage imageNamed:uri];
+        return [UIImage kk_imageWithPath:uri];
     } else if([uri hasPrefix:@"@"]) {
-        return [UIImage imageNamed:[uri substringFromIndex:1]];
+        return [UIImage kk_imageWithPath:[uri substringFromIndex:1]];
     } else {
-        return [UIImage imageNamed:[_basePath stringByAppendingPathComponent:uri]];
+        return [UIImage kk_imageWithPath:[_basePath stringByAppendingPathComponent:uri]];
     }
 }
     
@@ -114,7 +114,7 @@ static NSMutableArray * KKViewContextQueue() {
     } else if([uri hasPrefix:@"@"]) {
         if(callback) {
             dispatch_async(KKHttpIODispatchQueue(), ^{
-                UIImage * image = [UIImage imageNamed:[uri substringFromIndex:1]];
+                UIImage * image = [UIImage kk_imageWithPath:[uri substringFromIndex:1]];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(image);
                 });
@@ -128,7 +128,7 @@ static NSMutableArray * KKViewContextQueue() {
     if(path && [[NSFileManager defaultManager] fileExistsAtPath:path]) {
         if(callback) {
             dispatch_async(KKHttpIODispatchQueue(), ^{
-                UIImage * image = [UIImage imageNamed:path];
+                UIImage * image = [UIImage kk_imageWithPath:path];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     callback(image);
                 });
