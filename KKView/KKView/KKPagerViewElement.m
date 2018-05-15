@@ -13,6 +13,7 @@
 @interface KKPagerViewElement() <UIScrollViewDelegate> {
     NSTimer * _timer;
     BOOL _animating;
+    BOOL _loop;
 }
 
 @end
@@ -24,8 +25,22 @@
     [KKViewContext setDefaultElementClass:[KKPagerViewElement class] name:@"pager"];
 }
 
+-(instancetype) init{
+    if((self = [super init])) {
+        _loop = YES;
+    }
+    return self;
+}
+
 -(void) dealloc {
     [_timer invalidate];
+}
+
+-(void) changedKey:(NSString *)key {
+    [super changedKey:key];
+    if([@"loop" isEqualToString:key]) {
+        _loop = KKBooleanValue([self get:key]);
+    }
 }
 
 -(void) setView:(UIView *)view{
@@ -79,7 +94,8 @@
     CGSize size = self.frame.size;
     NSInteger pageIndex = v.contentOffset.x / size.width;
     NSInteger pageCount = v.contentSize.width / size.width;
-    if(pageCount > 1) {
+    
+    if(pageCount > 1 && _loop) {
         if(pageIndex == 0) {
             if(!inited) {
                 [v setContentOffset:CGPointMake((pageCount - 2) * size.width, 0) animated:NO];

@@ -740,11 +740,10 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             
             if([vs count] == 3 && image) {
                 
-                CGSize size = image.size;
                 CGFloat left = [vs[1] doubleValue];
                 CGFloat top = [vs[2] doubleValue];
          
-                image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, size.height - top -1, size.width - left - 1)];
+                image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, 0, 0)];
                 
             }
             

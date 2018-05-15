@@ -28,9 +28,7 @@
         UIEdgeInsets cap = kk_backgroundImage.capInsets;
         CGFloat l = cap.left / size.width;
         CGFloat t = cap.top / size.height;
-        CGFloat r = cap.right / size.width;
-        CGFloat b = cap.bottom / size.height;
-        self.layer.contentsCenter = CGRectMake(l,t,r - l, b - t);
+        self.layer.contentsCenter = CGRectMake(l,t,1.0f / size.width, 1.0f / size.height);
     } else {
         self.layer.contentsCenter = CGRectMake(0, 0, 1, 1);
     }
