@@ -173,15 +173,7 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 }
 
 -(void) setImage:(UIImage *)image {
-    
-    if(image) {
-        NSString * v = [self get:@"cap"];
-        if(v) {
-            struct KKEdge cap = KKEdgeFromString([self get:@"cap"]);
-            image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(KKPixelValue(cap.top, 0, 0), KKPixelValue(cap.left, 0, 0), KKPixelValue(cap.bottom, 0, 0), KKPixelValue(cap.right, 0, 0))];
-        }
-    }
-    
+
     _hasLocalImage = NO;
     _error = nil;
     if(_imageTask) {

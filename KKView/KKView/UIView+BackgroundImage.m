@@ -26,9 +26,12 @@
     if(kk_backgroundImage) {
         CGSize size = kk_backgroundImage.size;
         UIEdgeInsets cap = kk_backgroundImage.capInsets;
+        CGFloat dx = 1.0f / size.width;
+        CGFloat dy = 1.0f / size.height;
         CGFloat l = cap.left / size.width;
         CGFloat t = cap.top / size.height;
-        self.layer.contentsCenter = CGRectMake(l,t,1.0f / size.width, 1.0f / size.height);
+        self.layer.contentsCenter = CGRectMake(l,t,dx, dy);
+        self.layer.contentsScale = [kk_backgroundImage scale];
     } else {
         self.layer.contentsCenter = CGRectMake(0, 0, 1, 1);
     }
