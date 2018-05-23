@@ -801,6 +801,25 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
 
 -(void) KKViewElement:(KKViewElement *) element setProperty:(NSString *) key value:(NSString *) value {
     [super KKViewElement:element setProperty:key value:value];
+    
+    if([key isEqualToString:@"scroll"]) {
+        
+        if([value isEqualToString:@"top"]) {
+            [self setContentOffset:CGPointZero animated:YES];
+            [self setScrollEnabled:NO];
+        } else if([value isEqualToString:@"bottom"]) {
+            [self setContentOffset:CGPointMake(0, MAX(element.contentSize.height - element.frame.size.height,0)) animated:YES];
+            [self setScrollEnabled:NO];
+        } else if([value isEqualToString:@"left"]) {
+            [self setContentOffset:CGPointMake(0, 0) animated:YES];
+            [self setScrollEnabled:NO];
+        } else if([value isEqualToString:@"right"]) {
+            [self setContentOffset:CGPointMake(MAX(element.contentSize.width - element.frame.size.width,0), 0) animated:YES];
+            [self setScrollEnabled:NO];
+        } else {
+            [self setScrollEnabled:YES];
+        }
+    }
 }
 
 -(void) KKViewElementDidLayouted:(KKViewElement *) element {
