@@ -31,6 +31,8 @@
 		1A104735203FD20500FBA6E3 /* KKTopbarElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A104733203FD20500FBA6E3 /* KKTopbarElement.m */; };
 		1A10473B203FD51900FBA6E3 /* KKElementView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A104739203FD51900FBA6E3 /* KKElementView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A10473C203FD51900FBA6E3 /* KKElementView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A10473A203FD51900FBA6E3 /* KKElementView.m */; };
+		1A32BF6520B66CB800B75FB7 /* KKSlideViewElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A32BF6320B66CB800B75FB7 /* KKSlideViewElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A32BF6620B66CB800B75FB7 /* KKSlideViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A32BF6420B66CB800B75FB7 /* KKSlideViewElement.m */; };
 		1A8E75F7200984130051826B /* NSTimer+KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8E75F5200984130051826B /* NSTimer+KKView.h */; };
 		1A8E75F8200984130051826B /* NSTimer+KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E75F6200984130051826B /* NSTimer+KKView.m */; };
 		1A8E7605200C82EB0051826B /* UIView+BackgroundImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -131,6 +133,8 @@
 		1A104733203FD20500FBA6E3 /* KKTopbarElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKTopbarElement.m; sourceTree = "<group>"; };
 		1A104739203FD51900FBA6E3 /* KKElementView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKElementView.h; sourceTree = "<group>"; };
 		1A10473A203FD51900FBA6E3 /* KKElementView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKElementView.m; sourceTree = "<group>"; };
+		1A32BF6320B66CB800B75FB7 /* KKSlideViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSlideViewElement.h; sourceTree = "<group>"; };
+		1A32BF6420B66CB800B75FB7 /* KKSlideViewElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSlideViewElement.m; sourceTree = "<group>"; };
 		1A8E75F5200984130051826B /* NSTimer+KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSTimer+KKView.h"; sourceTree = "<group>"; };
 		1A8E75F6200984130051826B /* NSTimer+KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+KKView.m"; sourceTree = "<group>"; };
 		1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+BackgroundImage.h"; sourceTree = "<group>"; };
@@ -268,6 +272,8 @@
 				AC1EF158207AB65C00FCC5B1 /* KKAnimationElement.m */,
 				AC1EF15E207AC36400FCC5B1 /* KKInputElement.h */,
 				AC1EF15F207AC36400FCC5B1 /* KKInputElement.m */,
+				1A32BF6320B66CB800B75FB7 /* KKSlideViewElement.h */,
+				1A32BF6420B66CB800B75FB7 /* KKSlideViewElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -318,6 +324,7 @@
 				1ACF73271FF0E328003FB42A /* KKPixel.h in Headers */,
 				AC1EF159207AB65C00FCC5B1 /* KKAnimationElement.h in Headers */,
 				1A03665B1FF9C85700CD6C27 /* KKQRCaptureElement.h in Headers */,
+				1A32BF6520B66CB800B75FB7 /* KKSlideViewElement.h in Headers */,
 				1ACF73861FF10B8B003FB42A /* KKViewCreator.h in Headers */,
 				AC1EF160207AC36400FCC5B1 /* KKInputElement.h in Headers */,
 				1A8E75F7200984130051826B /* NSTimer+KKView.h in Headers */,
@@ -460,6 +467,7 @@
 				1A03665C1FF9C85700CD6C27 /* KKQRCaptureElement.m in Sources */,
 				1ACF73871FF10B8B003FB42A /* KKViewCreator.m in Sources */,
 				1A9CE2CE1FFB803A00F2E650 /* KKBodyElement.m in Sources */,
+				1A32BF6620B66CB800B75FB7 /* KKSlideViewElement.m in Sources */,
 				1AE1434E1FF498D600D2DEAD /* KKViewContext.m in Sources */,
 				1ACF73341FF0F77E003FB42A /* UIColor+KKElement.m in Sources */,
 				AC1EF161207AC36400FCC5B1 /* KKInputElement.m in Sources */,

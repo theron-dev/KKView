@@ -290,7 +290,10 @@
     }
     CGRect r = _frame;
     r.origin = _contentOffset;
-    return CGRectIntersectsRect(r, element.frame);
+    CGRect t = element.frame;
+    t.origin.x += element.translate.x;
+    t.origin.y += element.translate.y;
+    return CGRectIntersectsRect(r, t);
 }
 
 -(BOOL) isHidden {

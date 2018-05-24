@@ -52,6 +52,7 @@ enum KKScrollViewElementScrollType {
     [super setView:view];
     [self.view addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
     [(UIScrollView *) self.view setDelegate:self];
+    [(UIScrollView *) self.view setShowsHorizontalScrollIndicator:NO];
     if (@available(iOS 11.0, *)) {
         ((UIScrollView *) self.view).contentInsetAdjustmentBehavior = UIApplicationBackgroundFetchIntervalNever;
     }
@@ -144,9 +145,6 @@ enum KKScrollViewElementScrollType {
     }
 }
 
--(void) addSubview:(UIView *) view toView:(UIView *) toView {
-    [toView insertSubview:view atIndex:0];
-}
 
 -(BOOL) isChildrenVisible:(KKViewElement *) element {
     
@@ -157,8 +155,12 @@ enum KKScrollViewElementScrollType {
             struct KKEdge margin = element.margin;
             CGFloat mtop = KKPixelValue(margin.top, 0, 0);
             CGRect frame = element.frame;
-            frame.origin.y = p.x + mtop;
-            element.frame = frame;
+            if(frame.origin.y - p.y - mtop < 0) {
+                element.translate = CGPointMake(0, p.y - frame.origin.y + mtop);
+            } else {
+                element.translate = CGPointZero;
+            }
+            [element didLayouted];
         }
             break;
         case KKPositionBottom:
@@ -178,7 +180,7 @@ enum KKScrollViewElementScrollType {
             } else {
                 element.translate = CGPointZero;
             }
-            
+            [element didLayouted];
         }
             break;
         default:

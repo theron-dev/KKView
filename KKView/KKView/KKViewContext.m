@@ -20,6 +20,7 @@
 #import "KKTopbarElement.h"
 #import "KKAnimationElement.h"
 #import "KKInputElement.h"
+#import "KKSlideViewElement.h"
 
 #include <pthread.h>
 
@@ -67,6 +68,7 @@ static NSMutableArray * KKViewContextQueue() {
     [KKTopbarElement class];
     [KKAnimationElement class];
     [KKInputElement class];
+    [KKSlideViewElement class];
 }
 
 -(UIImage *) imageWithURI:(NSString * ) uri {
