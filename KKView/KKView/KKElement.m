@@ -404,4 +404,19 @@
     return v;
 }
 
+-(BOOL) hasEventBubble:(NSString *) name {
+    
+    if([self hasEvent:name]) {
+        return YES;
+    }
+    
+    KKElement * p = self.parent;
+    
+    if(p) {
+        return [p hasEventBubble:name];
+    }
+    
+    return NO;
+}
+
 @end

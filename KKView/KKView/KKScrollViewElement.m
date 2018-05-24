@@ -8,6 +8,7 @@
 
 #import "KKScrollViewElement.h"
 #import "KKViewContext.h"
+#import <KKObserver/KKObserver.h>
 #include <objc/runtime.h>
 
 enum KKScrollViewElementScrollType {
@@ -18,6 +19,8 @@ enum KKScrollViewElementScrollType {
 
 @interface KKScrollViewElement() <UIScrollViewDelegate> {
     enum KKScrollViewElementScrollType _scrollType;
+    BOOL _tracking;
+    NSString * _anchor;
 }
 
 @end
@@ -104,6 +107,107 @@ enum KKScrollViewElementScrollType {
             }
         }
         
+        if([self hasEvent:@"scroll"]){
+            
+            NSMutableDictionary * data = self.data;
+            
+            data[@"tracking"] = @(_tracking);
+            data[@"x"] = @(self.contentOffset.x);
+            data[@"y"] = @(self.contentOffset.y);
+            data[@"w"] = @(self.contentSize.width);
+            data[@"h"] = @(self.contentSize.height);
+            data[@"width"] = @(self.frame.size.width);
+            data[@"height"] = @(self.frame.size.height);
+            
+            KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+            
+            e.data = data;
+            
+            [self emit:@"scroll" event:e];
+            
+        }
+        
+        if([self hasEvent:@"anchor"]) {
+  
+            KKElement * p = self.firstChild;
+            
+            NSString * anchor = nil;
+            KKViewElement * element = nil;
+            KKViewElement * vElement = nil;
+            
+            CGRect r = self.frame;
+            r.origin = self.contentOffset;
+            
+            while(p) {
+                if([p isKindOfClass:[KKViewElement class]]) {
+                    anchor = [p get:@"anchor"];
+                    if(anchor != nil) {
+                        CGRect t = [(KKViewElement *)p frame];
+                        t.origin.x += element.translate.x;
+                        t.origin.y += element.translate.y;
+                        if(vElement == nil) {
+                            CGRect rr = CGRectIntersection(r, t);
+                            if(rr.size.width >0 && rr.size.height) {
+                                element = vElement = (KKViewElement *)p;
+                            }
+                            if( rr.size.width >= t.size.width && rr.size.height >= t.size.height ) {
+                                element = (KKViewElement *) p;
+                                break;
+                            }
+                        } else {
+                            CGRect rr = CGRectIntersection(r, t);
+                            if( rr.size.width >= t.size.width && rr.size.height >= t.size.height ) {
+                                element = (KKViewElement *) p;
+                            }
+                            break;
+                        }
+                    }
+                }
+                p = p.nextSibling;
+            }
+            
+            if(element != nil) {
+            
+                anchor = [element get:@"anchor"];
+                
+                if(![anchor isEqualToString:_anchor]) {
+                    
+                    _anchor = anchor;
+                    
+                    NSMutableDictionary * data = self.data;
+                    
+                    data[@"tracking"] = @(_tracking);
+                    data[@"x"] = @(self.contentOffset.x);
+                    data[@"y"] = @(self.contentOffset.y);
+                    data[@"w"] = @(self.contentSize.width);
+                    data[@"h"] = @(self.contentSize.height);
+                    data[@"width"] = @(self.frame.size.width);
+                    data[@"height"] = @(self.frame.size.height);
+                    data[@"view"] = @{@"width":@(element.frame.size.width)
+                                      ,@"height":@(element.frame.size.height)
+                                      ,@"x":@(element.frame.origin.x)
+                                      ,@"y":@(element.frame.origin.y)
+                                      ,@"anchor":anchor
+                                      };
+                    
+                    KKElement * p = self.firstChild;
+                    
+                    while(p) {
+                        
+                        p = p.nextSibling;
+                    }
+                    
+                    KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+                    
+                    e.data = data;
+                    
+                    [self emit:@"anchor" event:e];
+                    
+                }
+                
+            }
+        }
+        
     }
 }
 
@@ -130,11 +234,19 @@ enum KKScrollViewElementScrollType {
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
     _scrollType = KKScrollViewElementScrollTypeNone;
+    _tracking = NO;
+    _anchor = nil;
 }
 
 -(void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     [self scrollViewDidEndScrolling];
+    _tracking = NO;
 }
+
+-(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    _tracking = YES;
+}
+
 
 -(void) addSubview:(UIView *) view element:(KKViewElement *) element toView:(UIView *) toView {
     NSString * v = [element get:@"floor"];
@@ -168,17 +280,23 @@ enum KKScrollViewElementScrollType {
             CGRect frame = element.frame;
             struct KKEdge margin = element.margin;
             
+            CGFloat pbottom = KKPixelValue(self.padding.bottom,0,0);
+            
             CGFloat mbottom = KKPixelValue(margin.bottom, 0, 0);
             
-            struct KKEdge padding = self.padding;
-            CGFloat pbottom = KKPixelValue(padding.bottom, 0, 0);
-            
             CGFloat dy = frame.origin.y + frame.size.height + mbottom;
-            CGFloat maxY = self.frame.size.height - pbottom;
-            if( dy < maxY) {
-                element.translate = CGPointMake(0, maxY - dy );
+            
+            if( dy < self.frame.size.height) {
+                element.translate = CGPointMake(0, self.frame.size.height - dy);
             } else {
-                element.translate = CGPointZero;
+                
+                dy = self.contentOffset.y + self.frame.size.height - frame.size.height - mbottom - frame.origin.y;
+                
+                if(dy > 0 ) {
+                    element.translate = CGPointMake(0, MIN(dy,pbottom));
+                } else {
+                    element.translate = CGPointZero;
+                }
             }
             [element didLayouted];
         }
@@ -199,6 +317,40 @@ enum KKScrollViewElementScrollType {
             [(KKElementEvent *) event setCancelBubble:YES];
             
             [(UIScrollView *) self.view setContentOffset:CGPointZero animated:NO];
+        } else if([name isEqualToString:@"anchor"]) {
+            
+            [(KKElementEvent *) event setCancelBubble:YES];
+            
+            NSDictionary * data = [(KKElementEvent *) event data];
+            
+            struct KKEdge margin = KKEdgeFromString([data kk_getString:@"margin"]);
+            
+            NSString * anchor = [data kk_getString:@"anchor"];
+            
+            KKViewElement * element = nil;
+            
+            KKElement * e = self.firstChild;
+            
+            while(e){
+                
+                if([e isKindOfClass:[KKViewElement class]]) {
+                    NSString * v = [e get:@"anchor"];
+                    if([v isEqualToString:anchor]) {
+                        element = (KKViewElement *) e;
+                        break;
+                    }
+                }
+                
+                e = e.nextSibling;
+            }
+            
+            if(element != nil) {
+                CGRect r = element.frame;
+                r.origin.y -= KKPixelValue(margin.top, 0, 0);
+                r.origin.x -= KKPixelValue(margin.left, 0, 0);
+                [(UIScrollView *) self.view setContentOffset:r.origin animated:YES];
+            }
+            
         }
         
     }

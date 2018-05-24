@@ -12,7 +12,6 @@
     
 }
 
-@property(nonatomic,strong) NSString * name;
 @property(nonatomic,strong) KKEventEmitterFunction fn;
 @property(nonatomic,assign) void * context;
 
@@ -23,7 +22,7 @@
 @end
 
 @interface KKEventEmitter() {
-    NSMutableArray * _callbacks;
+    NSMutableDictionary * _callbacks;
 }
 
 @end
@@ -35,41 +34,73 @@
 @implementation KKEventEmitter
 
 -(void) on:(NSString *) name fn:(KKEventEmitterFunction) fn context:(void *) context {
+    
+    if(_callbacks == nil){
+        _callbacks = [[NSMutableDictionary alloc] initWithCapacity:4];
+    }
+    
+    NSMutableArray * cbs = [_callbacks valueForKey:name];
+    
+    if(cbs == nil) {
+        cbs = [[NSMutableArray alloc] initWithCapacity:4];
+        [_callbacks setValue:cbs forKey:name];
+    }
+    
     KKEventCallback * cb = [[KKEventCallback alloc] init];
-    cb.name = name;
     cb.fn = fn;
     cb.context = context;
-    if(_callbacks == nil) {
-        _callbacks = [NSMutableArray arrayWithCapacity:4];
-    }
-    [_callbacks addObject:cb];
+    
+    [cbs addObject:cb];
 }
 
 -(void) off:(NSString *) name fn:(KKEventEmitterFunction) fn context:(void *) context {
-    NSInteger i = 0;
-    while(i < [_callbacks count]) {
-        KKEventCallback * cb = [_callbacks objectAtIndex:0];
-        if((name == nil || [name isEqualToString:cb.name])
-           && (fn == nil || fn == cb.fn) && (context == NULL || context == cb.context)) {
-            [_callbacks removeObjectAtIndex:i];
-            continue;
+    if(name == nil && fn == nil && context == nil) {
+        _callbacks = nil;
+    } else if(name == nil) {
+        NSEnumerator * keyEnum = [_callbacks keyEnumerator];
+        NSString * key;
+        while((key = [keyEnum nextObject])) {
+            NSMutableArray * cbs = [_callbacks valueForKey:key];
+            NSInteger i = 0;
+            while(i < [cbs count]) {
+                KKEventCallback * cb = [cbs objectAtIndex:0];
+                if((fn == nil || fn == cb.fn) && (context == NULL || context == cb.context)) {
+                    [cbs removeObjectAtIndex:i];
+                    continue;
+                }
+                i ++;
+            }
         }
-        i ++;
+    } else {
+        NSMutableArray * cbs = [_callbacks valueForKey:name];
+        NSInteger i = 0;
+        while(i < [cbs count]) {
+            KKEventCallback * cb = [cbs objectAtIndex:0];
+            if((fn == nil || fn == cb.fn) && (context == NULL || context == cb.context)) {
+                [cbs removeObjectAtIndex:i];
+                continue;
+            }
+            i ++;
+        }
     }
 }
 
 -(void) emit:(NSString *) name event:(KKEvent *) event {
-    NSMutableArray * cbs = [NSMutableArray arrayWithCapacity:4];
-    for(KKEventCallback * cb in _callbacks) {
-        if([name isEqualToString:cb.name]) {
-            [cbs addObject:cb];
+    
+    NSMutableArray * cbs = [_callbacks valueForKey:name];
+    
+    if(cbs != nil) {
+        for(KKEventCallback * cb in [NSArray arrayWithArray:cbs]) {
+            if(cb.fn) {
+                cb.fn(event, cb.context);
+            }
         }
     }
-    for(KKEventCallback * cb in cbs) {
-        if(cb.fn) {
-            cb.fn(event, cb.context);
-        }
-    }
+    
+}
+
+-(BOOL) hasEvent:(NSString *) name {
+    return [[_callbacks valueForKey:name] count] > 0;
 }
 
 @end
