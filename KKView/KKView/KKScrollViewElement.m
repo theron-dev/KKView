@@ -21,6 +21,7 @@ enum KKScrollViewElementScrollType {
     enum KKScrollViewElementScrollType _scrollType;
     BOOL _tracking;
     NSString * _anchor;
+    BOOL _anchorScrolling;
 }
 
 @end
@@ -127,7 +128,7 @@ enum KKScrollViewElementScrollType {
             
         }
         
-        if([self hasEvent:@"anchor"]) {
+        if(!_anchorScrolling && [self hasEvent:@"anchor"]) {
   
             KKElement * p = self.firstChild;
             
@@ -226,6 +227,7 @@ enum KKScrollViewElementScrollType {
 
 -(void) scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     [self scrollViewDidEndScrolling];
+    _anchorScrolling = NO;
 }
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -317,6 +319,7 @@ enum KKScrollViewElementScrollType {
             [(KKElementEvent *) event setCancelBubble:YES];
             
             [(UIScrollView *) self.view setContentOffset:CGPointZero animated:NO];
+            
         } else if([name isEqualToString:@"anchor"]) {
             
             [(KKElementEvent *) event setCancelBubble:YES];
@@ -348,6 +351,7 @@ enum KKScrollViewElementScrollType {
                 CGRect r = element.frame;
                 r.origin.y -= KKPixelValue(margin.top, 0, 0);
                 r.origin.x -= KKPixelValue(margin.left, 0, 0);
+                _anchorScrolling = YES;
                 [(UIScrollView *) self.view setContentOffset:r.origin animated:YES];
             }
             

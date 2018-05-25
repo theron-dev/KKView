@@ -241,13 +241,23 @@
                 if([self isChildrenVisible:e]) {
                     [e obtainView:_view];
                 } else {
-                    UIView * v = [e view];
                     [e recycleView];
-                    [v removeFromSuperview];
                 }
             }
             p = p.nextSibling;
         }
+        
+        NSMutableDictionary * dequeueViews = objc_getAssociatedObject(_view, KKViewDequeueViewsKey);
+        
+        NSEnumerator * keyEnum = [dequeueViews keyEnumerator];
+        NSString * key;
+        while((key = [keyEnum nextObject])) {
+            NSArray * views = [dequeueViews valueForKey:key];
+            for(UIView * v in views) {
+                [v removeFromSuperview];
+            }
+        }
+        
     }
     
 
@@ -275,13 +285,6 @@
         [v removeFromSuperview];
     }
     
-}
-
--(void) remove {
-    UIView * v = self.view;
-    [self recycleView];
-    [v removeFromSuperview];
-    [super remove];
 }
 
 -(BOOL) isChildrenVisible:(KKViewElement *) element {
