@@ -286,20 +286,14 @@ enum KKScrollViewElementScrollType {
             
             CGFloat mbottom = KKPixelValue(margin.bottom, 0, 0);
             
-            CGFloat dy = frame.origin.y + frame.size.height + mbottom;
+            CGFloat dy = self.contentOffset.y + self.frame.size.height - frame.size.height - mbottom - frame.origin.y;
             
-            if( dy < self.frame.size.height) {
-                element.translate = CGPointMake(0, self.frame.size.height - dy);
+            if(dy > 0 ) {
+                element.translate = CGPointMake(0, MIN(dy,pbottom));
             } else {
-                
-                dy = self.contentOffset.y + self.frame.size.height - frame.size.height - mbottom - frame.origin.y;
-                
-                if(dy > 0 ) {
-                    element.translate = CGPointMake(0, MIN(dy,pbottom));
-                } else {
-                    element.translate = CGPointZero;
-                }
+                element.translate = CGPointZero;
             }
+            
             [element didLayouted];
         }
             break;
