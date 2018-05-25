@@ -72,19 +72,22 @@
     
     KKViewElement * element = nil;
     
-    KKElement * e = self.firstChild;
-    
-    while(e){
+    if(anchor) {
         
-        if([e isKindOfClass:[KKViewElement class]]) {
-            NSString * v = [e get:@"anchor"];
-            if([v isEqualToString:anchor]) {
-                element = (KKViewElement *) e;
-                break;
+        KKElement * e = self.firstChild;
+        
+        while(e){
+            
+            if([e isKindOfClass:[KKViewElement class]]) {
+                NSString * v = [e get:@"anchor"];
+                if([v isEqualToString:anchor]) {
+                    element = (KKViewElement *) e;
+                    break;
+                }
             }
+            
+            e = e.nextSibling;
         }
-        
-        e = e.nextSibling;
     }
     
     KKElementView * cur = [self curElementView];
