@@ -27,8 +27,13 @@
         }
         
         KKView(isa, attrs, parent, data, ^(KKElement *p, KKJSObserver *data) {
-            if(fn) {
-                [fn callWithArguments:@[p,data]];
+            if([fn isObject]) {
+                @try{
+                    [fn callWithArguments:@[p,data]];
+                }
+                @catch(NSException * ex) {
+                    NSLog(@"[KK] %@",ex);
+                }
             }
         });
     };

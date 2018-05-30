@@ -342,13 +342,15 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     NSMutableDictionary * attrs = [NSMutableDictionary dictionaryWithCapacity:4];
     
     attrs[NSForegroundColorAttributeName] = e.color;
-    attrs[NSFontAttributeName] = e.font;
+    attrs[NSFontAttributeName] = e.font ;
     attrs[NSKernAttributeName] = @(KKPixelValue(e.letterSpacing, 0, 0));
     attrs[NSBaselineOffsetAttributeName] = @(KKPixelValue(e.baseline, 0, 0));
     NSMutableParagraphStyle * style = [[NSMutableParagraphStyle alloc] init];
     
-    {
+    if(e.width.type != KKPixelTypeAuto) {
         style.alignment = e.textAlign;
+    } else {
+        style.alignment = NSTextAlignmentLeft;
     }
     
     style.lineSpacing = KKPixelValue(e.lineSpacing, 0, 0);

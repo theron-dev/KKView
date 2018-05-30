@@ -219,6 +219,7 @@
         [_styles setValue:attrs forKey:status];
     }
     [attrs setDictionary:style];
+    [self changedKeys:[NSSet setWithArray:[style allKeys]]];
 }
 
 -(void) setCSSStyle:(NSString *) cssStyle forStatus:(NSString *) status {

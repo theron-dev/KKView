@@ -34,6 +34,14 @@
             CGFloat dy = 1.0f / size.height;
             CGFloat l = cap.left / size.width;
             CGFloat t = cap.top / size.height;
+            CGFloat r = cap.right / size.width;
+            CGFloat b = cap.bottom / size.height;
+            if(r > 0.0f) {
+                dx = r- l;
+            }
+            if(b > 0.0f) {
+                dy = b - t;
+            }
             self.layer.contentsCenter = CGRectMake(l,t,dx, dy);
             self.layer.contentsScale = [kk_backgroundImage scale];
         }
