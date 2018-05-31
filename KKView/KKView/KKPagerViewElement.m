@@ -69,6 +69,13 @@
     }
 }
 
+-(void) didLayouted{
+    [super didLayouted];
+    if(self.view) {
+        [self pageIndexChanged:YES];
+    }
+}
+
 -(void) doLoopAction {
     
     if(_animating) {
