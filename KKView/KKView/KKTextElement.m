@@ -323,13 +323,20 @@ CGSize KKTextElementLayout(KKViewElement * element) {
     
     if(size.width == MAXFLOAT || size.height == MAXFLOAT) {
         CGRect r = [v bounds:size];
-        CGFloat pleft = KKPixelValue(v.padding.left, 0, 0);
-        CGFloat pright = KKPixelValue(v.padding.right, 0, 0);
-        CGFloat ptop = KKPixelValue(v.padding.top, 0, 0);
-        CGFloat pbottom = KKPixelValue(v.padding.bottom, 0, 0);
-        r.size.width = ceil(r.size.width + pleft + pright );
-        r.size.height = ceil(r.size.height + ptop + pbottom );
-        return r.size;
+        
+        if(size.width == MAXFLOAT) {
+            CGFloat pleft = KKPixelValue(v.padding.left, 0, 0);
+            CGFloat pright = KKPixelValue(v.padding.right, 0, 0);
+            size.width = ceil(r.size.width + pleft + pright );
+        }
+        
+        if(size.height == MAXFLOAT) {
+            CGFloat ptop = KKPixelValue(v.padding.top, 0, 0);
+            CGFloat pbottom = KKPixelValue(v.padding.bottom, 0, 0);
+            size.height = ceil(r.size.height + ptop + pbottom );
+        }
+        
+        return size;
     } else {
         return size;
     }
@@ -347,11 +354,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     attrs[NSBaselineOffsetAttributeName] = @(KKPixelValue(e.baseline, 0, 0));
     NSMutableParagraphStyle * style = [[NSMutableParagraphStyle alloc] init];
     
-    if(e.width.type != KKPixelTypeAuto) {
-        style.alignment = e.textAlign;
-    } else {
-        style.alignment = NSTextAlignmentLeft;
-    }
+    style.alignment = e.textAlign;
     
     style.lineSpacing = KKPixelValue(e.lineSpacing, 0, 0);
     style.paragraphSpacing = KKPixelValue(e.paragraphSpacing, 0, 0);

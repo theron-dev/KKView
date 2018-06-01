@@ -151,13 +151,13 @@ enum KKScrollViewElementScrollType {
                             if(rr.size.width >0 && rr.size.height > 0) {
                                 element = vElement = (KKViewElement *)p;
                             }
-                            if( rr.size.width >= t.size.width && rr.size.height >= t.size.height ) {
+                            if( rr.size.width * rr.size.height >= t.size.width * t.size.height * 0.7f ) {
                                 element = (KKViewElement *) p;
                                 break;
                             }
                         } else {
                             CGRect rr = CGRectIntersection(r, t);
-                            if( rr.size.width >= t.size.width && rr.size.height >= t.size.height ) {
+                            if( rr.size.width * rr.size.height >= t.size.width * t.size.height * 0.7f ) {
                                 element = (KKViewElement *) p;
                             }
                             break;
