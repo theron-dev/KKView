@@ -103,7 +103,11 @@ static CGSize KKImageElementLayout(KKViewElement * element);
                 
                 KKHttpImageCallback cb = ^(UIImage * image) {
                     if([[e src] isEqualToString:v]) {
-                        e.image = image;
+                        if(image == nil) {
+                            [e setError:[NSError errorWithDomain:@"KKImageElement" code:-300 userInfo:@{NSLocalizedDescriptionKey:@"图片读取错误"}]];
+                        } else {
+                            e.image = image;
+                        }
                     }
                 };
                 
