@@ -130,47 +130,29 @@ enum KKScrollViewElementScrollType {
         
         if(!_anchorScrolling && [self hasEvent:@"anchor"]) {
   
-            KKElement * p = self.firstChild;
+            KKElement * p = self.lastChild;
             
             NSString * anchor = nil;
             KKViewElement * element = nil;
-            KKViewElement * vElement = nil;
-            
-            CGRect r = self.frame;
-            r.origin = self.contentOffset;
             
             while(p) {
                 if([p isKindOfClass:[KKViewElement class]]) {
                     anchor = [p get:@"anchor"];
                     if(anchor != nil) {
+                        struct KKEdge margin = KKEdgeFromString([p get:@"anchor-margin"]);
                         CGRect t = [(KKViewElement *)p frame];
-                        t.origin.x += element.translate.x;
-                        t.origin.y += element.translate.y;
-                        if(vElement == nil) {
-                            CGRect rr = CGRectIntersection(r, t);
-                            if(rr.size.width >0 && rr.size.height > 0) {
-                                element = vElement = (KKViewElement *)p;
-                            }
-                            if( rr.size.width * rr.size.height >= t.size.width * t.size.height * 0.7f ) {
-                                element = (KKViewElement *) p;
-                                break;
-                            }
-                        } else {
-                            CGRect rr = CGRectIntersection(r, t);
-                            if( rr.size.width * rr.size.height >= t.size.width * t.size.height * 0.7f ) {
-                                element = (KKViewElement *) p;
-                            }
+                        t.origin.y += element.translate.y - KKPixelValue(margin.top,0,0);
+                        if(self.contentOffset.y >= t.origin.y) {
+                            element = (KKViewElement *) p;
                             break;
                         }
                     }
                 }
-                p = p.nextSibling;
+                p = p.prevSibling;
             }
             
             if(element != nil) {
-            
-                anchor = [element get:@"anchor"];
-                
+
                 if(![anchor isEqualToString:_anchor]) {
                     
                     _anchor = anchor;
