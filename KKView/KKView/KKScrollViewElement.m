@@ -282,14 +282,12 @@ enum KKScrollViewElementScrollType {
             CGRect frame = element.frame;
             struct KKEdge margin = element.margin;
             
-            CGFloat pbottom = KKPixelValue(self.padding.bottom,0,0);
-            
             CGFloat mbottom = KKPixelValue(margin.bottom, 0, 0);
             
             CGFloat dy = self.contentOffset.y + self.frame.size.height - frame.size.height - mbottom - frame.origin.y;
             
             if(dy > 0 ) {
-                element.translate = CGPointMake(0, MIN(dy,pbottom));
+                element.translate = CGPointMake(0, dy);
             } else {
                 element.translate = CGPointZero;
             }
