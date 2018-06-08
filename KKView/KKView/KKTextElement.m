@@ -161,10 +161,8 @@
         }
     } else if ([@"text-stroke" isEqualToString:key]) {
         NSArray * arr = [value componentsSeparatedByString:@" "];
-        if (arr[0]) {
+        if (arr.count >= 2) {
             self.strokeSpacing = KKPixelFromString(arr[0]);
-        }
-        if (arr[1]) {
             self.strokeColor = [UIColor KKElementStringValue:arr[1]];
         }
     }
@@ -315,10 +313,8 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         [self setNeedsDisplay];
     } else if ([@"text-stroke" isEqualToString:key]) {
         NSArray * arr = [value componentsSeparatedByString:@" "];
-        if (arr[0]) {
+        if (arr.count >= 2) {
             self.strokeSpacing = KKPixelFromString(arr[0]);
-        }
-        if (arr[1]) {
             self.strokeColor = [UIColor KKElementStringValue:arr[1]];
         }
     }
