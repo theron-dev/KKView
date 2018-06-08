@@ -159,6 +159,14 @@
         if([self.parent isKindOfClass:[KKTextElement class]]) {
             [(KKTextElement *) self.parent setNeedsDisplay];
         }
+    } else if ([@"text-stroke" isEqualToString:key]) {
+        NSArray * arr = [value componentsSeparatedByString:@" "];
+        if (arr[0]) {
+            self.strokeSpacing = KKPixelFromString(arr[0]);
+        }
+        if (arr[1]) {
+            self.strokeColor = [UIColor KKElementStringValue:arr[1]];
+        }
     }
 }
 
@@ -305,6 +313,14 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         [self setNeedsDisplay];
     } else if([@"#text" isEqualToString:key]) {
         [self setNeedsDisplay];
+    } else if ([@"text-stroke" isEqualToString:key]) {
+        NSArray * arr = [value componentsSeparatedByString:@" "];
+        if (arr[0]) {
+            self.strokeSpacing = KKPixelFromString(arr[0]);
+        }
+        if (arr[1]) {
+            self.strokeColor = [UIColor KKElementStringValue:arr[1]];
+        }
     }
 }
 
@@ -359,6 +375,12 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     style.lineSpacing = KKPixelValue(e.lineSpacing, 0, 0);
     style.paragraphSpacing = KKPixelValue(e.paragraphSpacing, 0, 0);
     
+
+    if (e.strokeColor) {
+        attrs[NSStrokeColorAttributeName] = e.strokeColor;
+        attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(e.strokeSpacing, 0, 0)));
+    }
+    
     if(e != element && [element isKindOfClass:[KKSpanElement class]]) {
         
         KKSpanElement * ee = (KKSpanElement *) element;
@@ -385,12 +407,19 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
             }
         }
         
+        {
+            UIColor * v = ee.strokeColor;
+            if (v != nil) {
+                attrs[NSStrokeColorAttributeName] = ee.strokeColor;
+                attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(ee.strokeSpacing, 0, 0)));
+            }
+        }
+        
     }
     
     attrs[NSParagraphStyleAttributeName] = style;
     
     return attrs;
-    
 }
 
 
