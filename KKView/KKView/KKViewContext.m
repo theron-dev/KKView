@@ -21,6 +21,7 @@
 #import "KKAnimationElement.h"
 #import "KKInputElement.h"
 #import "KKSlideViewElement.h"
+#import "KKAudioElement.h"
 
 #include <pthread.h>
 
@@ -69,6 +70,7 @@ static NSMutableArray * KKViewContextQueue() {
     [KKAnimationElement class];
     [KKInputElement class];
     [KKSlideViewElement class];
+    [KKAudioElement class];
 }
 
 -(UIImage *) imageWithURI:(NSString * ) uri {

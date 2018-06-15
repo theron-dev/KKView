@@ -33,6 +33,9 @@
         
         group.duration = [[self get:@"duration"] floatValue] * 0.001;
         group.repeatCount = [[self get:@"repeat-count"] intValue];
+        if(group.repeatCount < 0) {
+            group.repeatCount = INT_MAX;
+        }
         group.autoreverses = KKBooleanValue( [self get:@"autoreverses"] );
         group.timeOffset = [[self get:@"delay"] floatValue] * 0.001;
         

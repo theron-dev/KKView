@@ -39,6 +39,8 @@
 		1A8E7606200C82EB0051826B /* UIView+BackgroundImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E7604200C82EB0051826B /* UIView+BackgroundImage.m */; };
 		1A9CE2CD1FFB803A00F2E650 /* KKBodyElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9CE2CB1FFB803A00F2E650 /* KKBodyElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A9CE2CE1FFB803A00F2E650 /* KKBodyElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */; };
+		1AA7917220D3AE9F00121878 /* KKAudioElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA7917020D3AE9F00121878 /* KKAudioElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AA7917320D3AE9F00121878 /* KKAudioElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA7917120D3AE9F00121878 /* KKAudioElement.m */; };
 		1ACF73111FF0DC3B003FB42A /* KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF730F1FF0DC3B003FB42A /* KKView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF73191FF0DC7A003FB42A /* KKElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF73171FF0DC7A003FB42A /* KKElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF731A1FF0DC7A003FB42A /* KKElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF73181FF0DC7A003FB42A /* KKElement.m */; };
@@ -141,6 +143,8 @@
 		1A8E7604200C82EB0051826B /* UIView+BackgroundImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+BackgroundImage.m"; sourceTree = "<group>"; };
 		1A9CE2CB1FFB803A00F2E650 /* KKBodyElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKBodyElement.h; sourceTree = "<group>"; };
 		1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKBodyElement.m; sourceTree = "<group>"; };
+		1AA7917020D3AE9F00121878 /* KKAudioElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKAudioElement.h; sourceTree = "<group>"; };
+		1AA7917120D3AE9F00121878 /* KKAudioElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKAudioElement.m; sourceTree = "<group>"; };
 		1ACF730C1FF0DC3B003FB42A /* KKView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KKView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1ACF730F1FF0DC3B003FB42A /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		1ACF73101FF0DC3B003FB42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 				AC1EF15F207AC36400FCC5B1 /* KKInputElement.m */,
 				1A32BF6320B66CB800B75FB7 /* KKSlideViewElement.h */,
 				1A32BF6420B66CB800B75FB7 /* KKSlideViewElement.m */,
+				1AA7917020D3AE9F00121878 /* KKAudioElement.h */,
+				1AA7917120D3AE9F00121878 /* KKAudioElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -314,6 +320,7 @@
 				1ACF73611FF106EF003FB42A /* KKScrollViewElement.h in Headers */,
 				1ACF73191FF0DC7A003FB42A /* KKElement.h in Headers */,
 				1ACF741B1FF36A6E003FB42A /* KKLoadingViewElement.h in Headers */,
+				1AA7917220D3AE9F00121878 /* KKAudioElement.h in Headers */,
 				1ACF73231FF0E285003FB42A /* KKViewElement.h in Headers */,
 				1ACF741F1FF376C6003FB42A /* KKEvent.h in Headers */,
 				1A9CE2CD1FFB803A00F2E650 /* KKBodyElement.h in Headers */,
@@ -479,6 +486,7 @@
 				1A8E75F8200984130051826B /* NSTimer+KKView.m in Sources */,
 				1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */,
 				1ACF732C1FF0EFE8003FB42A /* KKTextElement.m in Sources */,
+				1AA7917320D3AE9F00121878 /* KKAudioElement.m in Sources */,
 				1ACF735E1FF101C4003FB42A /* KKImageElement.m in Sources */,
 				1A104728203FB1D800FBA6E3 /* KKKeyboardElement.m in Sources */,
 				1AE1437A1FF5DBF100D2DEAD /* KKSwitchViewElement.m in Sources */,

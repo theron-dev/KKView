@@ -85,6 +85,10 @@
     UIScrollView * v = (UIScrollView *) self.view;
     CGSize size = self.frame.size;
     
+    if(size.width <= 0){
+        return;
+    }
+    
     NSInteger pageIndex = (NSInteger) self.contentOffset.x / (NSInteger) size.width;
     NSInteger pageCount = (NSInteger) self.contentSize.width / (NSInteger) size.width;
     
@@ -99,6 +103,9 @@
 -(void) pageIndexChanged:(BOOL) inited {
     UIScrollView * v = (UIScrollView *) self.view;
     CGSize size = self.frame.size;
+    if(size.width <=0.0f) {
+        return;
+    }
     NSInteger pageIndex = (NSInteger) self.contentOffset.x / (NSInteger) size.width;
     NSInteger pageCount = (NSInteger) self.contentSize.width / (NSInteger) size.width;
     
