@@ -21,7 +21,7 @@
 @implementation KKPagerViewElement
 
 +(void) initialize{
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKPagerViewElement class] name:@"pager"];
 }
 

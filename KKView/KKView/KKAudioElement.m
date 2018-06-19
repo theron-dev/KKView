@@ -21,7 +21,7 @@
 @implementation KKAudioElement
 
 +(void) initialize {
-    [super initialize];
+    
     
     [KKViewContext setDefaultElementClass:[KKAudioElement class] name:@"audio"];
     

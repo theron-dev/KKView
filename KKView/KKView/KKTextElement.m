@@ -31,7 +31,6 @@
 @implementation KKImgElement
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKImgElement class] name:@"img"];
 }
 
@@ -129,7 +128,6 @@
 @implementation KKSpanElement
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKSpanElement class] name:@"span"];
 }
 
@@ -178,7 +176,6 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 @synthesize attributedString = _attributedString;
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKTextElement class] name:@"text"];
 }
 

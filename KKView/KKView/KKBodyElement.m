@@ -12,7 +12,6 @@
 @implementation KKBodyElement
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKBodyElement class] name:@"body"];
 }
 

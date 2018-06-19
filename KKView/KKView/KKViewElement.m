@@ -45,7 +45,6 @@
 @synthesize obtaining = _obtaining;
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKViewElement class] name:@"view"];
 }
 

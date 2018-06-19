@@ -17,7 +17,7 @@
 @synthesize curElementView = _curElementView;
 
 +(void) initialize{
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKSlideViewElement class] name:@"slide"];
     [KKViewContext setDefaultElementClass:[KKSlideCurElement class] name:@"slide:cur"];
 }

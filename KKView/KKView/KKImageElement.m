@@ -36,7 +36,6 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 @synthesize failImage = _failImage;
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKImageElement class] name:@"image"];
 }
 

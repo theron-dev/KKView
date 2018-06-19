@@ -29,7 +29,6 @@ enum KKScrollViewElementScrollType {
 @implementation KKScrollViewElement
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKScrollViewElement class] name:@"scroll"];
 }
 

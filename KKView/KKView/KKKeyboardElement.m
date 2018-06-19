@@ -14,7 +14,7 @@
 @implementation KKKeyboardElement
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKKeyboardElement class] name:@"keyboard"];
 }
 

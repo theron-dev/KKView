@@ -12,7 +12,7 @@
 @implementation KKLoadingViewElement
 
 +(void) initialize{
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKLoadingViewElement class] name:@"loading"];
 }
 

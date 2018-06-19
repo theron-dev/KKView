@@ -20,7 +20,7 @@
 @synthesize animation = _animation;
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKAnimationElement class] name:@"animation"];
     [KKViewContext setDefaultElementClass:[KKElement class] name:@"anim:transform"];
     [KKViewContext setDefaultElementClass:[KKElement class] name:@"anim:opacity"];

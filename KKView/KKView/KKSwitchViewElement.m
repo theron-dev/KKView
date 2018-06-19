@@ -12,7 +12,7 @@
 @implementation KKSwitchViewElement
 
 +(void) initialize{
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKSwitchViewElement class] name:@"switch"];
 }
 

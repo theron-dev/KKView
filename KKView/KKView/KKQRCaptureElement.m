@@ -154,7 +154,7 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 @implementation KKQRCaptureElement
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKQRCaptureElement class] name:@"qr:capture"];
 }
 

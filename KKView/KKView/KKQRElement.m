@@ -20,7 +20,7 @@
 @synthesize image = _image;
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKQRElement class] name:@"qr"];
 }
 

@@ -17,7 +17,7 @@
 @implementation KKInputElement
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKInputElement class] name:@"input"];
 }
 

@@ -12,7 +12,6 @@
 @implementation KKControlViewElement
 
 +(void) initialize{
-    [super initialize];
     [KKViewContext setDefaultElementClass:[KKControlViewElement class] name:@"button"];
 }
 

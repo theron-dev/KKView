@@ -12,7 +12,7 @@
 @implementation KKTopbarElement
 
 +(void) initialize {
-    [super initialize];
+    
     [KKViewContext setDefaultElementClass:[KKTopbarElement class] name:@"topbar"];
 }
 

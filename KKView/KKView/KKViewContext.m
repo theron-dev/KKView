@@ -53,7 +53,7 @@ static NSMutableArray * KKViewContextQueue() {
 @implementation KKViewContext
 
 +(void) initialize {
-    [super initialize];
+    
     [KKPagerViewElement class];
     [KKTextElement class];
     [KKSpanElement class];
