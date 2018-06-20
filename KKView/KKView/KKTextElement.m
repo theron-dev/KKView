@@ -162,6 +162,14 @@
         if (arr.count >= 2) {
             self.strokeSpacing = KKPixelFromString(arr[0]);
             self.strokeColor = [UIColor KKElementStringValue:arr[1]];
+            if([self.parent isKindOfClass:[KKTextElement class]]) {
+                [(KKTextElement *) self.parent setNeedsDisplay];
+            }
+        }
+    } else if([@"text-decoration" isEqualToString:key]) {
+        self.textDecoration = KKTextDecorationFromString(value);
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
         }
     }
 }
@@ -313,7 +321,11 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         if (arr.count >= 2) {
             self.strokeSpacing = KKPixelFromString(arr[0]);
             self.strokeColor = [UIColor KKElementStringValue:arr[1]];
+            [self setNeedsDisplay];
         }
+    } else if([@"text-decoration" isEqualToString:key]) {
+        self.textDecoration = KKTextDecorationFromString(value);
+        [self setNeedsDisplay];
     }
 }
 
@@ -361,6 +373,20 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     attrs[NSFontAttributeName] = e.font ;
     attrs[NSKernAttributeName] = @(KKPixelValue(e.letterSpacing, 0, 0));
     attrs[NSBaselineOffsetAttributeName] = @(KKPixelValue(e.baseline, 0, 0));
+    
+    switch (e.textDecoration) {
+        case KKTextDecorationUnderline:
+            attrs[NSUnderlineColorAttributeName] = e.color;
+            attrs[NSUnderlineStyleAttributeName] = @(NSUnderlineStyleSingle);
+            break;
+        case KKTextDecorationLineThrough:
+            attrs[NSStrikethroughColorAttributeName] = e.color;
+            attrs[NSStrikethroughStyleAttributeName] = @(NSUnderlineStyleSingle);
+            break;
+        default:
+            break;
+    }
+    
     NSMutableParagraphStyle * style = [[NSMutableParagraphStyle alloc] init];
     
     style.alignment = e.textAlign;
@@ -382,6 +408,12 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
             UIColor * v = ee.color;
             if( v != NULL ) {
                 attrs[NSForegroundColorAttributeName] = v;
+                if(attrs[NSUnderlineColorAttributeName] != nil) {
+                    attrs[NSUnderlineColorAttributeName] = v;
+                }
+                if(attrs[NSStrikethroughColorAttributeName] != nil) {
+                    attrs[NSStrikethroughColorAttributeName] = v;
+                }
             }
         }
         
@@ -406,6 +438,19 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
                 attrs[NSStrokeColorAttributeName] = ee.strokeColor;
                 attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(ee.strokeSpacing, 0, 0)));
             }
+        }
+        
+        switch (ee.textDecoration) {
+            case KKTextDecorationUnderline:
+                attrs[NSUnderlineColorAttributeName] = attrs[NSForegroundColorAttributeName];
+                attrs[NSUnderlineStyleAttributeName] = @(NSUnderlineStyleSingle);
+                break;
+            case KKTextDecorationLineThrough:
+                attrs[NSStrikethroughColorAttributeName] = attrs[NSForegroundColorAttributeName];
+                attrs[NSStrikethroughStyleAttributeName] = @(NSUnderlineStyleSingle);
+                break;
+            default:
+                break;
         }
         
     }

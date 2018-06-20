@@ -791,6 +791,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
             e = e.nextSibling;
         }
     } else if([key isEqualToString:@"transform"]) {
+        self.layer.transform = CATransform3DIdentity;
         self.layer.transform = KKTransformFromString(value);
     }
 }

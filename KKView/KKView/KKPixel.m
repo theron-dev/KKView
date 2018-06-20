@@ -241,3 +241,16 @@ CATransform3D KKTransformFromString(NSString * value) {
     }
     return v;
 }
+
+enum KKTextDecoration KKTextDecorationFromString(NSString * value) {
+    
+    if([value isEqualToString:@"underline"]) {
+        return KKTextDecorationUnderline;
+    }
+    
+    if([value isEqualToString:@"line-through"]) {
+        return KKTextDecorationLineThrough;
+    }
+    
+    return KKTextDecorationNone;
+}
