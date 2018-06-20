@@ -159,12 +159,15 @@
         }
     } else if ([@"text-stroke" isEqualToString:key]) {
         NSArray * arr = [value componentsSeparatedByString:@" "];
-        if (arr.count >= 2) {
-            self.strokeSpacing = KKPixelFromString(arr[0]);
-            self.strokeColor = [UIColor KKElementStringValue:arr[1]];
-            if([self.parent isKindOfClass:[KKTextElement class]]) {
-                [(KKTextElement *) self.parent setNeedsDisplay];
+        for(NSString *v in arr) {
+            if(KKPixelIsValue(v)) {
+                self.strokeSpacing = KKPixelFromString(v);
+            } else if([v hasPrefix:@"#"]) {
+                self.strokeColor = [UIColor KKElementStringValue:v];
             }
+        }
+        if([self.parent isKindOfClass:[KKTextElement class]]) {
+            [(KKTextElement *) self.parent setNeedsDisplay];
         }
     } else if([@"text-decoration" isEqualToString:key]) {
         self.textDecoration = KKTextDecorationFromString(value);
@@ -318,11 +321,14 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         [self setNeedsDisplay];
     } else if ([@"text-stroke" isEqualToString:key]) {
         NSArray * arr = [value componentsSeparatedByString:@" "];
-        if (arr.count >= 2) {
-            self.strokeSpacing = KKPixelFromString(arr[0]);
-            self.strokeColor = [UIColor KKElementStringValue:arr[1]];
-            [self setNeedsDisplay];
+        for(NSString *v in arr) {
+            if(KKPixelIsValue(v)) {
+                self.strokeSpacing = KKPixelFromString(v);
+            } else if([v hasPrefix:@"#"]) {
+                self.strokeColor = [UIColor KKElementStringValue:v];
+            }
         }
+        [self setNeedsDisplay];
     } else if([@"text-decoration" isEqualToString:key]) {
         self.textDecoration = KKTextDecorationFromString(value);
         [self setNeedsDisplay];

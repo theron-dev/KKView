@@ -183,6 +183,11 @@
     _obtaining = NO;
 }
 
+-(void) recycle {
+    [self recycleView];
+    [super recycle];
+}
+
 -(void) recycleView {
     
     UIView * vv = _view;

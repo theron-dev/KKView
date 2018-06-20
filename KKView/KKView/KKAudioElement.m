@@ -34,13 +34,21 @@
     return self;
 }
 
+-(void) dealloc {
+    [self cancelPlaying];
+}
+
 -(void) changedKey:(NSString *)key {
     [super changedKey:key];
     
     if([key isEqualToString:@"src"]) {
         [self startPlaying];
     } else if([key isEqualToString:@"autoplay"]) {
-        [self startPlaying];
+        if(KKBooleanValue([self get:key])) {
+            [self startPlaying];
+        } else {
+            [self cancelPlaying];
+        }
     } else if([key isEqualToString:@"pool"]) {
         [self startPlaying];
     }
@@ -79,7 +87,17 @@
         
         NSError * error = nil;
         
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&error];
+        AVAudioSession * session =[AVAudioSession sharedInstance];
+        
+        [session setCategory:AVAudioSessionCategoryAmbient error:&error];
+
+        if(error != nil) {
+            [self onError:[error localizedDescription] errcode:500];
+            return;
+        }
+        
+        [session setActive:YES error:&error];
+        
         if(error != nil) {
             [self onError:[error localizedDescription] errcode:500];
             return;
@@ -87,6 +105,9 @@
         
         self.playerItem = [AVPlayerItem playerItemWithURL:u];
         self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayingFinished) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+        
     }
     
     if(_player && !_playing) {
@@ -95,13 +116,31 @@
     }
 }
 
+-(void) didPlayingFinished {
+    
+    if(KKBooleanValue([self get:@"loop"])) {
+        [self.player seekToTime:kCMTimeZero];
+        [self.player play];
+    }
+    
+}
+
 -(void) cancelPlaying {
     if(_player) {
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+        
+        
         [self.player pause];
         self.player = nil;
         self.playerItem = nil;
         _playing =NO;
     }
+}
+
+-(void) recycle {
+    [self cancelPlaying];
+    [super recycle];
 }
 
 @end
