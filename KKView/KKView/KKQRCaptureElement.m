@@ -164,9 +164,12 @@ typedef void (^KKQRCaptureViewOnVisible)(BOOL visible);
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self set:@"view" value:NSStringFromClass([KKQRCaptureView class])];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [KKQRCaptureView class];
 }
 
 -(void) setView:(UIView *)view {

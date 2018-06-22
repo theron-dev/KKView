@@ -193,9 +193,12 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 -(instancetype) init{
     if((self = [super init])) {
         [super setLayout:KKTextElementLayout];
-        [self setAttrs:@{@"view":@"UILabel"}];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UILabel class];
 }
 
 -(void) setLayout:(KKViewElementLayout)layout {

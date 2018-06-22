@@ -130,6 +130,8 @@
     
     __strong UIView * vv = nil;
     
+    Class viewClass = [self viewClass];
+    
     UIView * v = view;
     
     NSString * reuse = self.reuse;
@@ -142,12 +144,18 @@
             
             NSMutableArray * views = [dequeueViews objectForKey:reuse];
             
-            if([views count] > 0) {
+            while([views count] > 0) {
                 
                 vv = [views lastObject];
                 
                 [views removeLastObject];
                 
+                if([vv isKindOfClass:viewClass]) {
+                    break;
+                } else {
+                    vv = nil;
+                }
+
             }
             
         }

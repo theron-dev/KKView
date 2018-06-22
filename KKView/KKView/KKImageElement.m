@@ -42,10 +42,13 @@ static CGSize KKImageElementLayout(KKViewElement * element);
 -(instancetype) init{
     if((self = [super init])) {
         [super setLayout:KKImageElementLayout];
-        [self set:@"view" value:@"UIImageView"];
         _context = [KKViewContext currentContext];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UIImageView class];
 }
 
 -(void) dealloc {

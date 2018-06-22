@@ -17,9 +17,12 @@
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self set:@"view" value:@"UIControl"];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UIControl class];
 }
 
 -(void) setView:(UIView *)view {

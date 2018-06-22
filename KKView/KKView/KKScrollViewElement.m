@@ -34,9 +34,12 @@ enum KKScrollViewElementScrollType {
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self set:@"view" value:@"UIScrollView"];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UIScrollView class];
 }
 
 -(void) changedKey:(NSString *)key {

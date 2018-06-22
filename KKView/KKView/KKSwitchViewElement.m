@@ -23,6 +23,10 @@
     return self;
 }
 
+-(Class) viewClass {
+    return [UISwitch class];
+}
+
 -(void) setView:(UIView *)view {
     [(UISwitch *) self.view removeTarget:self action:@selector(doChangeAction:) forControlEvents:UIControlEventValueChanged];
     [super setView:view];

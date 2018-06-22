@@ -26,9 +26,12 @@
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self set:@"view" value:@"UIImageView"];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UIImageView class];
 }
 
 -(void) changedKey:(NSString *)key {

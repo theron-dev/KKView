@@ -18,9 +18,13 @@
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self setAttrs:@{@"view":NSStringFromClass([UIActivityIndicatorView class]),@"hidden":@"false"}];
+        [self setAttrs:@{@"hidden":@"false"}];
     }
     return self;
+}
+
+-(Class) viewClass {
+    return [UIActivityIndicatorView class];
 }
 
 @end
