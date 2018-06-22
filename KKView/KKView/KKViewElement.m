@@ -229,14 +229,6 @@
         
         [self setView:nil];
         
-        KKElement * p = self.firstChild;
-        
-        while(p) {
-            if([p isKindOfClass:[KKViewElement class]]) {
-                [(KKViewElement *) p recycleView];
-            }
-            p = p.nextSibling;
-        }
     }
 }
 

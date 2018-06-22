@@ -422,6 +422,13 @@
 
 -(void) recycle {
     
+    KKElement * p = self.firstChild;
+    
+    while(p) {
+        [p recycle];
+        p = p.nextSibling;
+    }
+    
 }
 
 @end
