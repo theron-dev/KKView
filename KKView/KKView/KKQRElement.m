@@ -71,6 +71,12 @@
     return _image;
 }
 
+-(void) display {
+    UIImageView * v = (UIImageView *) self.view;
+    v.image = self.image;
+    _displaying = NO;
+}
+
 -(void) setNeedsDisplay {
     
     if(_displaying) {
@@ -80,13 +86,10 @@
     _image = nil;
     _displaying = YES;
     
+    __weak KKQRElement * e = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        UIImageView * v = (UIImageView *) self.view;
-        
-        v.image = self.image;
-        
-        _displaying = NO;
+        [e display];
     });
 }
 

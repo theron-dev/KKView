@@ -271,6 +271,18 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     [(UILabel *)view setNumberOfLines:0];
 }
 
+-(void) display {
+    
+    UILabel * v = (UILabel *) [self view];
+    
+    if([v isKindOfClass:[UILabel class]]) {
+        [v setAttributedText:self.attributedString];
+    }
+    
+    _displaying = false;
+    
+}
+
 -(void) setNeedsDisplay {
     
     _attributedString = nil;
@@ -283,15 +295,10 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     
     _displaying = true;
     
+    __weak KKTextElement * e = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        UILabel * v = (UILabel *) [self view];
-        
-        if([v isKindOfClass:[UILabel class]]) {
-            [v setAttributedText:self.attributedString];
-        }
-        
-        _displaying = false;
+        [e display];
     });
     
 }

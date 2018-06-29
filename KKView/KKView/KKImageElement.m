@@ -332,6 +332,18 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     [self setNeedsDisplay];
 }
 
+-(void) display {
+    
+    UIImageView * v = (UIImageView *) self.view;
+    
+    if([v isKindOfClass:[UIImageView class]]) {
+        v.image = self.image;
+    };
+    
+    _displaying = false;
+    
+}
+
 -(void) setNeedsDisplay {
     
     if(_displaying || self.view == nil) {
@@ -340,15 +352,10 @@ static CGSize KKImageElementLayout(KKViewElement * element);
     
     _displaying = true;
     
+    __weak KKImageElement * e = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        UIImageView * v = (UIImageView *) self.view;
-        
-        if([v isKindOfClass:[UIImageView class]]) {
-            v.image = self.image;
-        };
-        
-        _displaying = false;
+        [e display];
     });
 }
 
