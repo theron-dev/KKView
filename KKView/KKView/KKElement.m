@@ -422,6 +422,8 @@
 
 -(void) recycle {
     
+    [self off:nil fn:nil context:nil];
+    
     KKElement * p = self.firstChild;
     
     while(p) {

@@ -18,7 +18,6 @@
 
 -(instancetype) init {
     if((self = [super init])) {
-        [self setAttrs:@{@"view":NSStringFromClass([UISwitch class])}];
     }
     return self;
 }
