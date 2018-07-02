@@ -128,27 +128,30 @@
     
     NSString * reuse = self.reuse;
     
-    NSMutableDictionary * dequeueViews = objc_getAssociatedObject(v, KKViewDequeueViewsKey);
-    
-    if(dequeueViews != nil) {
+    if([reuse length] > 0) {
         
-        NSMutableArray * views = [dequeueViews objectForKey:reuse];
+        NSMutableDictionary * dequeueViews = objc_getAssociatedObject(v, KKViewDequeueViewsKey);
         
-        while([views count] > 0) {
+        if(dequeueViews != nil) {
             
-            vv = [views objectAtIndex:0];
+            NSMutableArray * views = [dequeueViews objectForKey:reuse];
             
-            [views removeObjectAtIndex:0];
-            
-            if([vv isKindOfClass:viewClass]) {
-                break;
-            } else {
-                [vv removeFromSuperview];
-                vv = nil;
+            while([views count] > 0) {
+                
+                vv = [views objectAtIndex:0];
+                
+                [views removeObjectAtIndex:0];
+                
+                if([vv isKindOfClass:viewClass]) {
+                    break;
+                } else {
+                    [vv removeFromSuperview];
+                    vv = nil;
+                }
+                
             }
             
         }
-        
     }
     
     if(vv == nil) {
@@ -195,21 +198,27 @@
         
         NSString * reuse = element.reuse;
         
-        NSMutableDictionary * dequeueViews = objc_getAssociatedObject(v, KKViewDequeueViewsKey);
-        
-        if(dequeueViews == nil) {
-            dequeueViews = [NSMutableDictionary dictionaryWithCapacity:4];
-            objc_setAssociatedObject(v, KKViewDequeueViewsKey, dequeueViews, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        if([reuse length] > 0) {
+            
+            NSMutableDictionary * dequeueViews = objc_getAssociatedObject(v, KKViewDequeueViewsKey);
+            
+            if(dequeueViews == nil) {
+                dequeueViews = [NSMutableDictionary dictionaryWithCapacity:4];
+                objc_setAssociatedObject(v, KKViewDequeueViewsKey, dequeueViews, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            }
+            
+            NSMutableArray * views = [dequeueViews objectForKey:reuse];
+            
+            if(views == nil) {
+                views = [NSMutableArray arrayWithCapacity:4];
+                [dequeueViews setObject:views forKey:reuse];
+            }
+            
+            [views addObject:vv];
+            
+        } else {
+            [vv removeFromSuperview];
         }
-        
-        NSMutableArray * views = [dequeueViews objectForKey:reuse];
-        
-        if(views == nil) {
-            views = [NSMutableArray arrayWithCapacity:4];
-            [dequeueViews setObject:views forKey:reuse];
-        }
-        
-        [views addObject:vv];
         
         [vv KKElementRecycleView:element];
         
@@ -713,10 +722,6 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
 }
 
 @implementation UIView (KKElement)
-
--(NSString *) description {
-    return [objc_getAssociatedObject(self, KKViewDequeueViewsKey) description];
-}
 
 -(void) KKViewElement:(KKViewElement *) element setProperty:(NSString *) key value:(NSString *) value {
     if([key isEqualToString:@"background-color"]) {

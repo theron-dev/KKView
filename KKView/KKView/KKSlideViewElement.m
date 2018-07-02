@@ -7,8 +7,16 @@
 //
 
 #import "KKSlideViewElement.h"
+#import "KKControlViewElement.h"
+
+@interface KKSlideViewElement()
+
+@property(nonatomic,strong) UITapGestureRecognizer * tapGestureRecognizer;
+
+@end
 
 @implementation KKSlideCurElement
+
 
 @end
 
@@ -20,6 +28,51 @@
     
     [KKViewContext setDefaultElementClass:[KKSlideViewElement class] name:@"slide"];
     [KKViewContext setDefaultElementClass:[KKSlideCurElement class] name:@"slide:cur"];
+}
+
+-(void) tapAction:(UITapGestureRecognizer *) tapGestureRecognizer {
+    
+    CGPoint p = [tapGestureRecognizer locationInView:self.view];
+    
+    KKElement * e = self.lastChild;
+    
+    while(e) {
+        
+        if([e isKindOfClass:[KKControlViewElement class]]) {
+            
+            CGRect frame = [(KKViewElement *) e frame];
+            
+            if(CGRectContainsPoint(frame, p)) {
+                
+                KKElementEvent * event = [[KKElementEvent alloc] initWithElement:e];
+                
+                NSMutableDictionary * data = [e data];
+                
+                data[@"x"] = @(p.x - frame.origin.x);
+                data[@"y"] = @(p.y - frame.origin.y);
+                data[@"width"] = @(frame.size.width);
+                data[@"height"] = @(frame.size.height);
+                
+                event.data = data;
+                
+                [e emit:@"tap" event:event];
+                
+                return;
+            }
+        }
+        
+        e = e.prevSibling;
+    }
+    
+}
+
+-(UITapGestureRecognizer *) tapGestureRecognizer {
+    
+    if(_tapGestureRecognizer == nil) {
+        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    }
+    
+    return _tapGestureRecognizer;
 }
 
 -(KKViewElement *) curElement {
@@ -34,9 +87,13 @@
 }
 
 -(void) setView:(UIView *)view {
+    if(_tapGestureRecognizer) {
+        [self.view removeGestureRecognizer:_tapGestureRecognizer];
+    }
     [_curElementView removeFromSuperview];
     [super setView:view];
     if(view != nil) {
+        [view addGestureRecognizer:self.tapGestureRecognizer];
         [(UIScrollView *) view setDelaysContentTouches:NO];
         [self updateAnchor:NO];
     }
@@ -104,13 +161,25 @@
                 animated = NO;
             }
             
+            CGRect r = element.frame;
+            CGSize size = CGSizeMake(r.size.width, self.frame.size.height);
+            
+            size.width = KKPixelValue(cur.element.width, size.width, 0);
+            size.height = KKPixelValue(cur.element.height, size.height, 0);
+            
+            [cur.element layout:size];
+        
+            CGFloat centerX = r.origin.x + r.size.width * 0.5f;
+
             if(animated) {
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
             }
             
-            cur.frame = element.frame;
-            [cur.element layout:element.frame.size];
+            cur.frame = CGRectMake(centerX - size.width * 0.5f,
+                                   0,
+                                   size.width, size.height);
+            
             [cur.element obtainView:cur];
             
             if(animated) {
@@ -125,6 +194,15 @@
         [(UIScrollView *)self.view scrollRectToVisible:element.frame animated:animated];
     }
     
+}
+
+-(void) addSubview:(UIView *) view element:(KKViewElement *) element toView:(UIView *) toView {
+    NSString * v = [element get:@"floor"];
+    if([v isEqualToString:@"back"]) {
+        [toView insertSubview:view atIndex:0];
+    } else {
+        [toView addSubview:view];
+    }
 }
 
 @end

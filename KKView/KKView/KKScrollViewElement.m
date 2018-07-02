@@ -19,7 +19,6 @@ enum KKScrollViewElementScrollType {
 
 @interface KKScrollViewElement() <UIScrollViewDelegate> {
     enum KKScrollViewElementScrollType _scrollType;
-    BOOL _tracking;
     NSString * _anchor;
     BOOL _anchorScrolling;
 }
@@ -69,6 +68,25 @@ enum KKScrollViewElementScrollType {
     [(UIScrollView *) self.view setDelegate:nil];
 }
 
+-(void) emitScrollEvent {
+    
+    NSMutableDictionary * data = self.data;
+    
+    data[@"tracking"] = @([(UIScrollView *) self.view isTracking]);
+    data[@"x"] = @(self.contentOffset.x);
+    data[@"y"] = @(self.contentOffset.y);
+    data[@"w"] = @(self.contentSize.width);
+    data[@"h"] = @(self.contentSize.height);
+    data[@"width"] = @(self.frame.size.width);
+    data[@"height"] = @(self.frame.size.height);
+    
+    KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
+    
+    e.data = data;
+    
+    [self emit:@"scroll" event:e];
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if(object == self.view && [keyPath isEqualToString:@"contentOffset"]) {
         self.contentOffset = [(UIScrollView *) self.view contentOffset];
@@ -110,23 +128,11 @@ enum KKScrollViewElementScrollType {
             }
         }
         
+        
+        
         if([self hasEvent:@"scroll"]){
             
-            NSMutableDictionary * data = self.data;
-            
-            data[@"tracking"] = @(_tracking);
-            data[@"x"] = @(self.contentOffset.x);
-            data[@"y"] = @(self.contentOffset.y);
-            data[@"w"] = @(self.contentSize.width);
-            data[@"h"] = @(self.contentSize.height);
-            data[@"width"] = @(self.frame.size.width);
-            data[@"height"] = @(self.frame.size.height);
-            
-            KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
-            
-            e.data = data;
-            
-            [self emit:@"scroll" event:e];
+            [self emitScrollEvent];
             
         }
         
@@ -161,7 +167,7 @@ enum KKScrollViewElementScrollType {
                     
                     NSMutableDictionary * data = self.data;
                     
-                    data[@"tracking"] = @(_tracking);
+                    data[@"tracking"] = @([(UIScrollView *) self.view isTracking]);
                     data[@"x"] = @(self.contentOffset.x);
                     data[@"y"] = @(self.contentOffset.y);
                     data[@"w"] = @(self.contentSize.width);
@@ -220,17 +226,21 @@ enum KKScrollViewElementScrollType {
 
 -(void) scrollViewDidScroll:(UIScrollView *)scrollView {
     _scrollType = KKScrollViewElementScrollTypeNone;
-    _tracking = NO;
     _anchor = nil;
+    if(![scrollView isTracking]) {
+        if([self hasEvent:@"scroll"]) {
+            [self emitScrollEvent];
+        }
+    }
 }
 
 -(void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     [self scrollViewDidEndScrolling];
-    _tracking = NO;
+
 }
 
 -(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    _tracking = YES;
+
 }
 
 
