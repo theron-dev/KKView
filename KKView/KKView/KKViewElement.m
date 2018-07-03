@@ -107,6 +107,10 @@
     return [UIView class];
 }
 
+-(UIView*) createView {
+    return [[[self viewClass] alloc] initWithFrame:CGRectZero];
+}
+
 -(void) obtainView:(UIView *) view {
     
     if(_view && _view.superview == view) {
@@ -154,9 +158,7 @@
         }
     }
     
-    if(vv == nil) {
-        vv = [[viewClass alloc] initWithFrame:CGRectZero];
-    }
+    vv = [self createView];
     
     if(vv == nil) {
         vv = [[UIView alloc] initWithFrame:CGRectZero];
@@ -185,11 +187,11 @@
 }
 
 -(void) recycle {
-    [KKViewElement recycleView:self];
+    [self recycleView:self];
     [super recycle];
 }
 
-+(void) recycleView:(KKViewElement *) element {
+-(void) recycleView:(KKViewElement *) element {
     
     UIView * vv = element.view;
     UIView * v = [vv superview];
@@ -230,7 +232,7 @@
 
 -(void) recycleView {
     
-    [KKViewElement recycleView:self];
+    [self recycleView:self];
     
     KKElement * e = self.firstChild;
     

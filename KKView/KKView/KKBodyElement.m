@@ -15,11 +15,6 @@
     [KKViewContext setDefaultElementClass:[KKBodyElement class] name:@"body"];
 }
 
--(void) dealloc {
-    [self.view removeObserver:self forKeyPath:@"contentSize"];
-    [self.view removeObserver:self forKeyPath:@"contentOffset"];
-}
-
 -(void) obtainView:(UIView *) view {
     
     if(self.view == view) {
@@ -40,7 +35,8 @@
     [self obtainChildrenView];
 }
 
--(void) recycleView {
+
+-(void) recycleView:(KKViewElement *) element {
     
     if(self.view != nil) {
         
@@ -49,14 +45,7 @@
         [self.view KKElementRecycleView:self];
         
         self.view = nil;
-        
-        KKElement * p = self.firstChild;
-        while(p) {
-            if([p isKindOfClass:[KKViewElement class]]) {
-                [(KKViewElement *) p recycleView];
-            }
-            p = p.nextSibling;
-        }
+    
     }
     
 }
