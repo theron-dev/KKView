@@ -413,7 +413,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
 
     if (e.strokeColor) {
         attrs[NSStrokeColorAttributeName] = e.strokeColor;
-        attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(e.strokeSpacing, 0, 0)));
+        attrs[NSStrokeWidthAttributeName] = @(-KKPixelValue(e.strokeSpacing, 0, 0) -2);
     }
     
     if(e != element && [element isKindOfClass:[KKSpanElement class]]) {
@@ -452,7 +452,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
             UIColor * v = ee.strokeColor;
             if (v != nil) {
                 attrs[NSStrokeColorAttributeName] = ee.strokeColor;
-                attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(ee.strokeSpacing, 0, 0)));
+                attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(ee.strokeSpacing, 0, 0)) - 2);
             }
         }
         

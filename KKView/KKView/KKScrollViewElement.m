@@ -180,13 +180,7 @@ enum KKScrollViewElementScrollType {
                                       ,@"y":@(element.frame.origin.y)
                                       ,@"anchor":anchor
                                       };
-                    
-                    KKElement * p = self.firstChild;
-                    
-                    while(p) {
-                        
-                        p = p.nextSibling;
-                    }
+                
                     
                     KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
                     
