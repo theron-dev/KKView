@@ -2,7 +2,7 @@
 //  UIView+BackgroundImage.m
 //  KKView
 //
-//  Created by hailong11 on 2018/1/15.
+//  Created by zhanghailong on 2018/1/15.
 //  Copyright © 2018年 kkmofang.cn. All rights reserved.
 //
 
