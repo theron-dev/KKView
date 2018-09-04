@@ -158,7 +158,9 @@
         }
     }
     
-    vv = [self createView];
+    if(vv == nil) {
+        vv = [self createView];
+    }
     
     if(vv == nil) {
         vv = [[UIView alloc] initWithFrame:CGRectZero];
@@ -201,6 +203,10 @@
         NSString * reuse = element.reuse;
         
         if([reuse length] > 0) {
+            
+            if([reuse isEqualToString:@"record"]) {
+                NSLog(@"");
+            }
             
             NSMutableDictionary * dequeueViews = objc_getAssociatedObject(v, KKViewDequeueViewsKey);
             

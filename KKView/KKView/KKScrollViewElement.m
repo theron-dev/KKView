@@ -41,6 +41,40 @@ enum KKScrollViewElementScrollType {
     return [UIScrollView class];
 }
 
+-(void) changedStatus {
+    
+    UIScrollView * v = (UIScrollView *) self.view;
+    
+    if(v == nil) {
+        return;
+    }
+    
+    if(_taptop.type == KKPixelTypeAuto) {
+        return ;
+    }
+
+    if([[self status] isEqualToString:@"loading"]) {
+        
+        [UIView animateWithDuration:300 animations:^{
+            [v setContentInset:UIEdgeInsetsMake(KKPixelValue(_taptop, 0, 0), 0, 0, 0)];
+        }];
+        
+    } else {
+        
+        [UIView animateWithDuration:300 animations:^{
+            [v setContentInset:UIEdgeInsetsZero];
+        }];
+        
+    }
+}
+
+-(void) set:(NSString *)key value:(NSString *)value {
+    [super set:key value:value];
+    
+    if([key isEqualToString:@"status"] || [key isEqualToString:@"in-status"]) {
+        [self changedStatus];
+    }
+}
 -(void) changedKey:(NSString *)key {
     [super changedKey:key];
     

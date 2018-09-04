@@ -202,6 +202,7 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
             KKJSObserver * obs = [observers lastObject];
             [obs recycle];
             [e remove];
+            [e recycle];
             [elements removeLastObject];
             [observers removeLastObject];
         }
