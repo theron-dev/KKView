@@ -127,6 +127,16 @@
 
 @implementation KKSpanElement
 
+@synthesize lineSpacing = _lineSpacing;
+@synthesize paragraphSpacing = _paragraphSpacing;
+@synthesize letterSpacing = _letterSpacing;
+@synthesize baseline = _baseline;
+@synthesize color = _color;
+@synthesize font = _font;
+@synthesize strokeColor = _strokeColor;
+@synthesize strokeSpacing = _strokeSpacing;
+@synthesize textDecoration = _textDecoration;
+
 +(void) initialize{
     [KKViewContext setDefaultElementClass:[KKSpanElement class] name:@"span"];
 }
@@ -179,12 +189,21 @@
 
 @end
 
-static CGSize KKTextElementLayout(KKViewElement * element);
-static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * element);
+CGSize KKTextElementLayout(KKViewElement * element);
 
 @implementation KKTextElement
 
 @synthesize attributedString = _attributedString;
+@synthesize lineSpacing = _lineSpacing;
+@synthesize paragraphSpacing = _paragraphSpacing;
+@synthesize letterSpacing = _letterSpacing;
+@synthesize baseline = _baseline;
+@synthesize color = _color;
+@synthesize font = _font;
+@synthesize strokeColor = _strokeColor;
+@synthesize strokeSpacing = _strokeSpacing;
+@synthesize textDecoration = _textDecoration;
+@synthesize textAlign = _textAlign;
 
 +(void) initialize{
     [KKViewContext setDefaultElementClass:[KKTextElement class] name:@"text"];
@@ -214,7 +233,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         KKElement * p = self.firstChild;
         if(p == NULL) {
             NSString * v = self.text;
-            _attributedString = ([[NSAttributedString alloc] initWithString:v ? v : @"" attributes:KKTextElementAttribute(self, self)]);
+            _attributedString = ([[NSAttributedString alloc] initWithString:v ? v : @"" attributes:KKTextElementStringAttribute(self,nil)]);
         } else {
             
             NSMutableAttributedString * string = [[NSMutableAttributedString alloc] init];
@@ -224,7 +243,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
                 if([p isKindOfClass:[KKSpanElement class]]){
                     KKSpanElement * e = (KKSpanElement *) p;
                     NSString * v = e.text;
-                    [string appendAttributedString:[[NSAttributedString alloc] initWithString:v?v:@"" attributes:KKTextElementAttribute(self, p)]];
+                    [string appendAttributedString:[[NSAttributedString alloc] initWithString:v?v:@"" attributes:KKTextElementStringAttribute(self, p,nil)]];
                     
                     p = p.nextSibling;
                     
@@ -380,8 +399,11 @@ CGSize KKTextElementLayout(KKViewElement * element) {
     
 }
 
-
-static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * element) {
+NSDictionary * KKTextElementStringAttribute(KKElement<KKTextElement> * e,...) {
+    
+    va_list ap;
+    
+    va_start(ap, e);
     
     NSMutableDictionary * attrs = [NSMutableDictionary dictionaryWithCapacity:4];
     
@@ -405,23 +427,22 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     
     NSMutableParagraphStyle * style = [[NSMutableParagraphStyle alloc] init];
     
-    style.alignment = e.textAlign;
+    if([e respondsToSelector:@selector(textAlign)]) {
+        style.alignment = e.textAlign;
+    }
     
     style.lineSpacing = KKPixelValue(e.lineSpacing, 0, 0);
     style.paragraphSpacing = KKPixelValue(e.paragraphSpacing, 0, 0);
     
-
     if (e.strokeColor) {
         attrs[NSStrokeColorAttributeName] = e.strokeColor;
         attrs[NSStrokeWidthAttributeName] = @(-KKPixelValue(e.strokeSpacing, 0, 0) -2);
     }
     
-    if(e != element && [element isKindOfClass:[KKSpanElement class]]) {
-        
-        KKSpanElement * ee = (KKSpanElement *) element;
+    while((e = va_arg(ap, KKElement<KKTextElement> *))) {
         
         {
-            UIColor * v = ee.color;
+            UIColor * v = e.color;
             if( v != NULL ) {
                 attrs[NSForegroundColorAttributeName] = v;
                 if(attrs[NSUnderlineColorAttributeName] != nil) {
@@ -434,7 +455,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         }
         
         {
-            UIFont * v = ee.font;
+            UIFont * v = e.font;
             
             if( v != nil ) {
                 attrs[NSFontAttributeName] = v;
@@ -442,21 +463,21 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         }
         
         {
-
-            if( ee.letterSpacing.type != KKPixelTypeAuto ) {
-                attrs[NSKernAttributeName] = @(KKPixelValue(ee.letterSpacing, 0, 0));
+            
+            if( e.letterSpacing.type != KKPixelTypeAuto ) {
+                attrs[NSKernAttributeName] = @(KKPixelValue(e.letterSpacing, 0, 0));
             }
         }
         
         {
-            UIColor * v = ee.strokeColor;
+            UIColor * v = e.strokeColor;
             if (v != nil) {
-                attrs[NSStrokeColorAttributeName] = ee.strokeColor;
-                attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(ee.strokeSpacing, 0, 0)) - 2);
+                attrs[NSStrokeColorAttributeName] = e.strokeColor;
+                attrs[NSStrokeWidthAttributeName] = @(-(KKPixelValue(e.strokeSpacing, 0, 0)) - 2);
             }
         }
         
-        switch (ee.textDecoration) {
+        switch (e.textDecoration) {
             case KKTextDecorationUnderline:
                 attrs[NSUnderlineColorAttributeName] = attrs[NSForegroundColorAttributeName];
                 attrs[NSUnderlineStyleAttributeName] = @(NSUnderlineStyleSingle);
@@ -470,6 +491,8 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
         }
         
     }
+    
+    va_end(ap);
     
     attrs[NSParagraphStyleAttributeName] = style;
     
@@ -491,6 +514,7 @@ static NSDictionary * KKTextElementAttribute(KKTextElement * e,KKElement * eleme
     } else if([key isEqualToString:@"#text"]) {
         [(KKTextElement *) element setNeedsDisplay];
     }
+    
 }
 
 @end

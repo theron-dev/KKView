@@ -24,6 +24,7 @@
 #import "KKAudioElement.h"
 #import "KKWebViewElement.h"
 #import "KKSelectElement.h"
+#import "KKTextareaElement.h"
 
 #include <pthread.h>
 
@@ -75,6 +76,7 @@ static NSMutableArray * KKViewContextQueue() {
     [KKAudioElement class];
     [KKWebViewElement class];
     [KKSelectElement class];
+    [KKTextareaElement class];
 }
 
 -(UIImage *) imageWithURI:(NSString * ) uri {

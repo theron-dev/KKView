@@ -39,11 +39,13 @@
 		1A8E75F8200984130051826B /* NSTimer+KKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E75F6200984130051826B /* NSTimer+KKView.m */; };
 		1A8E7605200C82EB0051826B /* UIView+BackgroundImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8E7606200C82EB0051826B /* UIView+BackgroundImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E7604200C82EB0051826B /* UIView+BackgroundImage.m */; };
+		1A99661C21428BEB00DEE74D /* KKTextareaElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A99661A21428BEB00DEE74D /* KKTextareaElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A99661D21428BEB00DEE74D /* KKTextareaElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A99661B21428BEB00DEE74D /* KKTextareaElement.m */; };
 		1A9CE2CD1FFB803A00F2E650 /* KKBodyElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9CE2CB1FFB803A00F2E650 /* KKBodyElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A9CE2CE1FFB803A00F2E650 /* KKBodyElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */; };
 		1AA7917220D3AE9F00121878 /* KKAudioElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA7917020D3AE9F00121878 /* KKAudioElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AA7917320D3AE9F00121878 /* KKAudioElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA7917120D3AE9F00121878 /* KKAudioElement.m */; };
-		1ACA5A542140D87D00D9E590 /* KKSelectElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACA5A522140D87D00D9E590 /* KKSelectElement.h */; };
+		1ACA5A542140D87D00D9E590 /* KKSelectElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACA5A522140D87D00D9E590 /* KKSelectElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACA5A552140D87D00D9E590 /* KKSelectElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACA5A532140D87D00D9E590 /* KKSelectElement.m */; };
 		1ACF73111FF0DC3B003FB42A /* KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF730F1FF0DC3B003FB42A /* KKView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF73191FF0DC7A003FB42A /* KKElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF73171FF0DC7A003FB42A /* KKElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -147,6 +149,8 @@
 		1A8E75F6200984130051826B /* NSTimer+KKView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+KKView.m"; sourceTree = "<group>"; };
 		1A8E7603200C82EB0051826B /* UIView+BackgroundImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+BackgroundImage.h"; sourceTree = "<group>"; };
 		1A8E7604200C82EB0051826B /* UIView+BackgroundImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+BackgroundImage.m"; sourceTree = "<group>"; };
+		1A99661A21428BEB00DEE74D /* KKTextareaElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKTextareaElement.h; sourceTree = "<group>"; };
+		1A99661B21428BEB00DEE74D /* KKTextareaElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKTextareaElement.m; sourceTree = "<group>"; };
 		1A9CE2CB1FFB803A00F2E650 /* KKBodyElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKBodyElement.h; sourceTree = "<group>"; };
 		1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKBodyElement.m; sourceTree = "<group>"; };
 		1AA7917020D3AE9F00121878 /* KKAudioElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKAudioElement.h; sourceTree = "<group>"; };
@@ -292,6 +296,8 @@
 				1A5DA58D20E9FEEF001B9EF4 /* KKWebViewElement.m */,
 				1ACA5A522140D87D00D9E590 /* KKSelectElement.h */,
 				1ACA5A532140D87D00D9E590 /* KKSelectElement.m */,
+				1A99661A21428BEB00DEE74D /* KKTextareaElement.h */,
+				1A99661B21428BEB00DEE74D /* KKTextareaElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -327,6 +333,7 @@
 				1ACF732F1FF0F739003FB42A /* UIFont+KKElement.h in Headers */,
 				1A10473B203FD51900FBA6E3 /* KKElementView.h in Headers */,
 				1ACF73111FF0DC3B003FB42A /* KKView.h in Headers */,
+				1A99661C21428BEB00DEE74D /* KKTextareaElement.h in Headers */,
 				1ACF74101FF33569003FB42A /* KKPagerViewElement.h in Headers */,
 				1A104734203FD20500FBA6E3 /* KKTopbarElement.h in Headers */,
 				1ACF73611FF106EF003FB42A /* KKScrollViewElement.h in Headers */,
@@ -496,6 +503,7 @@
 				1ACF736A1FF108D6003FB42A /* KKControlViewElement.m in Sources */,
 				1ACF73241FF0E285003FB42A /* KKViewElement.m in Sources */,
 				1A10473C203FD51900FBA6E3 /* KKElementView.m in Sources */,
+				1A99661D21428BEB00DEE74D /* KKTextareaElement.m in Sources */,
 				1ACF73301FF0F739003FB42A /* UIFont+KKElement.m in Sources */,
 				1A8E75F8200984130051826B /* NSTimer+KKView.m in Sources */,
 				1A5DA58F20E9FEEF001B9EF4 /* KKWebViewElement.m in Sources */,

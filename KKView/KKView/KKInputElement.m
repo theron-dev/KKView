@@ -78,6 +78,14 @@
     
     [self emit:@"done" event:e];
     
+    __weak UITextField * v = textField;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([v isFirstResponder]) {
+            [v resignFirstResponder];
+        }
+    });
+
     return YES;
 }
 
@@ -134,6 +142,21 @@
         } else {
             self.keyboardType = UIKeyboardTypeDefault;
             self.secureTextEntry = NO;
+        }
+    } else if([key isEqualToString:@"padding"]) {
+        CGFloat left = KKPixelValue(element.padding.left,0,0);
+        CGFloat right = KKPixelValue(element.padding.right,0,0);
+        if(left > 0) {
+            UIView * v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, left, self.frame.size.height)];
+            self.leftView = v;
+        } else {
+            self.leftView = nil;
+        }
+        if(right > 0) {
+            UIView * v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, right, self.frame.size.height)];
+            self.rightView = v;
+        } else {
+            self.rightView = nil;
         }
     }
 }
