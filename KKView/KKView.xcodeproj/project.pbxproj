@@ -43,6 +43,8 @@
 		1A9CE2CE1FFB803A00F2E650 /* KKBodyElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */; };
 		1AA7917220D3AE9F00121878 /* KKAudioElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA7917020D3AE9F00121878 /* KKAudioElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AA7917320D3AE9F00121878 /* KKAudioElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA7917120D3AE9F00121878 /* KKAudioElement.m */; };
+		1ACA5A542140D87D00D9E590 /* KKSelectElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACA5A522140D87D00D9E590 /* KKSelectElement.h */; };
+		1ACA5A552140D87D00D9E590 /* KKSelectElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACA5A532140D87D00D9E590 /* KKSelectElement.m */; };
 		1ACF73111FF0DC3B003FB42A /* KKView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF730F1FF0DC3B003FB42A /* KKView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF73191FF0DC7A003FB42A /* KKElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACF73171FF0DC7A003FB42A /* KKElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACF731A1FF0DC7A003FB42A /* KKElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF73181FF0DC7A003FB42A /* KKElement.m */; };
@@ -149,6 +151,8 @@
 		1A9CE2CC1FFB803A00F2E650 /* KKBodyElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKBodyElement.m; sourceTree = "<group>"; };
 		1AA7917020D3AE9F00121878 /* KKAudioElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKAudioElement.h; sourceTree = "<group>"; };
 		1AA7917120D3AE9F00121878 /* KKAudioElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKAudioElement.m; sourceTree = "<group>"; };
+		1ACA5A522140D87D00D9E590 /* KKSelectElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSelectElement.h; sourceTree = "<group>"; };
+		1ACA5A532140D87D00D9E590 /* KKSelectElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSelectElement.m; sourceTree = "<group>"; };
 		1ACF730C1FF0DC3B003FB42A /* KKView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KKView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1ACF730F1FF0DC3B003FB42A /* KKView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKView.h; sourceTree = "<group>"; };
 		1ACF73101FF0DC3B003FB42A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -286,6 +290,8 @@
 				1AA7917120D3AE9F00121878 /* KKAudioElement.m */,
 				1A5DA58C20E9FEEF001B9EF4 /* KKWebViewElement.h */,
 				1A5DA58D20E9FEEF001B9EF4 /* KKWebViewElement.m */,
+				1ACA5A522140D87D00D9E590 /* KKSelectElement.h */,
+				1ACA5A532140D87D00D9E590 /* KKSelectElement.m */,
 			);
 			path = KKView;
 			sourceTree = "<group>";
@@ -333,6 +339,7 @@
 				1A9CE2CD1FFB803A00F2E650 /* KKBodyElement.h in Headers */,
 				1ACF74171FF340FC003FB42A /* JSContext+KKView.h in Headers */,
 				1A0366541FF9C80100CD6C27 /* KKQRElement.h in Headers */,
+				1ACA5A542140D87D00D9E590 /* KKSelectElement.h in Headers */,
 				1AE1434D1FF498D600D2DEAD /* KKViewContext.h in Headers */,
 				1ACF732B1FF0EFE8003FB42A /* KKTextElement.h in Headers */,
 				1ACF73271FF0E328003FB42A /* KKPixel.h in Headers */,
@@ -494,6 +501,7 @@
 				1A5DA58F20E9FEEF001B9EF4 /* KKWebViewElement.m in Sources */,
 				1ACF741C1FF36A6E003FB42A /* KKLoadingViewElement.m in Sources */,
 				1ACF732C1FF0EFE8003FB42A /* KKTextElement.m in Sources */,
+				1ACA5A552140D87D00D9E590 /* KKSelectElement.m in Sources */,
 				1AA7917320D3AE9F00121878 /* KKAudioElement.m in Sources */,
 				1ACF735E1FF101C4003FB42A /* KKImageElement.m in Sources */,
 				1A104728203FB1D800FBA6E3 /* KKKeyboardElement.m in Sources */,

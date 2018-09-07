@@ -216,9 +216,61 @@ void KKViewOnFor(NSString * evaluate, Class elementClass, NSDictionary * attrs, 
     
 }
 
+void KKViewOnIf(NSString * evaluate, Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserver * data,KKViewChildren children) {
+    
+    KKViewContext * viewContext = [KKViewContext currentContext];
+    
+    KKElement * before = [[KKElement alloc] init];
+    
+    [p append:before];
+    
+    __weak KKElement * be = before;
+    __block KKElement * e = nil;
+    __block KKJSObserver * obs = nil;
+    
+    KKObserverFunction reloadData = ^(id value, NSArray *changedKeys, void *context) {
+        
+        if(viewContext) {
+            [KKViewContext pushContext:viewContext];
+        }
+        
+        if(KKBooleanValue(value)) {
+
+            if( e == nil) {
+                e = [[elementClass alloc] init];
+                obs = [data newObserver];
+                KKViewOnAttribute(obs,e,attrs);
+                if(children){
+                    children(e,obs);
+                }
+                [be before:e];
+                [obs.observer setParent:data.observer];
+            }
+            
+        } else {
+            if(obs) {
+                [obs recycle];
+                obs = nil;
+            }
+            if (e) {
+                [e remove];
+                [e recycle];
+                e = nil;
+            }
+        }
+        
+        if(viewContext) {
+            [KKViewContext popContext];
+        }
+    };
+    
+    [data.observer on:reloadData evaluateScript:evaluate priority:KKOBSERVER_PRIORITY_DESC context:nil];
+    
+}
+
 void KKView(Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserver * data,KKViewChildren children) {
     
-    NSString * v = [attrs valueForKey:@"kk:for"];
+    NSString * v = [attrs kk_getString:@"kk:for"];
     
     if([v length] > 0) {
         
@@ -228,12 +280,27 @@ void KKView(Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserve
         
         KKViewOnFor(v,elementClass, mattrs, p, data, children);
         
-    } else {
-        KKElement * e = [[elementClass alloc] init];
-        KKViewOnAttribute(data,e,attrs);
-        [p append:e];
-        if(children){
-            children(e,data);
-        }
+        return;
     }
+    
+    v = [attrs kk_getString:@"kk:if"];
+    
+    if([v length] > 0) {
+        
+        NSMutableDictionary * mattrs = [NSMutableDictionary dictionaryWithDictionary:attrs];
+        
+        [mattrs removeObjectForKey:@"kk:for"];
+        
+        KKViewOnIf(v,elementClass, mattrs, p, data, children);
+        
+        return;
+    }
+    
+    KKElement * e = [[elementClass alloc] init];
+    KKViewOnAttribute(data,e,attrs);
+    [p append:e];
+    if(children){
+        children(e,data);
+    }
+
 }
