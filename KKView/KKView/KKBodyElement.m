@@ -26,11 +26,15 @@
     
     [view addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
     [view addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
-    [view KKElementObtainView:self];
     
     [self setView:view];
     
-    [self changedKeys:[self keys]];
+    [view KKElementObtainView:self];
+
+    for(NSString * key in self.keys) {
+        NSString * v = [self get:key];
+        [view KKViewElement:self setProperty:key value:v];
+    }
     
     [self obtainChildrenView];
 }
