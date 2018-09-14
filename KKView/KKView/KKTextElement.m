@@ -517,4 +517,18 @@ NSDictionary * KKTextElementStringAttribute(KKElement<KKTextElement> * e,...) {
     
 }
 
+-(void) KKViewElementDidLayouted:(KKViewElement *)element {
+
+    CGRect r = element.frame;
+    r.origin.x += KKPixelValue(element.padding.left, 0, 0);
+    r.origin.y += KKPixelValue(element.padding.top, 0, 0);
+    r.size.width -= KKPixelValue(element.padding.left, 0, 0) + KKPixelValue(element.padding.right, 0, 0);
+    r.size.height -= KKPixelValue(element.padding.top, 0, 0) + KKPixelValue(element.padding.bottom, 0, 0);
+    
+    r.origin.x += element.translate.x;
+    r.origin.y += element.translate.y;
+    self.frame = r;
+    
+}
+
 @end
