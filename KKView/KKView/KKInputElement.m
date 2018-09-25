@@ -149,14 +149,18 @@
         if(left > 0) {
             UIView * v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, left, self.frame.size.height)];
             self.leftView = v;
+            self.leftViewMode = UITextFieldViewModeAlways;
         } else {
             self.leftView = nil;
+            self.leftViewMode = UITextFieldViewModeNever;
         }
         if(right > 0) {
             UIView * v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, right, self.frame.size.height)];
             self.rightView = v;
+            self.rightViewMode = UITextFieldViewModeAlways;
         } else {
             self.rightView = nil;
+            self.rightViewMode = UITextFieldViewModeNever;
         }
     }
 }

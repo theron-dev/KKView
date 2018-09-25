@@ -10,6 +10,7 @@
 #import "KKViewContext.h"
 #import "UIColor+KKElement.h"
 #import "UIFont+KKElement.h"
+#import <KKObserver/KKObserver.h>
 
 @interface KKTextareaElement()<UITextViewDelegate>
 
@@ -77,6 +78,7 @@ CGSize KKTextareaElementLayout(KKViewElement * element) {
 +(void) initialize {
     
     [KKViewContext setDefaultElementClass:[KKTextareaElement class] name:@"textarea"];
+    [KKViewContext setDefaultElementClass:[KKTextareaElement class] name:@"editor"];
 }
 
 -(instancetype) init{
@@ -95,13 +97,91 @@ CGSize KKTextareaElementLayout(KKViewElement * element) {
 }
 
 -(void) setView:(UIView *)view {
+    
+    {
+        KKElement * e = self.firstChild;
+        
+        if(e && [[e get:@"#name"] isEqualToString:@"bar"]) {
+            KKElement * p = e.firstChild;
+            while(p != nil) {
+                if([p isKindOfClass:[KKViewElement class]]) {
+                    [(KKViewElement *) p recycleView];
+                }
+                p = p.nextSibling;
+            }
+        }
+    }
+    
+    [(UITextView*) self.view setInputView:nil];
     [(UITextView*) self.view setDelegate:nil];
     [super setView:view];
     [(UITextView*) self.view setDelegate:self];
     UITextView * textView = (UITextView *) view;
     if(textView) {
+        
         [textView setContentInset:UIEdgeInsetsMake(-10, -5, -15, -5)];
-        [textView setBackgroundColor:[UIColor grayColor]];
+        
+        {
+            KKElement * e = self.firstChild;
+            
+            if(e && [[e get:@"#name"] isEqualToString:@"bar"]) {
+                
+                UIView * view = [[UIView alloc] initWithFrame:CGRectZero];
+                
+                [textView setInputAccessoryView:view];
+                
+                CGSize size = CGSizeZero;
+                
+                KKElement * p = e.firstChild;
+                
+                while(p != nil) {
+                    if([p isKindOfClass:[KKViewElement class]]) {
+                        size.width = MAX(size.width,[(KKViewElement *) p frame].size.width);
+                        size.height = MAX(size.height,[(KKViewElement *) p frame].size.height);
+                        [(KKViewElement *) p obtainView:view];
+                    }
+                    p = p.nextSibling;
+                }
+                
+                view.frame = CGRectMake(0, 0, size.width, size.height);
+                
+            }
+        }
+        
+    }
+}
+
+-(void) emit:(NSString *)name event:(KKEvent *)event {
+    [super emit:name event:event];
+    
+    if([name isEqualToString:@"insert"]) {
+        if([event isKindOfClass: [KKElementEvent class]]) {
+            NSString * text = [[(KKElementEvent *) event data] kk_getString:@"text"];
+            if(text) {
+                UITextView * textView = (UITextView *) self.view;
+                [textView insertText:text];
+                [self textViewDidChange:textView];
+            }
+        }
+        
+    }
+}
+
+-(void) didLayouted {
+    [super didLayouted];
+    
+    KKElement * e = self.firstChild;
+    
+    if(e && [[e get:@"#name"] isEqualToString:@"bar"]) {
+        CGSize size = [UIScreen mainScreen].bounds.size;
+        KKElement * p = e.firstChild;
+        while(p != nil) {
+            if([p isKindOfClass:[KKViewElement class]]) {
+                KKViewElement * v =(KKViewElement *) p;
+                [(KKViewElement *) p layout:CGSizeMake(KKPixelValue(v.width, size.width, 0), KKPixelValue(v.height, size.height, 0))];
+            }
+            p = p.nextSibling;
+        }
     }
 }
 
@@ -162,7 +242,7 @@ CGSize KKTextareaElementLayout(KKViewElement * element) {
 -(void) KKViewElement:(KKViewElement *) element setProperty:(NSString *) key value:(NSString *) value {
     [super KKViewElement:element setProperty:key value:value];
   
-    if([key isEqualToString:@"#text"]) {
+    if([key isEqualToString:@"#text"] || [key isEqualToString:@"value"]) {
         self.text = value;
     } else if([key isEqualToString:@"color"]) {
         self.textColor = [UIColor KKElementStringValue:value];
