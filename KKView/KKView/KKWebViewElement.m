@@ -114,6 +114,10 @@
     });
 }
 
+-(UIView *) contentView {
+    return [(WKWebView *) self.view scrollView];
+}
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     
     if(object == self.view) {

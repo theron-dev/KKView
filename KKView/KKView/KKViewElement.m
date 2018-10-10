@@ -251,9 +251,15 @@
     
 }
 
+-(UIView *) contentView {
+    return _view;
+}
+
 -(void) obtainChildrenView {
     
-    if(_view) {
+    UIView * view = [self contentView];
+    
+    if(view) {
         
         KKElement * p = self.firstChild;
         
@@ -262,7 +268,7 @@
             if([p isKindOfClass:[KKViewElement class]]) {
                 KKViewElement * e = (KKViewElement *) p;
                 if([self isChildrenVisible:e]) {
-                    [e obtainView:_view];
+                    [e obtainView:view];
                 } else {
                     [e recycleView];
                 }
@@ -270,7 +276,7 @@
             p = p.nextSibling;
         }
         
-        NSMutableDictionary * dequeueViews = objc_getAssociatedObject(_view, KKViewDequeueViewsKey);
+        NSMutableDictionary * dequeueViews = objc_getAssociatedObject(view, KKViewDequeueViewsKey);
         
         NSEnumerator * keyEnum = [dequeueViews keyEnumerator];
         NSString * key;
