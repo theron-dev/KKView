@@ -200,6 +200,14 @@
         
         KKElementEvent * e = [[KKElementEvent alloc] initWithElement:self];
         NSMutableDictionary * data = self.data;
+        {
+            NSMutableDictionary * v = p.data;
+            NSEnumerator *keyEnum = [v keyEnumerator];
+            NSString * key;
+            while((key = [keyEnum nextObject])) {
+                data[key] = [v valueForKey:key];
+            }
+        }
         data[@"url"] = u;
         e.data = data;
         [self emit:name event:e];

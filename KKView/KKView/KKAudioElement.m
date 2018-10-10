@@ -108,12 +108,24 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayingFinished) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doApplicationDidBecomeActiveNotification) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     
     if(_player && !_playing) {
         _playing = YES;
         [_player play];
     }
+}
+
+-(void) doApplicationDidBecomeActiveNotification {
+    
+    if(_player && _playing) {
+        AVAudioSession * session =[AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryAmbient error:nil];
+        [session setActive:YES error:nil];
+        [_player play];
+    }
+    
 }
 
 -(void) didPlayingFinished {
@@ -129,6 +141,8 @@
     if(_player) {
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
         
         
         [self.player pause];
