@@ -109,6 +109,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPlayingFinished) name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doApplicationDidBecomeActiveNotification) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doApplicationDidEnterBackgroundNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     
     if(_player && !_playing) {
@@ -128,6 +130,12 @@
     
 }
 
+-(void) doApplicationDidEnterBackgroundNotification {
+    if(_player && _playing) {
+        [_player pause];
+    }
+}
+
 -(void) didPlayingFinished {
     
     if(KKBooleanValue([self get:@"loop"])) {
@@ -143,6 +151,8 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
         
         
         [self.player pause];

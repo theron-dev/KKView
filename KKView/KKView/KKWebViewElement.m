@@ -81,19 +81,54 @@
 
 -(void) display {
     
-    NSURL * u = nil;
+    NSString * uri = [[self get:@"src"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    @try {
-        u = [NSURL URLWithString:[[self get:@"src"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    }
-    @catch(NSException *ex) {
+    if(uri != nil ){
+        
+        NSURL * u = nil;
+        
+        if([uri containsString:@"://"]) {
+           
+            @try {
+                u = [NSURL URLWithString:uri];
+            }
+            @catch(NSException *ex) {
+                
+            }
+            
+            if(u) {
+                
+                NSLog(@"[KK] [WEBVIEW] %@",u);
+                
+                NSMutableURLRequest * r = [NSMutableURLRequest requestWithURL:u];
+                
+                [r setValue:[KKHttp userAgent] forHTTPHeaderField:@"User-Agent"];
+                
+                NSArray<NSHTTPCookie *> * cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:u];
+                
+                NSMutableString * s = [NSMutableString stringWithCapacity:4];
+                
+                for(NSHTTPCookie * cookie in cookies) {
+                    [s appendFormat:@"%@=%@; ",cookie.name,cookie.value];
+                }
+                
+                [r setValue:s forHTTPHeaderField:@"Cookie"];
+                
+                [self.webView loadRequest:[NSURLRequest requestWithURL:u]];
+                
+            }
+            
+        } else {
+            NSString * path = [[self.viewContext basePath] stringByAppendingPathComponent:uri];
+            NSString * code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+            if(code != nil ){
+                [self.webView loadHTMLString:code baseURL:nil];
+            }
+        }
+        
         
     }
-    
-    if(u) {
-        NSLog(@"[KK] [WEBVIEW] %@",u);
-        [self.webView loadRequest:[NSURLRequest requestWithURL:u]];
-    }
+   
     
     _displaying = false;
     
