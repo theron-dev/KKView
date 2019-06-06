@@ -184,7 +184,7 @@
     }
 
     [self obtainChildrenView];
-    
+
     _obtaining = NO;
 }
 

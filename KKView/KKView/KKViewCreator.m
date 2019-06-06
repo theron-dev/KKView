@@ -289,7 +289,7 @@ void KKView(Class elementClass, NSDictionary * attrs, KKElement * p, KKJSObserve
         
         NSMutableDictionary * mattrs = [NSMutableDictionary dictionaryWithDictionary:attrs];
         
-        [mattrs removeObjectForKey:@"kk:for"];
+        [mattrs removeObjectForKey:@"kk:if"];
         
         KKViewOnIf(v,elementClass, mattrs, p, data, children);
         
