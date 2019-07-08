@@ -761,41 +761,94 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
     } else if([key isEqualToString:@"enabled"]) {
         self.userInteractionEnabled = KKBooleanValue(value);
     } else if([key isEqualToString:@"background-image"]) {
-        if(value) {
+        if([value length]) {
             
-            NSArray * vs = [value componentsSeparatedByString:@" "];
             
-            UIImage * image = nil;
-            
-            if(element.viewContext == nil) {
-                image = [UIImage kk_imageWithPath:vs[0]];
+            if([value hasPrefix:@"linear-gradient("] && [value hasSuffix:@")"]) {
+                
+                CAGradientLayer * v = [self kk_backgroundGradientLayer];
+                
+                NSRange r = {16,[value length] - 16 - 1};
+                NSArray * items = [[value substringWithRange:r] componentsSeparatedByString:@","];
+                
+                NSMutableArray * colors = [NSMutableArray arrayWithCapacity:4];
+                NSMutableArray * locs = [NSMutableArray arrayWithCapacity:4];
+                
+                for(NSString * item in items) {
+                    item = [item stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    if([item hasPrefix:@"#"]) {
+                        NSArray * vs = [item componentsSeparatedByString:@" "];
+                        if([vs count] > 0) {
+                            UIColor * c = [UIColor KKElementStringValue:vs[0]];
+                            if(c != nil) {
+                                [colors addObject:(id) [c CGColor]];
+                                if([vs count] > 1) {
+                                    [locs addObject:@([vs[1] doubleValue] / 100.0)]
+                                } else {
+                                    [locs addObject:@(0)];
+                                }
+                            }
+                        }
+                    } else if([item isEqualToString:@"to right"] || [item isEqualToString:@"-90deg"]) {
+                        v.startPoint = CGPointMake(0, 0.5);
+                        v.endPoint = CGPointMake(1, 0.5);
+                    } else if([item isEqualToString:@"to top"]) {
+                        v.startPoint = CGPointMake(0.5, 0);
+                        v.endPoint = CGPointMake(0.5, 1);
+                    } else if([item isEqualToString:@"to left"] || [item isEqualToString:@"90deg"]) {
+                        v.startPoint = CGPointMake(1, 0.5);
+                        v.endPoint = CGPointMake(0, 0.5);
+                    } else if([item isEqualToString:@"to bottom"]) {
+                        v.startPoint = CGPointMake(1, 0.5);
+                        v.endPoint = CGPointMake(0, 0.5);
+                    }
+                }
+                
+                v.colors = colors;
+                v.locations = locs;
+                
+                [self kk_backgroundGradientLayerLayout];
+                
             } else {
-                image = [element.viewContext imageWithURI:vs[0]];
-            }
             
-            if([vs count] > 2 && image) {
+                UIImage * image = nil;
                 
-                CGFloat left = [vs[1] doubleValue];
-                CGFloat top = [vs[2] doubleValue];
-                CGFloat right = 0;
-                CGFloat bottom = 0;
+                NSArray * vs = [value componentsSeparatedByString:@" "];
                 
-                if([vs count] > 3) {
-                    right = [vs[3] doubleValue];
+                if(element.viewContext == nil) {
+                    image = [UIImage kk_imageWithPath:vs[0]];
+                } else {
+                    image = [element.viewContext imageWithURI:vs[0]];
                 }
                 
-                if([vs count] > 4) {
-                    bottom = [vs[4] doubleValue];
+                if([vs count] > 2 && image) {
+                    
+                    CGFloat left = [vs[1] doubleValue];
+                    CGFloat top = [vs[2] doubleValue];
+                    CGFloat right = 0;
+                    CGFloat bottom = 0;
+                    
+                    if([vs count] > 3) {
+                        right = [vs[3] doubleValue];
+                    }
+                    
+                    if([vs count] > 4) {
+                        bottom = [vs[4] doubleValue];
+                    }
+                    
+                    image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, right, bottom)];
+                    
                 }
                 
-                image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, right, bottom)];
-                
+                self.kk_backgroundImage = image;
+                [self kk_backgroundGradientLayerClear]
             }
             
-            self.kk_backgroundImage = image;
+            
             
         } else {
             self.kk_backgroundImage = nil;
+            [self kk_backgroundGradientLayerClear]
         }
     } else if([key isEqualToString:@"box-shadow"]) {
         NSArray * vs = [value componentsSeparatedByString:@" "];
@@ -831,6 +884,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
     r.origin.x += element.translate.x;
     r.origin.y += element.translate.y;
     self.frame = r;
+    [self kk_backgroundGradientLayerLayout];
 }
 
 -(void) KKElementRecycleView:(KKViewElement *) element {

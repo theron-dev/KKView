@@ -51,4 +51,32 @@
     
 }
 
+-(CAGradientLayer *) kk_backgroundGradientLayer {
+    CAGradientLayer * v = (CAGradientLayer *) objc_getAssociatedObject(self, "__kk_backgroundGradientLayer");
+    if(v == nil) {
+        v = [[CAGradientLayer alloc] init];
+        objc_setAssociatedObject(self, "__kk_backgroundGradientLayer", v, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return v;
+}
+
+
+-(void) kk_backgroundGradientLayerLayout {
+    CAGradientLayer * v = (CAGradientLayer *) objc_getAssociatedObject(self, "__kk_backgroundGradientLayer");
+    if(v != nil ){
+        CGRect r = self.bounds;
+        r.origin = CGPointZero;
+        v.frame = r;
+        [self.layer insertSublayer:v atIndex:0];
+    }
+}
+
+-(void) kk_backgroundGradientLayerClear {
+    CAGradientLayer * v = (CAGradientLayer *) objc_getAssociatedObject(self, "__kk_backgroundGradientLayer");
+    if(v != nil ){
+        [v removeFromSuperlayer];
+        objc_setAssociatedObject(self, "__kk_backgroundGradientLayer", nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
 @end

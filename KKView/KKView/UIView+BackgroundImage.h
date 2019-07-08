@@ -11,5 +11,10 @@
 @interface UIView (BackgroundImage)
 
 @property(nonatomic,strong) UIImage * kk_backgroundImage;
+@property(nonatomic,strong,readonly) CAGradientLayer * kk_backgroundGradientLayer;
+
+-(void) kk_backgroundGradientLayerLayout;
+
+-(void) kk_backgroundGradientLayerClear;
 
 @end

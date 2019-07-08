@@ -9,6 +9,24 @@
 #import "KKWebViewElement.h"
 #import "KKViewContext.h"
 #import <WebKit/WebKit.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <KKObserver/KKObserver.h>
+
+@interface WKWebView(KKWebViewElement)
+
+@end
+
+@implementation WKWebView(KKWebViewElement)
+
+-(void) KKViewElement:(KKViewElement *) element setProperty:(NSString *) key value:(NSString *) value {
+    if([key hasPrefix:@"content-"]) {
+        [self.scrollView KKViewElement:element setProperty:[key substringFromIndex:8] value:value];
+    } else {
+        [super KKViewElement:element setProperty:key value:value];
+    }
+}
+
+@end
 
 @interface KKWebViewElement()<WKUIDelegate,WKNavigationDelegate,UIAlertViewDelegate> {
     BOOL _displaying;
@@ -20,12 +38,204 @@
 
 @end
 
+@interface KKWebViewElementScriptMessageHandler : NSURLProtocol<WKScriptMessageHandler,WKURLSchemeHandler>
+
+@property(nonatomic,strong) NSString * basePath;
+@property(nonatomic,weak) KKWebViewElement * element;
+
+@end
+
+static NSString * KKWebViewElementURLProtocolKey = @"KKWebViewElementURLProtocolKey";
+
+@implementation KKWebViewElementScriptMessageHandler
+
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    KKWebViewElement * e = self.element;
+    if(e) {
+        KKElementEvent * event = [[KKElementEvent alloc] initWithElement:self.element];
+        event.data = message.body;
+        [e emit:@"data" event:event];
+    }
+}
+
+
++ (BOOL)canInitWithRequest:(NSURLRequest *)request {
+    if([NSURLProtocol propertyForKey:KKWebViewElementURLProtocolKey inRequest:request]) {
+        return NO;
+    }
+    NSString * scheme = [request.URL scheme];
+    return [scheme isEqualToString:@"app"];
+}
+
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
+    return request;
+}
+
+
+-(void) getContent:(NSURL *) URL response:(NSURLResponse **) resp data:(NSData **) data error:(NSError **) error {
+    
+    //    NSLog(@"[Ker] [KerURLProtocol] %@",[URL absoluteString]);
+    
+    NSString * filePath = [_basePath stringByAppendingPathComponent:URL.path];
+    
+    if(filePath == nil) {
+        * error = [NSError errorWithDomain:@"KKWebViewElement" code:0 userInfo:@{NSLocalizedDescriptionKey:@"Not Found File Path"}];
+        return;
+    }
+    
+    * data = [NSData dataWithContentsOfFile:filePath];
+    
+    if(* data == nil) {
+        * error = [NSError errorWithDomain:@"KKWebViewElement" code:0 userInfo:@{NSLocalizedDescriptionKey:@"Not Found File"}];
+        return;
+    }
+    
+    NSString * mimeType = [KKWebViewElementScriptMessageHandler mimeType:filePath data:* data defaultType:@"application/octet-stream"];
+    
+    * resp = [[NSURLResponse alloc] initWithURL:URL MIMEType:mimeType expectedContentLength:(* data).length textEncodingName:nil];
+    
+}
+
+- (void)startLoading {
+    
+    NSMutableURLRequest * req = [self.request mutableCopy];
+    
+    [NSURLProtocol setProperty:@(YES) forKey:KKWebViewElementURLProtocolKey inRequest:req];
+    
+    NSError * err = nil;
+    NSData * data = nil;
+    NSURLResponse * resp = nil;
+    
+    [self getContent:req.URL response:&resp data:&data error:&err];
+    
+    if(err != nil) {
+        [self.client URLProtocol:self didFailWithError:err];
+        return;
+    }
+    
+    [self.client URLProtocol:self didReceiveResponse:resp cacheStoragePolicy:NSURLCacheStorageAllowed];
+    [self.client URLProtocol:self didLoadData:data];
+    [self.client URLProtocolDidFinishLoading:self];
+    
+}
+
+- (void)stopLoading {
+    
+}
+
+- (void)webView:(WKWebView *)webView startURLSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask API_AVAILABLE(ios(11.0)){
+    
+
+    NSURL * URL = [urlSchemeTask request].URL;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSError * err = nil;
+        NSData * data = nil;
+        NSURLResponse * resp = nil;
+        
+        [self getContent:URL response:&resp data:&data error:&err];
+        
+        if(err != nil) {
+            [urlSchemeTask didFailWithError:err];
+            return;
+        }
+        
+        [urlSchemeTask didReceiveResponse:resp];
+        [urlSchemeTask didReceiveData:data];
+        [urlSchemeTask didFinish];
+        
+    });
+    
+    
+}
+
+- (void)webView:(WKWebView *)webView stopURLSchemeTask:(id <WKURLSchemeTask>)urlSchemeTask  API_AVAILABLE(ios(11.0)) {
+    
+}
+
+
++(NSString *) mimeType:(NSString *) filePath data:(NSData *) data defaultType:(NSString *) defaultType {
+    
+    NSString * mimeType = nil;
+    
+    if(mimeType == nil) {
+        
+        CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef) filePath.pathExtension, nil);
+        
+        if(uti) {
+            
+            CFStringRef v = UTTypeCopyPreferredTagWithClass(uti,kUTTagClassMIMEType);
+            
+            if(v) {
+                mimeType = (__bridge NSString *) v ;
+                CFRelease(v);
+            }
+            
+            CFRelease(uti);
+            
+        }
+        
+    }
+    
+    if(mimeType == nil && data) {
+        
+        uint8_t c;
+        
+        [data getBytes:&c length:1];
+        
+        switch (c) {
+            case 0xFF:
+                mimeType = @"image/jpeg";
+                break;
+            case 0x89:
+                mimeType = @"image/png";
+                break;
+            case 0x47:
+                mimeType = @"image/gif";
+                break;
+            case 0x49:
+            case 0x4D:
+                mimeType = @"image/tiff";
+                break;
+        }
+    }
+    
+    if(mimeType == nil) {
+        mimeType = defaultType;
+    }
+    
+    return mimeType;
+    
+}
+
+
+
+@end
+
+@protocol KKWebViewElementWKBrowsingContextController  <NSObject>
+
+-(void) registerSchemeForCustomProtocol:(NSString *) scheme;
+
+@end
+
 @implementation KKWebViewElement
 
 +(void) initialize {
     
     [KKViewContext setDefaultElementClass:[KKWebViewElement class] name:@"webview"];
     
+    if (@available(iOS 11.0, *)) {
+    } else {
+        [NSURLProtocol registerClass:[KKWebViewElementScriptMessageHandler class]];
+        {
+            Class cls = NSClassFromString(@"WKBrowsingContextController");
+            SEL sel = @selector(registerSchemeForCustomProtocol:);
+            if([cls respondsToSelector:sel]) {
+                [(id<KKWebViewElementWKBrowsingContextController>)cls registerSchemeForCustomProtocol:@"app"];
+            }
+        }
+    }
 }
 
 -(Class) viewClass {
@@ -33,7 +243,43 @@
 }
 
 -(WKWebViewConfiguration *) loadWebViewConfiguration {
+    
     WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc] init];
+    
+    WKUserContentController * userContentController = [[WKUserContentController alloc] init];
+    
+    KKWebViewElementScriptMessageHandler * object = [[KKWebViewElementScriptMessageHandler alloc] init];
+    
+    object.basePath = [self.viewContext basePath];
+    object.element = self;
+    
+    [userContentController addScriptMessageHandler:object name:@"kk"];
+    
+    configuration.userContentController = userContentController;
+    
+    [configuration.preferences setJavaScriptCanOpenWindowsAutomatically:YES];
+    [configuration.preferences setJavaScriptEnabled:YES];
+    [configuration.preferences setMinimumFontSize:0];
+    if (@available(iOS 9.0, *)) {
+        [configuration setApplicationNameForUserAgent:[[KKHttp userAgent] stringByAppendingString:@" KK/1.0"]];
+    } else {
+    }
+    
+    @try {
+        [configuration.preferences setValue:@TRUE forKey:@"allowFileAccessFromFileURLs"];
+    }
+    @catch (NSException *exception) {}
+    
+    @try {
+        [configuration setValue:@TRUE forKey:@"allowUniversalAccessFromFileURLs"];
+    }
+    @catch (NSException *exception) {}
+    
+    if (@available(iOS 11.0, *)) {
+        [configuration setURLSchemeHandler:object forURLScheme:@"app"];
+    } else {
+    }
+    
     return configuration;
 }
 
@@ -41,11 +287,15 @@
 
     WKWebViewConfiguration * v = [self loadWebViewConfiguration];
     
+    WKWebView * view = nil;
+    
     if(v == nil) {
-        return [[WKWebView alloc] initWithFrame:CGRectZero];
+        view =  [[WKWebView alloc] initWithFrame:CGRectZero];
+    } else {
+        view = [[WKWebView alloc] initWithFrame:CGRectZero configuration:v];
     }
     
-    return [[WKWebView alloc] initWithFrame:CGRectZero configuration:v];
+    return view;
     
 }
 
@@ -74,7 +324,7 @@
 -(void) changedKey:(NSString *)key {
     [super changedKey:key];
     
-    if([key isEqualToString:@"src"]) {
+    if([key isEqualToString:@"src"] || [key isEqualToString:@"#text"]) {
         [self setNeedsDisplay];
     }
 }
@@ -122,11 +372,16 @@
             NSString * path = [[self.viewContext basePath] stringByAppendingPathComponent:uri];
             NSString * code = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
             if(code != nil ){
-                [self.webView loadHTMLString:code baseURL:nil];
+                [self.webView loadHTMLString:code baseURL:[NSURL URLWithString:@"app:///"]];
             }
         }
         
         
+    } else {
+        NSString * text = [self get:@"#text"];
+        if([text length]) {
+            [self.webView loadHTMLString:text baseURL:[NSURL URLWithString:@"app:///"]];
+        }
     }
    
     
@@ -151,6 +406,23 @@
 
 -(UIView *) contentView {
     return [(WKWebView *) self.view scrollView];
+}
+
+-(void) emit:(NSString *) name event:(KKEvent *) event {
+    
+    if([name isEqualToString:@"evaluateJavaScript"]) {
+        
+        if([event isKindOfClass:[KKElementEvent class]]) {
+            NSString * text = [[(KKElementEvent *) event data] kk_getString:@"text"];
+            if([text length]) {
+                [self.webView evaluateJavaScript:text completionHandler:nil];
+            }
+        }
+        
+        return;
+    }
+    
+    [super emit:name event:event];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
