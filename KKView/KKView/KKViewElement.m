@@ -774,8 +774,8 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
                 NSMutableArray * colors = [NSMutableArray arrayWithCapacity:4];
                 NSMutableArray * locs = [NSMutableArray arrayWithCapacity:4];
                 
-                for(NSString * item in items) {
-                    item = [item stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                for(NSString * itm in items) {
+                    NSString * item = [itm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                     if([item hasPrefix:@"#"]) {
                         NSArray * vs = [item componentsSeparatedByString:@" "];
                         if([vs count] > 0) {
@@ -783,7 +783,7 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
                             if(c != nil) {
                                 [colors addObject:(id) [c CGColor]];
                                 if([vs count] > 1) {
-                                    [locs addObject:@([vs[1] doubleValue] / 100.0)]
+                                    [locs addObject:@([vs[1] doubleValue] / 100.0)];
                                 } else {
                                     [locs addObject:@(0)];
                                 }
@@ -841,14 +841,14 @@ CGSize KKViewElementLayoutHorizontal(KKViewElement * element) {
                 }
                 
                 self.kk_backgroundImage = image;
-                [self kk_backgroundGradientLayerClear]
+                [self kk_backgroundGradientLayerClear];
             }
             
             
             
         } else {
             self.kk_backgroundImage = nil;
-            [self kk_backgroundGradientLayerClear]
+            [self kk_backgroundGradientLayerClear];
         }
     } else if([key isEqualToString:@"box-shadow"]) {
         NSArray * vs = [value componentsSeparatedByString:@" "];
